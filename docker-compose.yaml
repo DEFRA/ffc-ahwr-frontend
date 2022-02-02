@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  ffc-template-node:
+  ffc-ahwr-frontend:
     build:
       context: .
       target: production
-    image: ffc-template-node
-    container_name: ffc-template-node
+    image: ffc-ahwr-frontend
+    container_name: ffc-ahwr-frontend
     environment:
-      APPINSIGHTS_CLOUDROLE: ffc-template-node-local
+      APPINSIGHTS_CLOUDROLE: ffc-ahwr-frontend-local
       APPINSIGHTS_INSTRUMENTATIONKEY: ${APPINSIGHTS_INSTRUMENTATIONKEY}

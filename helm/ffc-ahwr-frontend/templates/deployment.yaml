@@ -1,0 +1,8 @@
+{{- include "ffc-helm-library.deployment" (list . "ffc-ahwr-frontend.deployment") -}}
+{{- define "ffc-ahwr-frontend.deployment" -}}
+spec:
+  template:
+    spec:
+      containers:
+      - {{ include "ffc-helm-library.container" (list . "ffc-ahwr-frontend.container") }}
+{{- end -}}
