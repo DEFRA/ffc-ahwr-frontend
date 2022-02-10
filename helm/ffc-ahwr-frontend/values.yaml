@@ -49,6 +49,7 @@ ingress:
   class: nginx
   endpoint: ffc-ahwr-frontend
   server: value.replaced.from.app.config
+  requestMemory: 10Mi
 
 livenessProbe:
   failureThreshold: 3
