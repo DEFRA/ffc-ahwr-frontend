@@ -20,12 +20,6 @@ containerSecret:
   name: ffc-ahwr-frontend-container-secret
   type: Opaque
 
-deployment:
-  restartPolicy: Always
-  priorityClassName: default
-  replicas: 1
-  minReadySeconds: 0
-
 container:
   applicationRequestQueueAddress: ffc-sfi-application-request
   applicationResponseQueueAddress: ffc-sfi-application-response
@@ -39,16 +33,31 @@ container:
   requestCpu: 10m
   requestMemory: 10Mi
 
+deployment:
+  minReadySeconds: 0
+  priorityClassName: default
+  replicas: 1
+  restartPolicy: Always
+
+ingress:
+  class: nginx
+  endpoint: ffc-ahwr-frontend
+  server: example.com
+
 livenessProbe:
-  path: /healthz
-  port: 3000
-  initialDelaySeconds: 10
-  periodSeconds: 10
   failureThreshold: 3
+  initialDelaySeconds: 10
+  path: /healthz
+  periodSeconds: 10
+  port: 3000
 
 readinessProbe:
-  path: /healthy
-  port: 3000
-  initialDelaySeconds: 10
-  periodSeconds: 10
   failureThreshold: 3
+  initialDelaySeconds: 10
+  path: /healthy
+  periodSeconds: 10
+  port: 3000
+
+service:
+  port: 80
+  type: ClusterIP
