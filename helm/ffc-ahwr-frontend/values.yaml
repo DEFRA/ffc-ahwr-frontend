@@ -9,6 +9,10 @@ labels: {}
 appInsights:
   key:
 
+azureIdentity:
+  clientID:
+  resourceID:
+
 containerConfigMap:
   name: ffc-ahwr-frontend-config-map
 
@@ -23,12 +27,17 @@ deployment:
   minReadySeconds: 0
 
 container:
+  applicationRequestQueueAddress: ffc-sfi-application-request
+  applicationResponseQueueAddress: ffc-sfi-application-response
+  eligibilityRequestQueueAddress: ffc-sfi-eligibility-request
+  eligibilityResponseQueueAddress: ffc-sfi-eligibility-response
   imagePullPolicy: IfNotPresent
-  requestMemory: 10Mi
-  requestCpu: 10m
-  limitMemory: 40Mi
   limitCpu: 40m
+  limitMemory: 40Mi
+  messageQueueHost: namespace.servicebus.windows.net
   port: 3000
+  requestCpu: 10m
+  requestMemory: 10Mi
 
 livenessProbe:
   path: /healthz
