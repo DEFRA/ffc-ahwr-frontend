@@ -21,10 +21,10 @@ containerSecret:
   type: Opaque
 
 container:
-  applicationRequestQueueAddress: ffc-sfi-application-request
-  applicationResponseQueueAddress: ffc-sfi-application-response
-  eligibilityRequestQueueAddress: ffc-sfi-eligibility-request
-  eligibilityResponseQueueAddress: ffc-sfi-eligibility-response
+  applicationRequestQueueAddress: ffc-ahwr-application-request
+  applicationResponseQueueAddress: ffc-ahwr-application-response
+  eligibilityRequestQueueAddress: ffc-ahwr-eligibility-request
+  eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
   imagePullPolicy: IfNotPresent
   limitCpu: 40m
   limitMemory: 40Mi
