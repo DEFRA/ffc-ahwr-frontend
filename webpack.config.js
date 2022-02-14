@@ -40,20 +40,20 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'images/[hash][ext]'
+          filename: 'images/[contenthash][ext]'
         }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'fonts/[hash][ext]'
+          filename: 'fonts/[contenthash][ext]'
         }
       }
     ]
   },
   output: {
-    filename: 'js/bundle.[contenthash].js',
+    filename: 'js/[contenthash].js',
     path: path.resolve(__dirname, 'app/frontend/dist'),
     publicPath: '/assets/'
   },
