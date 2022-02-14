@@ -31,7 +31,7 @@ module.exports = {
             options: {
               sourceMap: isDev,
               sassOptions: {
-                outputStyle: 'compressed'
+                outputStyle: isDev ? 'expanded' : 'compressed'
               }
             }
           }
