@@ -65,7 +65,7 @@ module.exports = {
       template: 'app/views/layouts/_layout.njk'
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/application.[contenthash].css'
+      filename: 'css/[contenthash].css'
     })
   ]
 }
