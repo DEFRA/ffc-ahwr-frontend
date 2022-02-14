@@ -16,7 +16,6 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          'style-loader',
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
@@ -31,7 +30,7 @@ module.exports = {
             options: {
               sourceMap: isDev,
               sassOptions: {
-                outputStyle: 'compressed'
+                outputStyle: isDev ? 'expanded' : 'compressed'
               }
             }
           }
@@ -39,26 +38,22 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            outputPath: 'images/'
-          }
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[contenthash][ext]'
         }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            outputPath: 'fonts/'
-          }
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[contenthash][ext]'
         }
       }
     ]
   },
   output: {
-    filename: 'js/bundle.[contenthash].js',
+    filename: 'js/[contenthash].js',
     path: path.resolve(__dirname, 'app/frontend/dist'),
     publicPath: '/assets/'
   },
@@ -70,7 +65,7 @@ module.exports = {
       template: 'app/views/layouts/_layout.njk'
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/application.[contenthash].css'
+      filename: 'css/[contenthash].css'
     })
   ]
 }
