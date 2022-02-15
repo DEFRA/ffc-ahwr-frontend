@@ -14,6 +14,7 @@ describe('Healthy test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).toBe(200)
   })
 
