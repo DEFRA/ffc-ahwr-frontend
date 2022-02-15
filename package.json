@@ -29,6 +29,7 @@
     "nunjucks": "^3.2.3"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.10",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.6.0",
     "file-loader": "^6.2.0",
