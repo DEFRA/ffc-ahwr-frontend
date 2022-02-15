@@ -1,3 +1,5 @@
+const cheerio = require('cheerio')
+
 describe('4xx error pages', () => {
   let server
   const createServer = require('../../../../app/server')
@@ -13,9 +15,12 @@ describe('4xx error pages', () => {
       url: '/unknown'
     }
 
-    const response = await server.inject(options)
+    const res = await server.inject(options)
 
-    expect(response.statusCode).toBe(404)
+    expect(res.statusCode).toBe(404)
+    const $ = cheerio.load(res.payload)
+    expect($('.govuk-heading-l').text()).toEqual('404 - Not Found')
+    expect($('.govuk-body').text()).toEqual('Not Found')
   })
 
   afterEach(async () => {
