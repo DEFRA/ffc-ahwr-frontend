@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../utils/phase-banner-expect')
 
-describe('4xx error pages', () => {
+describe('Home page test', () => {
   let server
   const createServer = require('../../../../app/server')
 
@@ -10,18 +10,18 @@ describe('4xx error pages', () => {
     await server.start()
   })
 
-  test('GET /unknown route returns 404', async () => {
+  test('GET / route returns 200', async () => {
     const options = {
       method: 'GET',
-      url: '/unknown'
+      url: '/'
     }
 
     const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(404)
+    expect(res.statusCode).toBe(200)
     const $ = cheerio.load(res.payload)
-    expect($('.govuk-heading-l').text()).toEqual('404 - Not Found')
-    expect($('.govuk-body').text()).toEqual('Not Found')
+    expect($('.govuk-heading-l').text()).toEqual('Apply for a vet visit')
+    expect($('.govuk-warning-text__text').text()).toMatch('This is not a real service and is for demonstration purposes only.')
     expectPhaseBanner.ok($)
   })
 
