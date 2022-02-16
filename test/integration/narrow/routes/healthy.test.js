@@ -13,8 +13,9 @@ describe('Healthy test', () => {
       url: '/healthy'
     }
 
-    const response = await server.inject(options)
-    expect(response.statusCode).toBe(200)
+    const res = await server.inject(options)
+
+    expect(res.statusCode).toBe(200)
   })
 
   afterEach(async () => {
