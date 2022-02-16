@@ -3,6 +3,16 @@ version: '3.8'
 services:
   ffc-ahwr-frontend:
     command: >
-      sh -c "npm run test:watch"
+      sh -c "npm run test:watch:all"
     volumes:
-      - ./.git:/home/node/.git
+      - ./app:/home/node/app
+      - ./test:/home/node/test
+      - ./package.json:/home/node/package.json
+      - ./jest.config.js:/home/node/jest.config.js
+      - ./webpack.config.js:/home/node/webpack.config.js
+      - dist:/home/node/app/frontend/dist
+      - layouts:/home/node/app/views/layouts
+
+volumes:
+  dist:
+  layouts:
