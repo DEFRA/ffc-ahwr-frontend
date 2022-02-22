@@ -8,7 +8,7 @@ const schema = Joi.object({
       partition: Joi.string().default('ffc-ahwr-frontend'),
       password: Joi.string().default('redis'),
       port: Joi.number().default(6379),
-      tls: Joi.boolean().default(true)
+      tls: Joi.object().default({})
     }
   },
   cookie: {
