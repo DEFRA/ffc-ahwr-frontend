@@ -19,11 +19,9 @@ module.exports = {
           const sessionCache = await request.server.app.cache.get(session.sid)
           const valid = !!sessionCache
           const result = { valid }
-          console.log(sessionCache)
           if (valid) {
             // TODO: replace with Defra Customer account
             result.credentials = { name: 'applicant-name' }
-            console.log('already logged in')
           } else {
             console.error(`Session has no cache: ${session.sid}`)
           }

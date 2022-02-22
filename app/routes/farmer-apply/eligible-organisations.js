@@ -1,6 +1,6 @@
 module.exports = {
   method: 'GET',
-  path: '/eligible-organisations',
+  path: '/farmer-apply/eligible-organisations',
   options: {
     auth: false,
     handler: async (_, h) => {
@@ -15,7 +15,7 @@ module.exports = {
         name: 'P & D Fearnley & Sons',
         sbi: '103491987'
       }]
-      return h.view('eligible-organisations', { organisations })
+      return h.view('farmer-apply/eligible-organisations', { organisations })
     }
   }
 }
