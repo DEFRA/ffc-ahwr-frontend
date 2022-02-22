@@ -4,10 +4,7 @@ const routes = [].concat(
   require('../routes/healthz'),
   require('../routes/home'),
   require('../routes/auth/login'),
-  require('../routes/farmer-apply/check-answers'),
-  require('../routes/farmer-apply/confirmation'),
-  require('../routes/farmer-apply/declaration'),
-  require('../routes/farmer-apply/org-review')
+  require('../routes/farmer-apply/eligible-organisations')
 )
 
 module.exports = {

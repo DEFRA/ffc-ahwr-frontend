@@ -25,10 +25,9 @@ module.exports = {
 
           const valid = !!org
           const result = { valid }
-
           if (valid) {
-            // Replace existing user with latest copy
-            result.credentials = org
+            // TODO: replace with Defra Customer account
+            result.credentials = { name: 'applicant-name' }
           } else {
             console.error(`Org was not found with reference: ${reference}`)
           }

@@ -90,7 +90,7 @@ describe('Login page test', () => {
     expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
   })
 
-  test('POST to /login route with valid payload redirects to /farmer-apply/org-review', async () => {
+  test('POST to /login route with valid payload redirects to /farmer-apply/eligible-organisations', async () => {
     const crumb = await getCrumbs(server)
     const reference = '1111'
     const options = {
@@ -103,10 +103,10 @@ describe('Login page test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual('farmer-apply/org-review')
+    expect(res.headers.location).toEqual('farmer-apply/eligible-organisations')
   })
 
-  test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
+  test('GET to /login route when already logged in redirects to /farmer-apply/eligible-organisations', async () => {
     const crumb = await getCrumbs(server)
     const reference = '1111'
 
@@ -118,7 +118,7 @@ describe('Login page test', () => {
     })
 
     expect(initialRes.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
+    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
 
     const cookieHeader = initialRes.headers['set-cookie']
     const authCookieValue = cookieHeader[0].split('; ').find(x => x.startsWith(cookieConfig.cookieNameAuth))
@@ -132,6 +132,6 @@ describe('Login page test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
+    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
   })
 })
