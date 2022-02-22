@@ -30,6 +30,7 @@
     "applicationinsights": "^2.1.6",
     "ffc-messaging": "^2.3.4",
     "govuk-frontend": "^4.0.1",
+    "hapi-pino": "^9.1.2",
     "joi": "^17.6.0",
     "nunjucks": "^3.2.3",
     "uuid": "^8.3.2"
@@ -39,6 +40,7 @@
     "@types/cheerio": "^0.22.31",
     "@types/hapi__hapi": "^20.0.10",
     "@types/jest": "^27.4.0",
+    "blipp": "^4.0.2",
     "cheerio": "^1.0.0-rc.10",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.6.0",
@@ -49,6 +51,7 @@
     "mini-css-extract-plugin": "^2.5.3",
     "nodemon": "^2.0.12",
     "npm-run-all": "^4.1.5",
+    "pino-pretty": "^7.5.1",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.49.7",
     "sass-loader": "^12.4.0",
