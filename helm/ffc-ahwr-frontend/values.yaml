@@ -30,11 +30,11 @@ container:
   eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
   imagePullPolicy: IfNotPresent
   limitCpu: 40m
-  limitMemory: 40Mi
+  limitMemory: 200Mi
   messageQueueHost: namespace.servicebus.windows.net
   port: 3000
   requestCpu: 10m
-  requestMemory: 10Mi
+  requestMemory: 200Mi
   redisHostname: redis-hostname.default
   redisPartition: ffc-ahwr-frontend
   redisPassword: redis
