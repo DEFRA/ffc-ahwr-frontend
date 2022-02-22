@@ -21,16 +21,23 @@
   "contributors": [],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@hapi/catbox-redis": "^6.0.2",
+    "@hapi/cookie": "^11.0.2",
+    "@hapi/crumb": "^8.0.1",
     "@hapi/hapi": "^20.1.5",
     "@hapi/inert": "^6.0.5",
     "@hapi/vision": "^6.1.0",
     "applicationinsights": "^2.1.6",
     "ffc-messaging": "^2.3.4",
     "govuk-frontend": "^4.0.1",
-    "nunjucks": "^3.2.3"
+    "joi": "^17.6.0",
+    "nunjucks": "^3.2.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@hapi/catbox-memory": "^5.0.1",
     "@types/cheerio": "^0.22.31",
+    "@types/hapi__hapi": "^20.0.10",
     "@types/jest": "^27.4.0",
     "cheerio": "^1.0.0-rc.10",
     "clean-webpack-plugin": "^4.0.0",

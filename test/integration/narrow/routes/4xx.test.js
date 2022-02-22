@@ -7,7 +7,7 @@ describe('4xx error pages', () => {
 
   beforeEach(async () => {
     server = await createServer()
-    await server.start()
+    await server.initialize()
   })
 
   test('GET /unknown route returns 404', async () => {
