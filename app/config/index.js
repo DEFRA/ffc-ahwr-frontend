@@ -20,7 +20,7 @@ const schema = Joi.object({
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   isDev: Joi.boolean().default(false),
   port: Joi.number().default(3000),
-  serviceName: Joi.string().default('Apply for a vet visit'),
+  serviceName: Joi.string().default('Review the health and welfare of your livestock'),
   useRedis: Joi.boolean().default(false)
 })
 
