@@ -15,6 +15,7 @@ module.exports = {
         },
         keepAlive: true,
         redirectTo: '/login',
+        appendNext: true,
         validateFunc: async (request, session) => {
           const sessionCache = await request.server.app.cache.get(session.sid)
           const valid = !!sessionCache

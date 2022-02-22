@@ -15,7 +15,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return h.redirect('farmer-apply/eligible-organisations')
+        return h.redirect(request.query?.next || '/farmer-apply/eligible-organisations')
       }
       return h.view('auth/login')
     }
@@ -41,9 +41,8 @@ module.exports = [{
       const sid = uuidv4()
       request.cookieAuth.set({ sid })
       await request.server.app.cache.set(sid, { callerId, crn })
-      // TODO: Depends what eligibility checking is required as to what happens
-      // here. Temporarily list dummy CPHs.
-      return h.redirect('farmer-apply/eligible-organisations')
+
+      return h.redirect(request.query?.next || '/farmer-apply/eligible-organisations')
     }
   }
 }]
