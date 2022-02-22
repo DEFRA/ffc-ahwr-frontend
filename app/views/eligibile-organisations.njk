@@ -1,0 +1,55 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}
+Eligible organisations you have access to
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Select the organisation to make an application for</h1>
+
+      <p>Only eligible organisations that you have access to are shown.</p>
+  </div>
+</div>
+
+  <div class="user-search-box govuk-!-width-two-thirds">
+    <form class="search-form" action="/eligible-organisations" method="POST">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{  searchBox({})  }}
+    </form>
+  </div>
+
+{% if organisations.length > 0 %}
+  <div class="govuk-grid-row govuk-!-margin-top-5">
+    <div class="govuk-grid-column-full">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Organisation</th>
+            <th scope="col" class="govuk-table__header">SBI Number</th>
+            <th scope="col" class="govuk-table__header">Applications</th>
+            <th scope="col" class="govuk-table__header "></th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for organisation in organisations %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ organisation.name }}</td>
+            <td class="govuk-table__cell">{{ organisation.sbi }}</td>
+            <td class="govuk-table__cell">0</td>
+            <td class="govuk-table__cell"><a class="start-application-link" href='/start-application?sbi={{ organisation.sbi }}'>View or start applications</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if pagination === true %}
+        {{ pager(page, totalPages, limit, total, url, hasNext, hasPrevious, showNextEllipsis, showPreviousEllipsis) }}
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+                                                                                                                                                                                                 <p class="govuk-body">No organisations found.</p>
+{% endif %}
+
+{% endblock %}

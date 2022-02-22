@@ -39,6 +39,7 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
+<<<<<<< HEAD
       const { reference, sbi } = request.payload
       const org = getOrgByReference(reference)
 
@@ -51,6 +52,15 @@ module.exports = [{
       request.yar.set(cacheKeys.org, org)
 
       return h.redirect(request.query?.next || 'farmer-apply/org-review')
+=======
+      const { callerId, crn } = request.payload
+      const sid = uuidv4()
+      request.cookieAuth.set({ sid })
+      await request.server.app.cache.set(sid, { callerId, crn })
+      // TODO: Depends what eligibility checking is required as to what happens
+      // here. Temporarily list dummy CPHs.
+      return h.redirect('/eligible-organisations')
+>>>>>>> feat: list eligibile orgs
     }
   }
 }]
