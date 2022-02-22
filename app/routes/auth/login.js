@@ -15,7 +15,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return h.redirect('/cph-list')
+        return h.redirect('/eligible-organisations')
       }
       return h.view('auth/login')
     }
@@ -43,7 +43,7 @@ module.exports = [{
       await request.server.app.cache.set(sid, { callerId, crn })
       // TODO: Depends what eligibility checking is required as to what happens
       // here. Temporarily list dummy CPHs.
-      return h.redirect('/cph-list')
+      return h.redirect('/eligible-organisations')
     }
   }
 }]
