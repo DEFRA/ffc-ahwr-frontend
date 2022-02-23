@@ -1,0 +1,19 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}Confirmation{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l">What happens next</h2>
+
+    {{ govukPanel({
+      titleText: "Application complete",
+      html: "Your reference number<br><strong>" + reference + "</strong>"
+    }) }}
+
+    <p>We have sent you a confirmation email.</p>
+    <p><a href="back-to-guidance-page">Read the guidance on what you need to do next</a>.</p>
+  </div>
+</div>
+{% endblock %}
