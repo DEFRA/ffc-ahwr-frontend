@@ -14,8 +14,7 @@ module.exports = {
         { key: { text: 'Address:' }, value: { text: organisation.address } },
         { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
       ]
-      const listData = { rows }
-      return h.view('farmer-apply/org-review', { organisation, listData })
+      return h.view('farmer-apply/org-review', { organisation, listData: { rows } })
     }
   }
 }
