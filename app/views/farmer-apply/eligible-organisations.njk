@@ -1,8 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}
-Eligible organisations you have access to
-{% endblock %}
+{% block pageTitle %}Eligible organisations you have access to{% endblock %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -13,41 +11,23 @@ Eligible organisations you have access to
   </div>
 </div>
 
+{% if orgsToShow %}
+
   <div class="user-search-box govuk-!-width-two-thirds">
     <form class="search-form" action="/farmer-apply/eligible-organisations" method="POST">
       <input type="hidden" name="crumb" value="{{crumb}}"/>
-      {{  searchBox({})  }}
+      {{ searchBox({}) }}
     </form>
   </div>
 
-{% if organisations.length > 0 %}
-  <div class="govuk-grid-row govuk-!-margin-top-5">
-    <div class="govuk-grid-column-full">
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Organisation</th>
-            <th scope="col" class="govuk-table__header">SBI Number</th>
-            <th scope="col" class="govuk-table__header">Applications</th>
-            <th scope="col" class="govuk-table__header "></th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for organisation in organisations %}
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell">{{ organisation.name }}</td>
-            <td class="govuk-table__cell">{{ organisation.sbi }}</td>
-            <td class="govuk-table__cell">0</td>
-            <td class="govuk-table__cell"><a class="start-application-link" href='/farmer-apply/org-review?sbi={{ organisation.sbi }}'>View or start applications</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% if pagination === true %}
-        {{ pager(page, totalPages, limit, total, url, hasNext, hasPrevious, showNextEllipsis, showPreviousEllipsis) }}
-      {% endif %}
-    </div>
-  </div>
+  {{ govukTable({
+    caption: "Eligible organisations",
+    captionClasses: "govuk-table__caption--m",
+    firstCellIsHeader: true,
+    head: tableData.head,
+    rows: tableData.rows
+  }) }}
+
 {% else %}
   <p>No organisations found.</p>
 {% endif %}
