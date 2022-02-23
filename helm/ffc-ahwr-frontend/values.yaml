@@ -25,15 +25,20 @@ containerSecret:
 container:
   applicationRequestQueueAddress: ffc-ahwr-application-request
   applicationResponseQueueAddress: ffc-ahwr-application-response
+  cookiePassword: who-likes-cookies-i-like-cookies-everybody-likes-cookies
   eligibilityRequestQueueAddress: ffc-ahwr-eligibility-request
   eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
   imagePullPolicy: IfNotPresent
   limitCpu: 40m
-  limitMemory: 40Mi
+  limitMemory: 200Mi
   messageQueueHost: namespace.servicebus.windows.net
   port: 3000
   requestCpu: 10m
-  requestMemory: 10Mi
+  requestMemory: 200Mi
+  redisHostname: redis-hostname.default
+  redisPartition: ffc-ahwr-frontend
+  redisPassword: redis
+  redisPort: 6379
 
 deployment:
   cpuThreshold: 40

@@ -7,7 +7,7 @@ describe('Home page test', () => {
 
   beforeEach(async () => {
     server = await createServer()
-    await server.start()
+    await server.initialize()
   })
 
   test('GET / route returns 200', async () => {

@@ -9,4 +9,13 @@ data:
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   NODE_ENV: {{ quote .Values.environment }}
   PORT: {{ quote .Values.container.port }}
+  {{- if .Values.container.redisHostname }}
+  REDIS_HOSTNAME: {{ quote .Values.container.redisHostname }}
+  {{- end }}
+  {{- if .Values.pr }}
+  REDIS_PARTITION: {{ .Values.container.redisPartition }}-{{ .Values.pr }}
+  {{ else }}
+  REDIS_PARTITION: {{ quote .Values.container.redisPartition }}
+  {{- end }}
+  REDIS_PORT: {{ quote .Values.container.redisPort }}
 {{- end -}}

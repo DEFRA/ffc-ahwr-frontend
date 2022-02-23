@@ -1,8 +1,17 @@
 const config = require('./config')
 const Hapi = require('@hapi/hapi')
+const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
+const catboxOptions = config.useRedis ? config.cache.options : {}
 
 async function createServer () {
   const server = Hapi.server({
+    cache: [{
+      name: 'session',
+      provider: {
+        constructor: catbox,
+        options: catboxOptions
+      }
+    }],
     port: config.port,
     routes: {
       validate: {
@@ -16,7 +25,13 @@ async function createServer () {
     }
   })
 
+  const cache = server.cache({ cache: 'session', segment: 'sessions', expiresIn: config.cache.expiresIn })
+  server.app.cache = cache
+
+  await server.register(require('@hapi/cookie'))
+  await server.register(require('@hapi/crumb'))
   await server.register(require('@hapi/inert'))
+  await server.register(require('./plugins/auth'))
   await server.register(require('./plugins/error-pages'))
   await server.register(require('./plugins/router'))
   await server.register(require('./plugins/views'))
