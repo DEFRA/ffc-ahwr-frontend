@@ -6,11 +6,16 @@ module.exports = {
   options: {
     handler: async (request, h) => {
       // TODO: Get this data based on eligibility or the applicant
-      console.log(request.query)
       const { sbi } = request.query
       const organisation = getEligibleOrgs().find(x => x.sbi === sbi)
-      console.log(organisation)
-      return h.view('farmer-apply/org-review', { organisation })
+      const rows = [
+        { key: { text: 'SBI number:' }, value: { text: organisation.sbi } },
+        { key: { text: 'CPH number:' }, value: { text: organisation.cph } },
+        { key: { text: 'Address:' }, value: { text: organisation.address } },
+        { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
+      ]
+      const listData = { rows }
+      return h.view('farmer-apply/org-review', { organisation, listData })
     }
   }
 }

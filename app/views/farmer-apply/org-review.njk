@@ -1,26 +1,24 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}
-Health and welfare review funding for this organisation
-{% endblock %}
+{% block pageTitle %}Health and welfare review funding for this organisation{% endblock %}
 
 {% block content %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Health and welfare review funding for this organisation</h1>
 
     <h2 class="govuk-heading-m">{{ organisation.name }}</h2>
-    <ul class="govuk-list">
-    <li><strong>SBI number:</strong> {{ organisation.sbi }}</li>
-    <li><strong>Address:</strong> {{ organisation.address }}</li>
-    <li><strong>Contact email address:</strong> {{ organisation.email }}</li>
-    </ul>
+    {{ govukSummaryList({
+      rows: listData.rows
+    }) }}
+
     <p>If your email is not correct, update your email address at Rural Payments Agency.</p>
 
-      {{ govukButton({
-        text: "Start new application",
-        href: "task-list"
-      }) }}
+    {{ govukButton({
+      text: "Start new application",
+      href: "check-answers?sbi=" + organisation.sbi
+    }) }}
   </div>
 </div>
 {% endblock %}
