@@ -1,5 +1,8 @@
 const Joi = require('joi')
 
+const uuidRegex = '[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}'
+const notifyApiKeyRegex = new RegExp(`.*-${uuidRegex}-${uuidRegex}`)
+
 const schema = Joi.object({
   cache: {
     expiresIn: Joi.number().default(1000 * 3600 * 24 * 3),
@@ -19,6 +22,10 @@ const schema = Joi.object({
   },
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   isDev: Joi.boolean().default(false),
+  notify: {
+    apiKey: Joi.string().pattern(notifyApiKeyRegex),
+    templateIdApplicationComplete: Joi.string().uuid()
+  },
   port: Joi.number().default(3000),
   serviceName: Joi.string().default('Review the health and welfare of your livestock'),
   useRedis: Joi.boolean().default(false)
@@ -43,6 +50,10 @@ const config = {
   },
   env: process.env.NODE_ENV,
   isDev: process.env.NODE_ENV === 'development',
+  notify: {
+    apiKey: process.env.NOTIFY_API_KEY,
+    templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE
+  },
   port: process.env.PORT,
   serviceName: process.env.SERVICE_NAME,
   useRedis: process.env.NODE_ENV === 'production'

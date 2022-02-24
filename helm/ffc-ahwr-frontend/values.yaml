@@ -32,6 +32,8 @@ container:
   limitCpu: 40m
   limitMemory: 200Mi
   messageQueueHost: namespace.servicebus.windows.net
+  notifyApiKey: keyname-uuid-uuid
+  notifyTemplateIdApplicationComplete: uuid
   port: 3000
   requestCpu: 10m
   requestMemory: 200Mi
