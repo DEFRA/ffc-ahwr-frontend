@@ -16,7 +16,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return h.redirect(request.query?.next || '/farmer-apply/eligible-organisations')
+        return h.redirect(request.query?.next || 'farmer-apply/eligible-organisations')
       }
       return h.view('auth/beta-login')
     }
@@ -44,7 +44,7 @@ module.exports = [{
       request.cookieAuth.set({ sid })
       await request.server.app.cache.set(sid, { callerId, crn })
 
-      return h.redirect(request.query?.next || '/farmer-apply/eligible-organisations')
+      return h.redirect(request.query?.next || 'farmer-apply/eligible-organisations')
     }
   }
 }]
