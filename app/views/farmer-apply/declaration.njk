@@ -10,10 +10,13 @@
     <p>By submitting the application, you confirm that the information you have given is correct and complete.</p>
     <p>If you give the wrong information, you may be refused funding.</p>
 
-    {{ govukButton({
-      text: "Submit my application",
-      href: "confirmation?sbi=" + organisation.sbi
-    }) }}
+    <form method="POST" action="confirmation">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      <input type="hidden" name="sbi" value="{{organisation.sbi}}"/>
+      {{ govukButton({
+        text: "Submit my application"
+      }) }}
+    </form>
   </div>
 </div>
 {% endblock %}

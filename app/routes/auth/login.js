@@ -29,7 +29,7 @@ module.exports = [{
     },
     validate: {
       payload: Joi.object({
-        crn: Joi.string().length(10).pattern(/^\d+$/).required(),
+        crn: Joi.string().pattern(/^\d{10}$/).required(),
         password: Joi.string().required()
       }),
       failAction: async (request, h, error) => {
