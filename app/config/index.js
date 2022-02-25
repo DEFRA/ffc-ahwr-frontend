@@ -15,7 +15,8 @@ const schema = Joi.object({
     }
   },
   cookie: {
-    authCookieName: Joi.string().default('ffc_ahwr_auth'),
+    cookieNameAuth: Joi.string().default('ffc_ahwr_auth'),
+    cookieNameSession: Joi.string().default('ffc_ahwr_session'),
     isSameSite: Joi.string().default('Lax'),
     isSecure: Joi.boolean().default(true),
     password: Joi.string().min(32).required()
@@ -43,7 +44,8 @@ const config = {
     }
   },
   cookie: {
-    authCookieName: 'ffc_ahwr_auth',
+    cookieNameAuth: 'ffc_ahwr_auth',
+    cookieNameSession: 'ffc_ahwr_session',
     isSameSite: 'Lax',
     isSecure: process.env.NODE_ENV === 'production',
     password: process.env.COOKIE_PASSWORD

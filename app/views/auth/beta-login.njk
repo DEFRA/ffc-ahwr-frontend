@@ -1,0 +1,70 @@
+{% extends './layouts/layout.njk' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle %}Sign in{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+        text: "Back",
+        href: "/",
+        attributes: {
+          id: "back"
+        }
+      })
+    }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="POST">
+        <input type="hidden" name="crumb" value="{{crumb}}"/>
+        <h1 class="govuk-heading-l">Sign in with your reference number</h1>
+        {% if errors %}
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                {% for errorDetail in errors.details %}
+                  <span class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> {{ errorDetail.message }}
+                  </span>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class=govuk-form-group>
+          <label class="govuk-label" for="reference">Enter the reference number you received</label>
+          <div id="reference-hint" class="govuk-hint">The reference number was emailed to you along with the private beta information</div>
+          <input class="govuk-input govuk-!-width-full-width" id="reference" name="reference" type="text" value="{{reference}}">
+        </div>
+        <div class=govuk-form-group>
+          <label class="govuk-label" for="sbi">Enter your SBI number</label>
+          <div id="sbi-hint" class="govuk-hint">The SBI number is for the organisation you are applying for</div>
+          <input class="govuk-input govuk-!-width-full-width" id="sbi" name="sbi" type="text" value="{{sbi}}">
+        </div>
+
+        {{ govukButton({
+          text: "Sign in",
+          attributes: {
+            id: "submit"
+          }
+        }) }}
+
+        {{ govukDetails({
+          summaryText: "Problems signing in?",
+          html: "Get in touch with the AHWR beta team"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
