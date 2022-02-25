@@ -7,7 +7,6 @@ const routes = [].concat(
   require('../routes/farmer-apply/check-answers'),
   require('../routes/farmer-apply/confirmation'),
   require('../routes/farmer-apply/declaration'),
-  // require('../routes/farmer-apply/eligible-organisations'), // Not needed for private-beta
   require('../routes/farmer-apply/org-review')
 )
 

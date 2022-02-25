@@ -68,7 +68,6 @@ describe('Login page test', () => {
     expectLoginPage.content($)
     expect($('.govuk-error-summary').length).toEqual(1)
     expect($('.govuk-error-message').length).toEqual(2)
-    // expect($('.govuk-error-message').eq(0).text()).toMatch('"reference" length must be 10 characters long')
     expect($('.govuk-error-message').eq(0).text()).toMatch(`"reference" with value "${reference}" fails to match the required pattern: /^\\d{4}$/`)
   })
 
