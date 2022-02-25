@@ -1,8 +1,7 @@
-const Joi = require('joi')
 const { v4: uuidv4 } = require('uuid')
 const boom = require('@hapi/boom')
 const { notify: { templateIdApplicationComplete } } = require('../../config')
-const { getEligibleOrgs } = require('../../api-requests/orgs')
+const { cacheKeys } = require('../../config/constants')
 const sendEmail = require('../../lib/send-email')
 
 // TODO: Where should a GET request to the route go?
@@ -10,18 +9,10 @@ module.exports = {
   method: 'POST',
   path: '/farmer-apply/confirmation',
   options: {
-    validate: {
-      payload: Joi.object({
-        sbi: Joi.string().pattern(/^\d{9}$/).required()
-      }),
-      failAction: () => {
-        return boom.internal()
-      }
-    },
     handler: async (request, h) => {
       // TODO: Get this data based on eligibility or the applicant
-      const { sbi } = request.payload
-      const organisation = getEligibleOrgs().find(x => x.sbi === sbi)
+      // const { sbi } = request.payload
+      const organisation = request.yar.get(cacheKeys.org)
 
       // TODO: should the reference number be a particular format?
       const reference = uuidv4().split('-').shift().toLocaleUpperCase('en-GB')

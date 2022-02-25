@@ -1,4 +1,4 @@
-const { getEligibleOrgs } = require('../../api-requests/orgs')
+const { getOrgs } = require('../../api-requests/orgs')
 
 module.exports = {
   method: 'GET',
@@ -6,7 +6,7 @@ module.exports = {
   options: {
     handler: async (_, h) => {
       // TODO: Get this data based on eligibility
-      const organisations = getEligibleOrgs()
+      const organisations = getOrgs()
       const rows = organisations.map(org => {
         return [{ text: org.name }, { text: org.sbi }, { text: 0 }, { html: `<a href="/farmer-apply/org-review?sbi=${org.sbi}">View or start application</a>` }]
       })

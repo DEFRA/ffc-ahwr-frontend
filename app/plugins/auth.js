@@ -17,13 +17,18 @@ module.exports = {
         keepAlive: true,
         redirectTo: '/login',
         appendNext: true,
-        validateFunc: async (request, session) => {
-          const sessionCache = await request.server.app.cache.get(session.sid)
-          const valid = !!sessionCache
+        validateFunc: async (_, session) => {
+          // TODO: Ideally check reference hasn't been used already, for time
+          // being just check there is an 'org' with matching reference
+          const { reference } = session
+          const org = getOrgByReference(reference)
+
+          const valid = !!org
           const result = { valid }
+
           if (valid) {
-            // TODO: replace with Defra Customer account
-            result.credentials = { name: 'applicant-name' }
+            // Replace existing user with latest copy
+            result.credentials = org
           } else {
             console.error(`Org was not found with reference: ${reference}`)
           }

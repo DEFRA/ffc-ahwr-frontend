@@ -68,6 +68,7 @@ describe('Login page test', () => {
     expectLoginPage.content($)
     expect($('.govuk-error-summary').length).toEqual(1)
     expect($('.govuk-error-message').length).toEqual(2)
+    // expect($('.govuk-error-message').eq(0).text()).toMatch('"reference" length must be 10 characters long')
     expect($('.govuk-error-message').eq(0).text()).toMatch(`"reference" with value "${reference}" fails to match the required pattern: /^\\d{4}$/`)
   })
 
@@ -90,7 +91,7 @@ describe('Login page test', () => {
     expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
   })
 
-  test('POST to /login route with valid payload redirects to /farmer-apply/eligible-organisations', async () => {
+  test('POST to /login route with valid payload redirects to /farmer-apply/org-review', async () => {
     const crumb = await getCrumbs(server)
     const reference = '1111'
     const options = {
@@ -103,10 +104,10 @@ describe('Login page test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(res.headers.location).toEqual('farmer-apply/org-review')
   })
 
-  test('GET to /login route when already logged in redirects to /farmer-apply/eligible-organisations', async () => {
+  test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
     const crumb = await getCrumbs(server)
     const reference = '1111'
 
@@ -118,7 +119,7 @@ describe('Login page test', () => {
     })
 
     expect(initialRes.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
 
     const cookieHeader = initialRes.headers['set-cookie']
     const authCookieValue = cookieHeader[0].split('; ').find(x => x.startsWith(cookieConfig.cookieNameAuth))
@@ -132,6 +133,6 @@ describe('Login page test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
   })
 })
