@@ -1,0 +1,41 @@
+{% extends './layouts/layout.njk' %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block pageTitle %}Sheep Numbers{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="POST" autocomplete="off" novalidate="novalidate">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "sheep",
+        name: "sheep",
+        fieldset: {
+          legend: {
+            text: "Do you keep more than 20 sheep?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        items: [
+          {
+            value: "yes",
+            text: "Yes"
+          },
+          {
+            value: "no",
+            text: "No"
+          }
+        ]
+      }) }}
+      {{ govukButton({
+        text: "Continue",
+        attributes: {id: "btnContinue"}
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

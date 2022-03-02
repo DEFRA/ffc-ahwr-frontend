@@ -1,5 +1,9 @@
 module.exports = {
   cacheKeys: {
-    org: 'org'
+    cattle: 'cattle',
+    cattleType: 'cattleType',
+    org: 'org',
+    pigs: 'pigs',
+    sheep: 'sheep'
   }
 }
