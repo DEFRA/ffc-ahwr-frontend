@@ -1,4 +1,4 @@
-function getYesNoRadios (legendText, id, errorText) {
+function getYesNoRadios (legendText, id, previousAnswer, errorText) {
   return {
     radios: {
       classes: 'govuk-radios--inline',
@@ -14,11 +14,13 @@ function getYesNoRadios (legendText, id, errorText) {
       items: [
         {
           value: 'yes',
-          text: 'Yes'
+          text: 'Yes',
+          checked: previousAnswer === 'yes'
         },
         {
           value: 'no',
-          text: 'No'
+          text: 'No',
+          checked: previousAnswer === 'no'
         }
       ],
       ...(errorText ? { errorMessage: { text: errorText } } : {})

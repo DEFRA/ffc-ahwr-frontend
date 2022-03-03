@@ -3,7 +3,7 @@ const { cacheKeys } = require('../../config/constants')
 
 const backLink = '/farmer-apply/cattle'
 
-function getRadios (errorText) {
+function getRadios (previousAnswer, errorText) {
   const id = 'cattle-type'
   return {
     radios: {
@@ -19,18 +19,21 @@ function getRadios (errorText) {
       items: [
         {
           value: 'beef',
-          text: 'Beef'
+          text: 'Beef',
+          checked: previousAnswer === 'beef'
         },
         {
           value: 'dairy',
-          text: 'Dairy'
+          text: 'Dairy',
+          checked: previousAnswer === 'dairy'
         },
         {
           divider: 'or'
         },
         {
           value: 'both',
-          text: 'Both'
+          text: 'Both',
+          checked: previousAnswer === 'both'
         }
       ],
       ...(errorText ? { errorMessage: { text: errorText } } : {})
@@ -44,7 +47,10 @@ module.exports = [
     path: '/farmer-apply/cattle-type',
     options: {
       handler: async (request, h) => {
-        return h.view('farmer-apply/cattle-type', { ...getRadios(), backLink })
+        return h.view('farmer-apply/cattle-type', {
+          ...getRadios(request.yar.get(cacheKeys.cattleType)),
+          backLink
+        })
       }
     }
   },
@@ -59,7 +65,10 @@ module.exports = [
         failAction: (request, h, err) => {
           console.log(request.payload)
           const errorText = 'Select the type of cattle that you keep'
-          return h.view('farmer-apply/cattle', { ...getRadios(errorText), backLink }).takeover()
+          return h.view('farmer-apply/cattle', {
+            ...getRadios(request.yar.get(cacheKeys.cattleType), errorText),
+            backLink
+          }).takeover()
         }
       },
       handler: async (request, h) => {

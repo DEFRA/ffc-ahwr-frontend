@@ -19,7 +19,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/sheep', {
-          ...getYesNoRadios(legendText, radioId),
+          ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.sheep)),
           backLink: getBackLink(request.yar)
         })
       }
@@ -35,7 +35,7 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           return h.view('farmer-apply/sheep', {
-            ...getYesNoRadios(legendText, radioId, errorText),
+            ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.sheep), errorText),
             backLink: getBackLink(request.yar)
           }).takeover()
         }
