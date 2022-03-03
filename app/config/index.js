@@ -9,9 +9,9 @@ const schema = Joi.object({
     options: {
       host: Joi.string().default('redis-hostname.default'),
       partition: Joi.string().default('ffc-ahwr-frontend'),
-      password: Joi.string().default('redis'),
+      password: Joi.string().allow(''),
       port: Joi.number().default(6379),
-      tls: Joi.object().default({})
+      tls: Joi.object()
     }
   },
   cookie: {
@@ -34,7 +34,7 @@ const schema = Joi.object({
 
 const config = {
   cache: {
-    expiresIn: 1000 * 3600 * 24 * 3,
+    expiresIn: process.env.SESSION_CACHE_TTL,
     options: {
       host: process.env.REDIS_HOSTNAME,
       partition: process.env.REDIS_PARTITION ?? 'ffc-ahwr-frontend',
@@ -58,7 +58,7 @@ const config = {
   },
   port: process.env.PORT,
   serviceName: process.env.SERVICE_NAME,
-  useRedis: process.env.NODE_ENV === 'production'
+  useRedis: process.env.NODE_ENV !== 'test'
 }
 
 const { error, value } = schema.validate(config, { abortEarly: false })
