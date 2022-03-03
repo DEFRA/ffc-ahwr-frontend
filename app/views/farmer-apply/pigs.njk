@@ -9,28 +9,7 @@
   <div class="govuk-grid-column-two-thirds">
     <form method="POST" autocomplete="off" novalidate="novalidate">
       <input type="hidden" name="crumb" value="{{crumb}}"/>
-      {{ govukRadios({
-        classes: "govuk-radios--inline",
-        idPrefix: "pigs",
-        name: "pigs",
-        fieldset: {
-          legend: {
-            text: "Do you keep more than 50 pigs?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        items: [
-          {
-            value: "yes",
-            text: "Yes"
-          },
-          {
-            value: "no",
-            text: "No"
-          }
-        ]
-      }) }}
+      {{ govukRadios(radios) }}
       {{ govukButton({
         text: "Continue",
         attributes: {id: "btnContinue"}

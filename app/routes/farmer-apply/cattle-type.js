@@ -56,7 +56,7 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           console.log(request.payload)
-          const errorText = 'Select the type of cattle do you keep'
+          const errorText = 'Select the type of cattle that you keep'
           return h.view('farmer-apply/cattle', getRadios(errorText)).takeover()
         }
       },
