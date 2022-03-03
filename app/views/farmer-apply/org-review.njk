@@ -1,9 +1,18 @@
 {% extends './layouts/layout.njk' %}
 
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 {% block pageTitle %}Health and welfare review funding for this organisation{% endblock %}
 
-{% block content %}
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/",
+	  attributes: {id: "back"}
+  }) }}
+{% endblock %}
 
+{% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Health and welfare review funding for this organisation</h1>

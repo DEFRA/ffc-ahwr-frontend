@@ -1,5 +1,7 @@
 const { cacheKeys } = require('../../config/constants')
 
+const backLink = '/farmer-apply/pigs'
+
 function hasEligibleLivestock (yar) {
   const hasCattle = yar.get(cacheKeys.cattle) === 'yes'
   const hasSheep = yar.get(cacheKeys.sheep) === 'yes'
@@ -45,7 +47,7 @@ module.exports = {
           : [])
       ]
 
-      return h.view('farmer-apply/check-answers', { listData: { rows } })
+      return h.view('farmer-apply/check-answers', { listData: { rows }, backLink })
     }
   }
 }

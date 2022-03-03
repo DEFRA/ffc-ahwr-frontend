@@ -5,6 +5,7 @@ const { getYesNoRadios } = require('../helpers')
 const legendText = 'Do you keep more than 50 pigs?'
 const radioId = 'pigs'
 const errorText = 'Select yes if you keep more than 50 pigs'
+const backLink = '/farmer-apply/sheep'
 
 module.exports = [
   {
@@ -12,7 +13,10 @@ module.exports = [
     path: '/farmer-apply/pigs',
     options: {
       handler: async (request, h) => {
-        return h.view('farmer-apply/pigs', getYesNoRadios(legendText, radioId))
+        return h.view('farmer-apply/pigs', {
+          ...getYesNoRadios(legendText, radioId),
+          backLink
+        })
       }
     }
   },
@@ -25,7 +29,10 @@ module.exports = [
           pigs: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, err) => {
-          return h.view('farmer-apply/pigs', getYesNoRadios(legendText, radioId, errorText)).takeover()
+          return h.view('farmer-apply/pigs', {
+            ...getYesNoRadios(legendText, radioId, errorText),
+            backLink
+          }).takeover()
         }
       },
       handler: async (request, h) => {

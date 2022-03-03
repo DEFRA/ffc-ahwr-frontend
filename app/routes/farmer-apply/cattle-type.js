@@ -1,6 +1,8 @@
 const Joi = require('joi')
 const { cacheKeys } = require('../../config/constants')
 
+const backLink = '/farmer-apply/cattle'
+
 function getRadios (errorText) {
   const id = 'cattle-type'
   return {
@@ -42,7 +44,7 @@ module.exports = [
     path: '/farmer-apply/cattle-type',
     options: {
       handler: async (request, h) => {
-        return h.view('farmer-apply/cattle-type', getRadios())
+        return h.view('farmer-apply/cattle-type', { ...getRadios(), backLink })
       }
     }
   },
@@ -57,7 +59,7 @@ module.exports = [
         failAction: (request, h, err) => {
           console.log(request.payload)
           const errorText = 'Select the type of cattle that you keep'
-          return h.view('farmer-apply/cattle', getRadios(errorText)).takeover()
+          return h.view('farmer-apply/cattle', { ...getRadios(errorText), backLink }).takeover()
         }
       },
       handler: async (request, h) => {

@@ -6,13 +6,22 @@ const legendText = 'Do you keep more than 20 sheep?'
 const radioId = 'sheep'
 const errorText = 'Select yes if you keep more than 20 sheep'
 
+function getBackLink (yar) {
+  return yar.get(cacheKeys.cattle) === 'yes'
+    ? '/farmer-apply/cattle-type'
+    : '/farmer-apply/cattle'
+}
+
 module.exports = [
   {
     method: 'GET',
     path: '/farmer-apply/sheep',
     options: {
       handler: async (request, h) => {
-        return h.view('farmer-apply/sheep', getYesNoRadios(legendText, radioId))
+        return h.view('farmer-apply/sheep', {
+          ...getYesNoRadios(legendText, radioId),
+          backLink: getBackLink(request.yar)
+        })
       }
     }
   },
@@ -25,7 +34,10 @@ module.exports = [
           sheep: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, err) => {
-          return h.view('farmer-apply/sheep', getYesNoRadios(legendText, radioId, errorText)).takeover()
+          return h.view('farmer-apply/sheep', {
+            ...getYesNoRadios(legendText, radioId, errorText),
+            backLink: getBackLink(request.yar)
+          }).takeover()
         }
       },
       handler: async (request, h) => {
