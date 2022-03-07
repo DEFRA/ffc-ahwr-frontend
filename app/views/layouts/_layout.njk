@@ -1,5 +1,15 @@
 {% extends "govuk/template.njk" %}
+
+{% from "govuk/components/breadcrumbs/macro.njk"  import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk"       import govukButton %}
+{% from "govuk/components/input/macro.njk"        import govukInput %}
+{% from "govuk/components/panel/macro.njk"        import govukPanel %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk"        import govukTable %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% from "../macros/search-box.njk"                import searchBox %}
 
 {% block pageTitle %}GOV.UK - Defra AHWR{% endblock %}
 
@@ -28,7 +38,7 @@
       tag: {
         text: "beta"
       },
-      html: 'This is a new service - your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+      html: 'This is a new service - your <a href="#">feedback</a> will help us to improve it.'
     }) }}
   </div>
 {% endblock %}

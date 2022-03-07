@@ -5,6 +5,8 @@
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
+{% block pageTitle %}Sign in{% endblock %}
+
 {% block beforeContent %}
   {{ govukBackLink({
         text: "Back",
@@ -19,9 +21,9 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form method="POST" action="/login">
+      <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Sign in to your Rural Payments account</h1>
+        <h1 class="govuk-heading-l">Sign in with your reference number</h1>
         {% if errors %}
           <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -40,15 +42,14 @@
         {% endif %}
 
         <div class=govuk-form-group>
-          <label class="govuk-label" for="crn">Enter your RPA customer reference number (CRN)</label>
-          <div id="crn-hint" class="govuk-hint">
-            Your customer reference number is the 10-digit number emailed to you when you created your RPA account
-          </div>
-          <input class="govuk-input govuk-!-width-full-width" id="crn" name="crn" type="text" value="{{crn}}">
+          <label class="govuk-label" for="reference">Enter the reference number you received</label>
+          <div id="reference-hint" class="govuk-hint">The reference number was emailed to you along with the private beta information</div>
+          <input class="govuk-input govuk-!-width-full-width" id="reference" name="reference" type="text" value="{{reference}}">
         </div>
         <div class=govuk-form-group>
-          <label class="govuk-label" for="password">Enter your password</label>
-          <input class="govuk-input govuk-!-width-full-width" id="password" name="password" type="password">
+          <label class="govuk-label" for="sbi">Enter your SBI number</label>
+          <div id="sbi-hint" class="govuk-hint">The SBI number is for the organisation you are applying for</div>
+          <input class="govuk-input govuk-!-width-full-width" id="sbi" name="sbi" type="text" value="{{sbi}}">
         </div>
 
         {{ govukButton({
@@ -60,7 +61,7 @@
 
         {{ govukDetails({
           summaryText: "Problems signing in?",
-          html: "Lost your customer reference number (CRN), call 03000 200 301."
+          html: "Get in touch with the AHWR beta team"
         }) }}
 
       </form>

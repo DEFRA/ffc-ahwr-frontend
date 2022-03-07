@@ -1,3 +1,4 @@
+const { getOrgByReference } = require('../api-requests/orgs')
 const cookieConfig = require('../config').cookie
 
 module.exports = {
@@ -8,22 +9,28 @@ module.exports = {
         cookie: {
           isSameSite: cookieConfig.isSameSite,
           isSecure: cookieConfig.isSecure,
-          name: cookieConfig.authCookieName,
+          name: cookieConfig.cookieNameAuth,
           password: cookieConfig.password,
           path: '/',
           ttl: 1000 * 3600 * 24 * 3
         },
         keepAlive: true,
         redirectTo: '/login',
-        validateFunc: async (request, session) => {
-          const sessionCache = await request.server.app.cache.get(session.sid)
-          const valid = !!sessionCache
+        appendNext: true,
+        validateFunc: async (_, session) => {
+          // TODO: Ideally check reference hasn't been used already, for time
+          // being just check there is an 'org' with matching reference
+          const { reference } = session
+          const org = getOrgByReference(reference)
+
+          const valid = !!org
           const result = { valid }
+
           if (valid) {
-            // TODO: replace with Defra Customer account
-            result.credentials = { name: 'applicant-name' }
+            // Replace existing user with latest copy
+            result.credentials = org
           } else {
-            console.error(`Session has no cache: ${session.sid}`)
+            console.error(`Org was not found with reference: ${reference}`)
           }
 
           return result

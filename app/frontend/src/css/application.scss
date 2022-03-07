@@ -1,4 +1,5 @@
 $govuk-assets-path: "~govuk-frontend/govuk/assets/";
+$govuk-global-styles: true; // https://frontend.design-system.service.gov.uk/sass-api-reference/#global-styles
 @import "~govuk-frontend/govuk/all";
 
 .nojs-hidden {
@@ -77,5 +78,22 @@ $govuk-assets-path: "~govuk-frontend/govuk/assets/";
     @extend %govuk-section-break;
     @extend %govuk-section-break--visible;
     @extend %govuk-section-break--xl;
+  }
+}
+
+.search-button {
+  position: absolute;
+  border-color: black;
+  border-style: solid;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-image: url(../images/search-icon.png);
+  background-position: 2px 50%;
+  background-color: #1d70b8;
+  margin-left: -2.5rem;
+
+  &:hover {
+    background-color: #143c7c;
   }
 }

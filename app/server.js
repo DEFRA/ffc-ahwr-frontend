@@ -25,16 +25,20 @@ async function createServer () {
     }
   })
 
-  const cache = server.cache({ cache: 'session', segment: 'sessions', expiresIn: config.cache.expiresIn })
-  server.app.cache = cache
-
+  // TODO: Add cookie banner plugin
   await server.register(require('@hapi/cookie'))
   await server.register(require('@hapi/crumb'))
   await server.register(require('@hapi/inert'))
   await server.register(require('./plugins/auth'))
   await server.register(require('./plugins/error-pages'))
+  await server.register(require('./plugins/logging'))
   await server.register(require('./plugins/router'))
+  await server.register(require('./plugins/session'))
   await server.register(require('./plugins/views'))
+
+  if (config.isDev) {
+    await server.register(require('blipp'))
+  }
 
   return server
 }

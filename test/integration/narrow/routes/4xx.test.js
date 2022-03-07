@@ -21,7 +21,7 @@ describe('4xx error pages', () => {
     expect(res.statusCode).toBe(404)
     const $ = cheerio.load(res.payload)
     expect($('.govuk-heading-l').text()).toEqual('404 - Not Found')
-    expect($('.govuk-body').text()).toEqual('Not Found')
+    expect($('#_404 div p').text()).toEqual('Not Found')
     expectPhaseBanner.ok($)
   })
 

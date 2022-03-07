@@ -1,10 +1,13 @@
 const routes = [].concat(
   require('../routes/assets'),
-  require('../routes/cph-list'),
   require('../routes/healthy'),
   require('../routes/healthz'),
   require('../routes/home'),
-  require('../routes/auth/login')
+  require('../routes/auth/login'),
+  require('../routes/farmer-apply/check-answers'),
+  require('../routes/farmer-apply/confirmation'),
+  require('../routes/farmer-apply/declaration'),
+  require('../routes/farmer-apply/org-review')
 )
 
 module.exports = {
