@@ -37,7 +37,7 @@ describe('Login page test', () => {
     const options = {
       method: 'POST',
       url: '/login',
-      payload: { crumb, crn: '', password: '' },
+      payload: { crumb, reference: '', sbi: '' },
       headers: { cookie: `crumb=${crumb}` }
     }
 
@@ -50,13 +50,13 @@ describe('Login page test', () => {
     expectLoginPage.errors($)
   })
 
-  test('POST to /login route returns 400 when request contains incorrect crn payload', async () => {
+  test('POST to /login route returns 400 when request contains incorrect reference payload', async () => {
     const crumb = await getCrumbs(server)
-    const crn = 'invalid'
+    const reference = 'invalid'
     const options = {
       method: 'POST',
       url: '/login',
-      payload: { crumb, crn, password: 'invalid' },
+      payload: { crumb, reference, sbi: 'invalid' },
       headers: { cookie: `crumb=${crumb}` }
     }
 
@@ -68,8 +68,7 @@ describe('Login page test', () => {
     expectLoginPage.content($)
     expect($('.govuk-error-summary').length).toEqual(1)
     expect($('.govuk-error-message').length).toEqual(2)
-    expect($('.govuk-error-message').eq(0).text()).toMatch('"crn" length must be 10 characters long')
-    expect($('.govuk-error-message').eq(1).text()).toMatch(`"crn" with value "${crn}" fails to match the required pattern: /^\\d+$/`)
+    expect($('.govuk-error-message').eq(0).text()).toMatch(`"reference" with value "${reference}" fails to match the required pattern: /^\\d{4}$/`)
   })
 
   test.each([
@@ -91,38 +90,38 @@ describe('Login page test', () => {
     expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
   })
 
-  test('POST to /login route with valid payload redirects to /farmer-apply/eligible-organisations', async () => {
+  test('POST to /login route with valid payload redirects to /farmer-apply/org-review', async () => {
     const crumb = await getCrumbs(server)
-    const crn = '1234567890'
+    const reference = '1111'
     const options = {
       method: 'POST',
       url: '/login',
-      payload: { crumb, crn, password: 'invalid' },
+      payload: { crumb, reference, sbi: '111111111' },
       headers: { cookie: `crumb=${crumb}` }
     }
 
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(res.headers.location).toEqual('farmer-apply/org-review')
   })
 
-  test('GET to /login route when already logged in redirects to /farmer-apply/eligible-organisations', async () => {
+  test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
     const crumb = await getCrumbs(server)
-    const crn = '1234567890'
+    const reference = '1111'
 
     const initialRes = await server.inject({
       method: 'POST',
       url: '/login',
-      payload: { crumb, crn, password: 'invalid' },
+      payload: { crumb, reference, sbi: '111111111' },
       headers: { cookie: `crumb=${crumb}` }
     })
 
     expect(initialRes.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
 
     const cookieHeader = initialRes.headers['set-cookie']
-    const authCookieValue = cookieHeader[0].split('; ').find(x => x.startsWith(cookieConfig.authCookieName))
+    const authCookieValue = cookieHeader[0].split('; ').find(x => x.startsWith(cookieConfig.cookieNameAuth))
 
     const options = {
       method: 'GET',
@@ -133,6 +132,6 @@ describe('Login page test', () => {
     const res = await server.inject(options)
 
     expect(res.statusCode).toBe(302)
-    expect(initialRes.headers.location).toEqual('farmer-apply/eligible-organisations')
+    expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
   })
 })
