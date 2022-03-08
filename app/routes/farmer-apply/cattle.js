@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const { cacheKeys } = require('../../config/constants')
 const getYesNoRadios = require('../helpers/yes-no-radios')
-const session = require('../helpers/session')
+const session = require('../../session')
 
 const legendText = 'Do you keep more than 10 cattle?'
 const radioId = 'cattle'

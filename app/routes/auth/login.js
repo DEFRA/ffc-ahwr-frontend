@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { getOrgByReference } = require('../../api-requests/orgs')
-const { cacheKeys } = require('../../config/constants')
+const session = require('../../session')
 
 module.exports = [{
   method: 'GET',
@@ -48,7 +48,7 @@ module.exports = [{
       }
 
       request.cookieAuth.set({ reference })
-      request.yar.set(cacheKeys.org, org)
+      Object.entries(org).forEach(([k, v]) => session.setOrganisation(request, k, v))
 
       return h.redirect(request.query?.next || 'farmer-apply/org-review')
     }

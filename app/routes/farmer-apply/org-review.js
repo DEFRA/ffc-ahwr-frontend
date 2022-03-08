@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom')
-const session = require('../helpers/session')
+const session = require('../../session')
 
 module.exports = {
   method: 'GET',
@@ -8,7 +8,6 @@ module.exports = {
     handler: async (request, h) => {
       // Take org from cache - should be ok!
       const organisation = session.getOrganisation(request)
-      console.log(organisation)
       if (!organisation) {
         return boom.notFound()
       }
