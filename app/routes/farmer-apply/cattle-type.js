@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const { cacheKeys } = require('../../config/constants')
+const session = require('../helpers/session')
 
 const backLink = '/farmer-apply/cattle'
 
@@ -48,7 +49,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/cattle-type', {
-          ...getRadios(request.yar.get(cacheKeys.cattleType)),
+          ...getRadios(session.getApplication(request, cacheKeys.cattleType)),
           backLink
         })
       }
@@ -63,16 +64,15 @@ module.exports = [
           'cattle-type': Joi.string().valid('beef', 'dairy', 'both').required()
         }),
         failAction: (request, h, err) => {
-          console.log(request.payload)
           const errorText = 'Select the type of cattle that you keep'
           return h.view('farmer-apply/cattle', {
-            ...getRadios(request.yar.get(cacheKeys.cattleType), errorText),
+            ...getRadios(session.getApplication(request, cacheKeys.cattleType), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        request.yar.set(cacheKeys.cattleType, request.payload['cattle-type'])
+        session.setApplication(request, cacheKeys.cattleType, request.payload['cattle-type'])
         return h.redirect('/farmer-apply/sheep')
       }
     }

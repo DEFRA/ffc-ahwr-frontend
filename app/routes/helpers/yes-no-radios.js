@@ -28,6 +28,4 @@ function getYesNoRadios (legendText, id, previousAnswer, errorText) {
   }
 }
 
-module.exports = {
-  getYesNoRadios
-}
+module.exports = getYesNoRadios

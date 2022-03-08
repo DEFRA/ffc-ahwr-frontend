@@ -1,6 +1,7 @@
 const Joi = require('joi')
 const { cacheKeys } = require('../../config/constants')
-const { getYesNoRadios } = require('../helpers')
+const getYesNoRadios = require('../helpers/yes-no-radios')
+const session = require('../helpers/session')
 
 const legendText = 'Do you keep more than 50 pigs?'
 const radioId = 'pigs'
@@ -14,7 +15,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/pigs', {
-          ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.pigs)),
+          ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.pigs)),
           backLink
         })
       }
@@ -30,13 +31,13 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           return h.view('farmer-apply/pigs', {
-            ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.pigs), errorText),
+            ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.pigs), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        request.yar.set(cacheKeys.pigs, request.payload.pigs)
+        session.setApplication(request, cacheKeys.pigs, request.payload.pigs)
         return h.redirect('/farmer-apply/check-answers')
       }
     }

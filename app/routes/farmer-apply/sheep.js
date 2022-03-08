@@ -1,13 +1,14 @@
 const Joi = require('joi')
 const { cacheKeys } = require('../../config/constants')
-const { getYesNoRadios } = require('../helpers')
+const getYesNoRadios = require('../helpers/yes-no-radios')
+const session = require('../helpers/session')
 
 const legendText = 'Do you keep more than 20 sheep?'
 const radioId = 'sheep'
 const errorText = 'Select yes if you keep more than 20 sheep'
 
-function getBackLink (yar) {
-  return yar.get(cacheKeys.cattle) === 'yes'
+function getBackLink (request) {
+  return session.getApplication(request, cacheKeys.cattle) === 'yes'
     ? '/farmer-apply/cattle-type'
     : '/farmer-apply/cattle'
 }
@@ -19,8 +20,8 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/sheep', {
-          ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.sheep)),
-          backLink: getBackLink(request.yar)
+          ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.sheep)),
+          backLink: getBackLink(request)
         })
       }
     }
@@ -35,13 +36,13 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           return h.view('farmer-apply/sheep', {
-            ...getYesNoRadios(legendText, radioId, request.yar.get(cacheKeys.sheep), errorText),
-            backLink: getBackLink(request.yar)
+            ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.sheep), errorText),
+            backLink: getBackLink(request)
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        request.yar.set(cacheKeys.sheep, request.payload.sheep)
+        session.setApplication(request, cacheKeys.sheep, request.payload.sheep)
         return h.redirect('/farmer-apply/pigs')
       }
     }
