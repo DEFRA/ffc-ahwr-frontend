@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { cacheKeys } = require('../../config/constants')
+const { cacheKeys: { answers } } = require('../../config/constants')
 const getYesNoRadios = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
@@ -8,7 +8,7 @@ const radioId = 'sheep'
 const errorText = 'Select yes if you keep more than 20 sheep'
 
 function getBackLink (request) {
-  return session.getApplication(request, cacheKeys.cattle) === 'yes'
+  return session.getApplication(request, answers.cattle) === 'yes'
     ? '/farmer-apply/cattle-type'
     : '/farmer-apply/cattle'
 }
@@ -20,7 +20,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/sheep', {
-          ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.sheep)),
+          ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.sheep)),
           backLink: getBackLink(request)
         })
       }
@@ -36,13 +36,13 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           return h.view('farmer-apply/sheep', {
-            ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.sheep), errorText),
+            ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.sheep), errorText),
             backLink: getBackLink(request)
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setApplication(request, cacheKeys.sheep, request.payload.sheep)
+        session.setApplication(request, answers.sheep, request.payload.sheep)
         return h.redirect('/farmer-apply/pigs')
       }
     }

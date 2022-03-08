@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { cacheKeys } = require('../../config/constants')
+const { cacheKeys: { answers } } = require('../../config/constants')
 const session = require('../../session')
 
 const backLink = '/farmer-apply/cattle'
@@ -49,7 +49,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/cattle-type', {
-          ...getRadios(session.getApplication(request, cacheKeys.cattleType)),
+          ...getRadios(session.getApplication(request, answers.cattleType)),
           backLink
         })
       }
@@ -66,13 +66,13 @@ module.exports = [
         failAction: (request, h, err) => {
           const errorText = 'Select the type of cattle that you keep'
           return h.view('farmer-apply/cattle', {
-            ...getRadios(session.getApplication(request, cacheKeys.cattleType), errorText),
+            ...getRadios(session.getApplication(request, answers.cattleType), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setApplication(request, cacheKeys.cattleType, request.payload['cattle-type'])
+        session.setApplication(request, answers.cattleType, request.payload['cattle-type'])
         return h.redirect('/farmer-apply/sheep')
       }
     }

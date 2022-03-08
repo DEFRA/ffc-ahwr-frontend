@@ -1,8 +1,10 @@
 module.exports = {
   cacheKeys: {
-    cattle: 'cattle',
-    cattleType: 'cattleType',
-    pigs: 'pigs',
-    sheep: 'sheep'
+    answers: {
+      cattle: 'cattle',
+      cattleType: 'cattleType',
+      pigs: 'pigs',
+      sheep: 'sheep'
+    }
   }
 }

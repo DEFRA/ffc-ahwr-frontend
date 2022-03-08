@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { cacheKeys } = require('../../config/constants')
+const { cacheKeys: { answers } } = require('../../config/constants')
 const getYesNoRadios = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
@@ -15,7 +15,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/cattle', {
-          ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.cattle)),
+          ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.cattle)),
           backLink
         })
       }
@@ -31,13 +31,13 @@ module.exports = [
         }),
         failAction: (request, h, err) => {
           return h.view('farmer-apply/cattle', {
-            ...getYesNoRadios(legendText, radioId, session.getApplication(request, cacheKeys.cattle), errorText),
+            ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.cattle), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setApplication(request, cacheKeys.cattle, request.payload.cattle)
+        session.setApplication(request, answers.cattle, request.payload.cattle)
         return request.payload.cattle === 'yes'
           ? h.redirect('/farmer-apply/cattle-type')
           : h.redirect('/farmer-apply/sheep')
