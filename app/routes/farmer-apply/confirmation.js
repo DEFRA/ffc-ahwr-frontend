@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require('uuid')
 const boom = require('@hapi/boom')
 const { notify: { templateIdApplicationComplete } } = require('../../config')
-const { cacheKeys } = require('../../config/constants')
 const sendEmail = require('../../lib/send-email')
+const session = require('../../session')
 
 // TODO: Where should a GET request to the route go?
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
     handler: async (request, h) => {
       // TODO: Get this data based on eligibility or the applicant
       // const { sbi } = request.payload
-      const organisation = request.yar.get(cacheKeys.org)
+      const organisation = session.getOrganisation(request)
 
       // TODO: should the reference number be a particular format?
       const reference = uuidv4().split('-').shift().toLocaleUpperCase('en-GB')
