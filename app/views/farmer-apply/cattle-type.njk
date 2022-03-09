@@ -1,8 +1,9 @@
 {% extends './layouts/layout.njk' %}
 
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% block pageTitle %}Declaration{% endblock %}
+{% block pageTitle %}Cattle Type{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -15,15 +16,12 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Declaration</h1>
-
-    <p>By submitting the application, you confirm that the information you have given is correct and complete.</p>
-    <p>If you give the wrong information, you may be refused funding.</p>
-
-    <form method="POST" action="confirmation">
+    <form method="POST" autocomplete="off" novalidate="novalidate">
       <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukRadios(radios) }}
       {{ govukButton({
-        text: "Submit my application"
+        text: "Continue",
+        attributes: {id: "btnContinue"}
       }) }}
     </form>
   </div>

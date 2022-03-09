@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom')
-const { cacheKeys } = require('../../config/constants')
+const session = require('../../session')
 
 module.exports = {
   method: 'GET',
@@ -7,7 +7,7 @@ module.exports = {
   options: {
     handler: async (request, h) => {
       // Take org from cache - should be ok!
-      const organisation = request.yar.get(cacheKeys.org)
+      const organisation = session.getOrganisation(request)
       if (!organisation) {
         return boom.notFound()
       }
