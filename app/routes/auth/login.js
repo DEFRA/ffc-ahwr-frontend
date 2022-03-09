@@ -42,7 +42,7 @@ module.exports = [{
       const { reference, sbi } = request.payload
       const org = getOrgByReference(reference)
 
-      if (!org || org.sbi !== sbi) {
+      if (org?.sbi !== sbi) {
         const errors = { details: [{ message: `No orgnisation found with reference '${reference}' and sbi '${sbi}'` }] }
         return h.view('auth/beta-login', { ...request.payload, errors }).code(400).takeover()
       }
