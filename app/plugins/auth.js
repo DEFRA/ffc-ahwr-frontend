@@ -1,5 +1,10 @@
 const { getOrgByReference } = require('../api-requests/orgs')
 const cookieConfig = require('../config').cookie
+const { getOrganisation, setOrganisation } = require('../session')
+
+function isOrgInSession (request) {
+  return !!getOrganisation(request)
+}
 
 module.exports = {
   plugin: {
@@ -17,20 +22,14 @@ module.exports = {
         keepAlive: true,
         redirectTo: '/login',
         appendNext: true,
-        validateFunc: async (_, session) => {
-          // TODO: Ideally check reference hasn't been used already, for time
-          // being just check there is an 'org' with matching reference
-          const { reference } = session
-          const org = getOrgByReference(reference)
-
-          const valid = !!org
-          const result = { valid }
-
-          if (valid) {
-            // Replace existing user with latest copy
-            result.credentials = org
+        validateFunc: async (request, session) => {
+          const result = { }
+          if (isOrgInSession(request)) {
+            result.valid = true
           } else {
-            console.error(`Org was not found with reference: ${reference}`)
+            const org = getOrgByReference(session.reference)
+            Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
+            result.valid = !!org
           }
 
           return result
