@@ -29,13 +29,13 @@ container:
   eligibilityRequestQueueAddress: ffc-ahwr-eligibility-request
   eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
   imagePullPolicy: IfNotPresent
-  limitCpu: 40m
+  limitCpu: 120m
   limitMemory: 200Mi
   messageQueueHost: namespace.servicebus.windows.net
   notifyApiKey: example-644a2a30-7487-4e98-a908-b5ecd82d5225-644a2a30-7487-4e98-a908-b5ecd82d5225
   notifyTemplateIdApplicationComplete: 644a2a30-7487-4e98-a908-b5ecd82d5225
   port: 3000
-  requestCpu: 10m
+  requestCpu: 100m
   requestMemory: 200Mi
   redisHostname: redis-hostname.default
   redisPartition: ffc-ahwr-frontend
