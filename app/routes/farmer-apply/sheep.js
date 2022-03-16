@@ -5,7 +5,7 @@ const session = require('../../session')
 
 const legendText = 'Do you keep more than 20 sheep?'
 const radioId = 'sheep'
-const errorText = 'Select yes if you keep more than 20 sheep'
+const { getErrorMessage, errorExtractor } = require('../helpers/helper-functions')
 
 function getBackLink (request) {
   return session.getApplication(request, answers.cattle) === 'yes'
@@ -35,6 +35,8 @@ module.exports = [
           sheep: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, err) => {
+          const errorObject = errorExtractor(err)
+          const errorText = getErrorMessage(errorObject)
           return h.view('farmer-apply/sheep', {
             ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.sheep), errorText),
             backLink: getBackLink(request)
