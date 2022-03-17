@@ -1,36 +1,32 @@
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
-const getCrumbs = require('../../../../utils/get-crumbs')
 describe('Cattle Type test', () => {
   test('GET /farmer-apply/cattle-type route returns 200', async () => {
     const options = {
       method: 'GET',
       url: '/farmer-apply/cattle-type',
-      auth
+      auth: global.__AUTH__
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.statusCode).toBe(200)
   })
   test('POST /farmer-apply/cattle-type route returns 200', async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
     const options = {
       method: 'POST',
       url: '/farmer-apply/cattle-type',
-      payload: { crumb, 'cattle-type': 'beef' },
-      auth,
-      headers: { cookie: `crumb=${crumb}` }
+      payload: { crumb: global.__CRUMB_VALUE__, 'cattle-type': 'beef' },
+      auth: global.__AUTH__,
+      headers: global.__CRUMB_HEADER__
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.statusCode).toBe(302)
     expect(res.headers.location).toEqual('/farmer-apply/sheep')
   })
   test('POST /farmer-apply/cattle-type route returns Error', async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
     const options = {
       method: 'POST',
       url: '/farmer-apply/cattle-type',
-      payload: { crumb, 'cattle-type': 'xyz' },
-      auth,
-      headers: { cookie: `crumb=${crumb}` }
+      payload: { crumb: global.__CRUMB_VALUE__, 'cattle-type': 'xyz' },
+      auth: global.__AUTH__,
+      headers: global.__CRUMB_HEADER__
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.payload).toContain('Select the type of cattle that you keep')

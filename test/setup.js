@@ -1,4 +1,3 @@
-
 beforeEach(async () => {
   // Set reference to server in order to close the server during teardown.
   const createServer = require('../app/server')
@@ -7,6 +6,10 @@ beforeEach(async () => {
   await server.initialize()
   global.__SERVER__ = server
   global.__VALIDSESSION__ = true
+  global.__AUTH__ = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
+  const crumb = await getCrumbs(server)
+  global.__CRUMB_VALUE__ = crumb
+  global.__CRUMB_HEADER__ = { cookie: `crumb=${crumb}` }
 })
 const getCrumbs = require('../test/utils/get-crumbs')
 describe('Login test', () => {
