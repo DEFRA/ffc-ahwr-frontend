@@ -2,10 +2,10 @@ const Joi = require('joi')
 const { cacheKeys: { answers } } = require('../../config/constants')
 const getYesNoRadios = require('../helpers/yes-no-radios')
 const session = require('../../session')
+const { getErrorMessage, errorExtractor } = require('../helpers/helper-functions')
 
 const legendText = 'Do you keep more than 50 pigs?'
 const radioId = 'pigs'
-const errorText = 'Select yes if you keep more than 50 pigs'
 const backLink = '/farmer-apply/sheep'
 
 module.exports = [
@@ -30,6 +30,8 @@ module.exports = [
           pigs: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, err) => {
+          const errorObject = errorExtractor(err)
+          const errorText = getErrorMessage(errorObject)
           return h.view('farmer-apply/pigs', {
             ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.pigs), errorText),
             backLink

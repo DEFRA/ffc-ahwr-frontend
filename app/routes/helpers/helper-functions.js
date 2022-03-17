@@ -1,4 +1,4 @@
-const lookupErrorText = require('./lookupErrorText')
+const lookupErrorText = require('./lookup-error-text')
 
 const getErrorMessage = (object) => {
   return lookupErrorText(object[Object.keys(object)[0]])
