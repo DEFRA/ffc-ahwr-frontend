@@ -2,7 +2,6 @@ const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const expectLoginPage = require('../../../../utils/login-page-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
-const { cookie: cookieConfig } = require('../../../../../app/config')
 
 describe('Login page test', () => {
   let server
@@ -31,6 +30,19 @@ describe('Login page test', () => {
     const $ = cheerio.load(res.payload)
     expectPhaseBanner.ok($)
     expectLoginPage.content($)
+  })
+
+  test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
+    const options = {
+      auth: { credentials: { email: validEmail }, strategy: 'basic', isAuthenticated: true },
+      method: 'GET',
+      url: '/login'
+    }
+
+    const res = await server.inject(options)
+
+    expect(res.statusCode).toBe(302)
+    expect(res.headers.location).toEqual('farmer-apply/org-review')
   })
 
   test('POST to /login route returns 400 when request contains empty payload', async () => {
@@ -108,34 +120,4 @@ describe('Login page test', () => {
     expect($('h1').text()).toEqual('Email has been sent')
     expect($('form input[name=email]').val()).toEqual(validEmail)
   })
-
-  // test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
-  //   const crumb = await getCrumbs(server)
-
-  //   const initialRes = await server.inject({
-  //     auth: { credentials: { email: validEmail }, strategy: 'basic' },
-  //     method: 'POST',
-  //     url: '/login',
-  //     payload: { crumb, email: validEmail },
-  //     headers: { cookie: `crumb=${crumb}` }
-  //   })
-
-  //   expect(initialRes.statusCode).toBe(302)
-  //   expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
-
-  //   const cookieHeader = initialRes.headers['set-cookie']
-  //   const authCookieValue = cookieHeader[0].split('; ').find(x => x.startsWith(cookieConfig.cookieNameAuth))
-
-  //   const options = {
-  //     auth: { credentials: { email: validEmail }, strategy: 'basic' },
-  //     method: 'GET',
-  //     url: '/login',
-  //     headers: { cookie: `crumb=${crumb}; ${authCookieValue}` }
-  //   }
-
-  //   const res = await server.inject(options)
-
-  //   expect(res.statusCode).toBe(302)
-  //   expect(initialRes.headers.location).toEqual('farmer-apply/org-review')
-  // })
 })
