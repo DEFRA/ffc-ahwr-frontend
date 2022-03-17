@@ -24,6 +24,9 @@ async function createServer () {
     }
   })
 
+  const magiclinkCache = server.cache({ expiresIn: 1000 * 60 * 15, segment: 'magiclinks' }) // 15 mins
+  server.app.magiclinkCache = magiclinkCache
+
   // TODO: Add cookie banner plugin
   await server.register(require('@hapi/cookie'))
   await server.register(require('@hapi/crumb'))

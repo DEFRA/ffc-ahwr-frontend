@@ -1,6 +1,9 @@
+const boom = require('@hapi/boom')
 const Joi = require('joi')
-const { getOrgByReference } = require('../../api-requests/orgs')
-const session = require('../../session')
+const { v4: uuid } = require('uuid')
+const { getByEmail } = require('../../api-requests/orgs')
+const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../config')
+const sendEmail = require('../../lib/send-email')
 
 module.exports = [{
   method: 'GET',
@@ -18,7 +21,7 @@ module.exports = [{
       if (request.auth.isAuthenticated) {
         return h.redirect(request.query?.next || 'farmer-apply/org-review')
       }
-      return h.view('auth/beta-login')
+      return h.view('auth/magic-login')
     }
   }
 }, {
@@ -30,27 +33,40 @@ module.exports = [{
     },
     validate: {
       payload: Joi.object({
-        reference: Joi.string().pattern(/^\d{4}$/).required(),
-        sbi: Joi.string().pattern(/^\d{9}$/).required()
+        email: Joi.string().email()
       }),
       failAction: async (request, h, error) => {
-        console.error(error)
-        return h.view('auth/beta-login', { ...request.payload, errors: error }).code(400).takeover()
+        return h.view('auth/magic-login', { ...request.payload, errors: error }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      const { reference, sbi } = request.payload
-      const org = getOrgByReference(reference)
+      const { email } = request.payload
+      const org = getByEmail(email)
 
-      if (org?.sbi !== sbi) {
-        const errors = { details: [{ message: `No orgnisation found with reference '${reference}' and sbi '${sbi}'` }] }
-        return h.view('auth/beta-login', { ...request.payload, errors }).code(400).takeover()
+      if (!org) {
+        const errors = { details: [{ message: `No user found for email '${email}'` }] }
+        return h.view('auth/magic-login', { ...request.payload, errors }).code(400).takeover()
       }
 
-      request.cookieAuth.set({ reference })
-      Object.entries(org).forEach(([k, v]) => session.setOrganisation(request, k, v))
+      const { magiclinkCache } = request.server.app
 
-      return h.redirect(request.query?.next || 'farmer-apply/org-review')
+      const token = uuid()
+      const tokens = await magiclinkCache.get(email) ?? []
+      tokens.push(token)
+      await magiclinkCache.set(email, tokens)
+
+      // send magic link
+      const options = {
+        personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
+        reference: token
+      }
+      const result = await sendEmail(templateIdFarmerLogin, email, options)
+
+      if (!result) {
+        return boom.internal()
+      }
+
+      return h.view('auth/check-email', { email })
     }
   }
 }]

@@ -1,4 +1,4 @@
-const { getOrgByReference } = require('../api-requests/orgs')
+const { getByEmail } = require('../api-requests/orgs')
 const cookieConfig = require('../config').cookie
 const { getOrganisation, setOrganisation } = require('../session')
 
@@ -26,7 +26,7 @@ module.exports = {
           if (isOrgInSession(request)) {
             result.valid = true
           } else {
-            const org = getOrgByReference(session.reference)
+            const org = getByEmail(session.email)
             Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
             result.valid = !!org
           }
