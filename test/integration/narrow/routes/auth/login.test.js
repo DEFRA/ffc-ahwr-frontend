@@ -18,106 +18,110 @@ describe('Login page test', () => {
     await server.stop()
   })
 
-  test('GET /login route returns 200', async () => {
-    const options = {
-      method: 'GET',
-      url
-    }
+  describe('GET requests to /login', () => {
+    test('GET /login route returns 200', async () => {
+      const options = {
+        method: 'GET',
+        url
+      }
 
-    const res = await server.inject(options)
+      const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(200)
-    const $ = cheerio.load(res.payload)
-    expectPhaseBanner.ok($)
-    expectLoginPage.content($)
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+      expectLoginPage.content($)
+    })
+
+    test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
+      const options = {
+        auth: { credentials: { email: validEmail }, strategy: 'basic', isAuthenticated: true },
+        method: 'GET',
+        url: '/login'
+      }
+
+      const res = await server.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual('farmer-apply/org-review')
+    })
   })
 
-  test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
-    const options = {
-      auth: { credentials: { email: validEmail }, strategy: 'basic', isAuthenticated: true },
-      method: 'GET',
-      url: '/login'
-    }
+  describe('POST requests to /login', () => {
+    test('POST to /login route returns 400 when request contains empty payload', async () => {
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email: '' },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await server.inject(options)
+      const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual('farmer-apply/org-review')
-  })
+      expect(res.statusCode).toBe(400)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+      expectLoginPage.content($)
+      expectLoginPage.errors($, '"email" is not allowed to be empty')
+    })
 
-  test('POST to /login route returns 400 when request contains empty payload', async () => {
-    const crumb = await getCrumbs(server)
-    const options = {
-      method: 'POST',
-      url: '/login',
-      payload: { crumb, email: '' },
-      headers: { cookie: `crumb=${crumb}` }
-    }
+    test.each([
+      { email: 'not-an-email', errorMessage: '"email" must be a valid email' },
+      { email: '', errorMessage: '"email" is not allowed to be empty' },
+      { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
+    ])('POST to /login route returns 400 when request contains incorrect email', async ({ email, errorMessage }) => {
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await server.inject(options)
+      const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(400)
-    const $ = cheerio.load(res.payload)
-    expectPhaseBanner.ok($)
-    expectLoginPage.content($)
-    expectLoginPage.errors($, '"email" is not allowed to be empty')
-  })
+      expect(res.statusCode).toBe(400)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+      expectLoginPage.content($)
+      expectLoginPage.errors($, errorMessage)
+    })
 
-  test.each([
-    { email: 'not-an-email', errorMessage: '"email" must be a valid email' },
-    { email: '', errorMessage: '"email" is not allowed to be empty' },
-    { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
-  ])('POST to /login route returns 400 when request contains incorrect email', async ({ email, errorMessage }) => {
-    const crumb = await getCrumbs(server)
-    const options = {
-      method: 'POST',
-      url: '/login',
-      payload: { crumb, email },
-      headers: { cookie: `crumb=${crumb}` }
-    }
+    test.each([
+      { crumb: '' },
+      { crumb: undefined }
+    ])('POST to /login route returns 403 when request does not contain crumb', async ({ crumb }) => {
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await server.inject(options)
+      const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(400)
-    const $ = cheerio.load(res.payload)
-    expectPhaseBanner.ok($)
-    expectLoginPage.content($)
-    expectLoginPage.errors($, errorMessage)
-  })
+      expect(res.statusCode).toBe(403)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+      expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
+    })
 
-  test.each([
-    { crumb: '' },
-    { crumb: undefined }
-  ])('POST to /login route returns 403 when request does not contain crumb', async ({ crumb }) => {
-    const options = {
-      method: 'POST',
-      url: '/login',
-      payload: { crumb },
-      headers: { cookie: `crumb=${crumb}` }
-    }
+    test('POST to /login route with known email redirects email sent page with form filled with email', async () => {
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await server.inject(options)
+      const res = await server.inject(options)
 
-    expect(res.statusCode).toBe(403)
-    const $ = cheerio.load(res.payload)
-    expectPhaseBanner.ok($)
-    expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
-  })
-
-  test('POST to /login route with known email redirects email sent page with form filled with email', async () => {
-    const crumb = await getCrumbs(server)
-    const options = {
-      method: 'POST',
-      url: '/login',
-      payload: { crumb, email: validEmail },
-      headers: { cookie: `crumb=${crumb}` }
-    }
-
-    const res = await server.inject(options)
-
-    expect(res.statusCode).toBe(200)
-    const $ = cheerio.load(res.payload)
-    expect($('h1').text()).toEqual('Email has been sent')
-    expect($('form input[name=email]').val()).toEqual(validEmail)
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toEqual('Email has been sent')
+      expect($('form input[name=email]').val()).toEqual(validEmail)
+    })
   })
 })
