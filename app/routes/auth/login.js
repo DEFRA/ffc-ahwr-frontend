@@ -5,6 +5,16 @@ const { getByEmail } = require('../../api-requests/orgs')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../config')
 const sendEmail = require('../../lib/send-email')
 
+async function createAndCacheToken (req, email) {
+  const { magiclinkCache } = req.server.app
+
+  const token = uuid()
+  const tokens = await magiclinkCache.get(email) ?? []
+  tokens.push(token)
+  await magiclinkCache.set(email, tokens)
+  return token
+}
+
 module.exports = [{
   method: 'GET',
   path: '/login',
@@ -48,19 +58,12 @@ module.exports = [{
         return h.view('auth/magic-login', { ...request.payload, errors }).code(400).takeover()
       }
 
-      const { magiclinkCache } = request.server.app
+      const token = await createAndCacheToken(request, email)
 
-      const token = uuid()
-      const tokens = await magiclinkCache.get(email) ?? []
-      tokens.push(token)
-      await magiclinkCache.set(email, tokens)
-
-      // send magic link
-      const options = {
+      const result = await sendEmail(templateIdFarmerLogin, email, {
         personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
         reference: token
-      }
-      const result = await sendEmail(templateIdFarmerLogin, email, options)
+      })
 
       if (!result) {
         return boom.internal()
