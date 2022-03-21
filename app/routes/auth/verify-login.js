@@ -10,7 +10,7 @@ module.exports = [{
     validate: {
       query: Joi.object({
         email: Joi.string().email(),
-        token: Joi.string().uuid()
+        token: Joi.string().uuid().required()
       }),
       failAction: async (_, h, error) => {
         console.error(error)
@@ -23,7 +23,7 @@ module.exports = [{
       const { magiclinkCache } = request.server.app
       const tokens = await magiclinkCache.get(email)
       if (!tokens?.find(x => x === token)) {
-        return h.view('auth/verify-login-failed')
+        return h.view('auth/verify-login-failed').code(400)
       }
 
       const organisation = getByEmail(email)
