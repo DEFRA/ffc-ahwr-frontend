@@ -2,7 +2,22 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
 
+jest.mock('../../../../../app/lib/send-email', () => () => {
+  return jest.fn().mockReturnValueOnce(true)
+})
+
+const mockSession = {
+  getOrganisation: (request) => {
+    return 'dummy-org'
+  }
+}
+
+jest.mock('../../../../../app/session', () => mockSession)
+
 describe('Confirmation test', () => {
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
   test('POST /farmer-apply/confirmation route returns 200', async () => {
     const crumb = await getCrumbs(global.__SERVER__)
     const options = {

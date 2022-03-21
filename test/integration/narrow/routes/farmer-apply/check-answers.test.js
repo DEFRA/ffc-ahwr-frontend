@@ -47,4 +47,20 @@ describe('Check Answers test', () => {
     expect(res.statusCode).toBe(302)
     expect(res.headers.location).toEqual('/farmer-apply/not-eligible')
   })
+  test('GET /farmer-apply/check-answers route returns 302', async () => {
+    varList = {
+      cattle: 'yes',
+      pig: 'no',
+      sheep: 'no',
+      cattleType: 'both'
+    }
+    const options = {
+      method: 'GET',
+      url: '/farmer-apply/check-answers',
+      auth
+    }
+    const res = await global.__SERVER__.inject(options)
+    expect(res.statusCode).toBe(200)
+    expect(res.payload).toContain('Beef and Dairy')
+  })
 })
