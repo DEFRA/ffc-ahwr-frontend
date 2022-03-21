@@ -47,7 +47,7 @@ describe('Login page test', () => {
       const options = {
         auth: { credentials: { email: validEmail }, strategy: 'basic', isAuthenticated: true },
         method: 'GET',
-        url: '/login'
+        url
       }
 
       const res = await server.inject(options)
@@ -62,7 +62,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email: '' },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -84,7 +84,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -104,7 +104,7 @@ describe('Login page test', () => {
     ])('POST to /login route returns 403 when request does not contain crumb', async ({ crumb }) => {
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -122,7 +122,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email: validEmail },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -145,7 +145,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email: validEmail },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -169,7 +169,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email: validEmail },
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -190,7 +190,7 @@ describe('Login page test', () => {
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
-        url: '/login',
+        url,
         payload: { crumb, email: validEmail },
         headers: { cookie: `crumb=${crumb}` }
       }
