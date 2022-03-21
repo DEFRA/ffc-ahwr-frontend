@@ -1,10 +1,10 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
-const expectLoginPage = require('../../../../utils/login-page-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
-const uuidRegex = require('../../../../../app/config/uuid-regex')
+const expectLoginPage = require('../../../../utils/login-page-expect')
+const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
+const uuidRegex = require('../../../../../app/config/uuid-regex')
 
 describe('Login page test', () => {
   let server

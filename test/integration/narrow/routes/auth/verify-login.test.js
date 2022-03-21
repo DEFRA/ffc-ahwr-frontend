@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const { getByEmail } = require('../../../../../app/api-requests/orgs')
 const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expect')
+const { getByEmail } = require('../../../../../app/api-requests/orgs')
 
 describe('Verify login page test', () => {
   let server
