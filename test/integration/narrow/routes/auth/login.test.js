@@ -40,7 +40,7 @@ describe('Login page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.content($)
+      expectLoginPage.hasCorrectContent($)
     })
 
     test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
@@ -72,7 +72,7 @@ describe('Login page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.content($)
+      expectLoginPage.hasCorrectContent($)
       expectLoginPage.errors($, '"email" is not allowed to be empty')
     })
 
@@ -94,7 +94,7 @@ describe('Login page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.content($)
+      expectLoginPage.hasCorrectContent($)
       expectLoginPage.errors($, errorMessage)
     })
 

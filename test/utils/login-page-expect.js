@@ -1,4 +1,4 @@
-function content ($) {
+function hasCorrectContent ($) {
   expect($('.govuk-heading-l').text()).toEqual('Sign in with your email address')
   expect($('label[for=email]').text()).toEqual('Enter your email address')
 }
@@ -10,6 +10,6 @@ function errors ($, expectedMessage) {
 }
 
 module.exports = {
-  content,
-  errors
+  errors,
+  hasCorrectContent
 }
