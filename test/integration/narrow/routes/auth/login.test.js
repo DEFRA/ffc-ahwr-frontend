@@ -1,15 +1,25 @@
 const cheerio = require('cheerio')
+const { v4: uuid } = require('uuid')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const expectLoginPage = require('../../../../utils/login-page-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
+const uuidRegex = require('../../../../../app/config/uuid-regex')
+const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
 
 describe('Login page test', () => {
   let server
   const url = '/login'
   const createServer = require('../../../../../app/server')
   const validEmail = 'dairy@ltd.com'
+  let sendEmail
 
   beforeEach(async () => {
+    jest.clearAllMocks()
+    jest.resetModules()
+
+    sendEmail = require('../../../../../app/lib/send-email')
+    jest.mock('../../../../../app/lib/send-email')
+
     server = await createServer()
     await server.initialize()
   })
@@ -107,7 +117,55 @@ describe('Login page test', () => {
       expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
     })
 
-    test('POST to /login route with known email redirects email sent page with form filled with email', async () => {
+    test('POST to /login route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
+      sendEmail.mockResolvedValue(true)
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      expect(await server.app.magiclinkCache.get(validEmail)).toBeNull()
+
+      const res = await server.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const cacheTokens = await server.app.magiclinkCache.get(validEmail)
+      expect(cacheTokens).toHaveLength(1)
+      expect(cacheTokens[0]).toMatch(new RegExp(uuidRegex))
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toEqual('Email has been sent')
+      expect($('form input[name=email]').val()).toEqual(validEmail)
+    })
+
+    test('POST to /login route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
+      sendEmail.mockResolvedValue(true)
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
+      const token = uuid()
+      await server.app.magiclinkCache.set(validEmail, [token])
+
+      const res = await server.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const cacheTokens = await server.app.magiclinkCache.get(validEmail)
+      expect(cacheTokens).toHaveLength(2)
+      expect(cacheTokens[0]).toEqual(token)
+      expect(cacheTokens[1]).toMatch(new RegExp(uuidRegex))
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toEqual('Email has been sent')
+      expect($('form input[name=email]').val()).toEqual(validEmail)
+    })
+
+    test('POST to /login route with known email sends email', async () => {
+      sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(server)
       const options = {
         method: 'POST',
@@ -119,9 +177,29 @@ describe('Login page test', () => {
       const res = await server.inject(options)
 
       expect(res.statusCode).toBe(200)
+      expect(sendEmail).toHaveBeenCalledWith(
+        templateIdFarmerLogin,
+        validEmail,
+        expect.objectContaining(
+          { personalisation: { magiclink: expect.stringMatching(new RegExp(`${serviceUri}/verify-login\\?token=${uuidRegex}&email=${validEmail}`)) }, reference: expect.stringMatching(new RegExp(uuidRegex)) })
+      )
+    })
+
+    test('POST to /login route with known email returns error when problem sending email', async () => {
+      sendEmail.mockResolvedValue(false)
+      const crumb = await getCrumbs(server)
+      const options = {
+        method: 'POST',
+        url: '/login',
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await server.inject(options)
+
+      expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toEqual('Email has been sent')
-      expect($('form input[name=email]').val()).toEqual(validEmail)
+      expect($('h1').text()).toEqual('Sorry, there is a problem with the service')
     })
   })
 })
