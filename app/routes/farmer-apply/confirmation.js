@@ -1,8 +1,9 @@
 const { v4: uuidv4 } = require('uuid')
 const boom = require('@hapi/boom')
-const { notify: { templateIdApplicationComplete } } = require('../../config')
+const { notify: { templateIdApplicationComplete }, applicationRequestQueue, applicationRequestMsgType } = require('../../config')
 const sendEmail = require('../../lib/send-email')
 const session = require('../../session')
+const sendMessage = require('../../messaging/send-message')
 
 // TODO: Where should a GET request to the route go?
 module.exports = {
@@ -13,9 +14,12 @@ module.exports = {
       // TODO: Get this data based on eligibility or the applicant
       // const { sbi } = request.payload
       const organisation = session.getOrganisation(request)
-
       // TODO: should the reference number be a particular format?
       const reference = uuidv4().split('-').shift().toLocaleUpperCase('en-GB')
+      session.setApplication(request, 'applicationId', reference)
+
+      const application = session.getApplication(request)
+      sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
 
       // TODO: Check an email hasn't been sent already and store the fact that this has been sent
       const result = await sendEmail(templateIdApplicationComplete, organisation.email, { personalisation: { name: organisation.name, reference }, reference })

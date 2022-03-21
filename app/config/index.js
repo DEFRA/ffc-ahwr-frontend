@@ -2,7 +2,15 @@ const Joi = require('joi')
 
 const uuidRegex = '[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}'
 const notifyApiKeyRegex = new RegExp(`.*-${uuidRegex}-${uuidRegex}`)
+const msgTypePrefix = 'uk.gov.ffc.ahwr'
 
+const sharedConfigSchema = {
+  appInsights: Joi.object(),
+  host: Joi.string().default('localhost'),
+  password: Joi.string(),
+  username: Joi.string(),
+  useCredentialChain: Joi.bool().default(false)
+}
 const schema = Joi.object({
   cache: {
     expiresIn: Joi.number().default(1000 * 3600 * 24 * 3),
@@ -29,9 +37,22 @@ const schema = Joi.object({
   },
   port: Joi.number().default(3000),
   serviceName: Joi.string().default('Review the health and welfare of your livestock'),
-  useRedis: Joi.boolean().default(false)
+  useRedis: Joi.boolean().default(false),
+  applicationRequestQueue: {
+    address: Joi.string().default('applicationRequestQueue'),
+    type: Joi.string(),
+    ...sharedConfigSchema
+  },
+  applicationRequestMsgType: Joi.string()
 })
 
+const sharedConfig = {
+  appInsights: require('applicationinsights'),
+  host: process.env.MESSAGE_QUEUE_HOST,
+  password: process.env.MESSAGE_QUEUE_PASSWORD,
+  username: process.env.MESSAGE_QUEUE_USER,
+  useCredentialChain: process.env.NODE_ENV === 'production'
+}
 const config = {
   cache: {
     expiresIn: process.env.SESSION_CACHE_TTL,
@@ -58,7 +79,13 @@ const config = {
   },
   port: process.env.PORT,
   serviceName: process.env.SERVICE_NAME,
-  useRedis: process.env.NODE_ENV !== 'test'
+  useRedis: process.env.NODE_ENV !== 'test',
+  applicationRequestQueue: {
+    address: process.env.APPLICATIONREQUEST_QUEUE_ADDRESS,
+    type: 'queue',
+    ...sharedConfig
+  },
+  applicationRequestMsgType: `${msgTypePrefix}.app.request`
 }
 
 const { error, value } = schema.validate(config, { abortEarly: false })
