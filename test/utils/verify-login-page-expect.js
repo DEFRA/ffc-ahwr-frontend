@@ -1,4 +1,4 @@
-const { cache, cookie } = require('../../app/config')
+const { cache, cookie: cookieConfig } = require('../../app/config')
 
 function hasCorrectContent ($) {
   expect($('h1').text()).toEqual('Login failed')
@@ -7,19 +7,25 @@ function hasCorrectContent ($) {
   expect(newLinkButton.attr('href')).toEqual('login')
 }
 
+function getCookiesMaxAge (cookieParts) {
+  return cookieParts.find(cookiePart => cookiePart.split('=')[0].toLowerCase() === 'max-age')
+}
+
+function getCookieName (cookieParts) {
+  return cookieParts[0].split('=')[0]
+}
+
 function hasCookiesSet (res) {
   let authCookieExists = false
   let sessionCookieExists = false
-  const cookies = res.headers['set-cookie']
-  cookies.forEach(cookieVal => {
-    const cookieParts = cookieVal.split('; ')
-    if (cookieParts[0].split('=')[0] === cookie.cookieNameAuth) {
-      const maxAge = cookieParts.find(cookiePart => cookiePart.split('=')[0].toLowerCase() === 'max-age')
-      expect(maxAge).toBeUndefined()
+
+  res.headers['set-cookie'].forEach(cookie => {
+    const cookieParts = cookie.split('; ')
+    if (getCookieName(cookieParts) === cookieConfig.cookieNameAuth) {
+      expect(getCookiesMaxAge(cookieParts)).toBeUndefined()
       authCookieExists = true
-    } else if (cookieParts[0].split('=')[0] === cookie.cookieNameSession) {
-      const maxAge = cookieParts.find(cookiePart => cookiePart.split('=')[0].toLowerCase() === 'max-age').split('=')[1]
-      expect(maxAge).toEqual((cache.expiresIn / 1000).toString())
+    } else if (getCookieName(cookieParts) === cookieConfig.cookieNameSession) {
+      expect(getCookiesMaxAge(cookieParts).split('=')[1]).toEqual((cache.expiresIn / 1000).toString())
       sessionCookieExists = true
     }
   })
