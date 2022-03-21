@@ -1,3 +1,5 @@
+const cheerio = require('cheerio')
+
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
 
 describe('Declaration test', () => {
@@ -9,6 +11,7 @@ describe('Declaration test', () => {
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(res.payload).toContain('Declaration')
+    const $ = cheerio.load(res.payload)
+    expect($('h1.govuk-heading-l').text()).toEqual('Declaration')
   })
 })

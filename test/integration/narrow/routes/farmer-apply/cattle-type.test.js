@@ -1,3 +1,4 @@
+const cheerio = require('cheerio')
 
 const getCrumbs = require('../../../../utils/get-crumbs')
 
@@ -36,7 +37,8 @@ describe('Cattle Type test', () => {
       headers: { cookie: `crumb=${crumb}` }
     }
     const res = await global.__SERVER__.inject(options)
-    expect(res.payload).toContain('Select the type of cattle that you keep')
+    const $ = cheerio.load(res.payload)
+    expect($('p.govuk-error-message').text()).toMatch('Select the type of cattle that you keep')
     expect(res.statusCode).toBe(200)
   })
 })

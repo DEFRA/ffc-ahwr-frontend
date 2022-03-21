@@ -1,3 +1,5 @@
+const cheerio = require('cheerio')
+
 const getCrumbs = require('../../../../utils/get-crumbs')
 
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
@@ -29,6 +31,7 @@ describe('Confirmation test', () => {
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(res.payload).toContain('Application complete')
+    const $ = cheerio.load(res.payload)
+    expect($('h1').text()).toMatch('Application complete')
   })
 })

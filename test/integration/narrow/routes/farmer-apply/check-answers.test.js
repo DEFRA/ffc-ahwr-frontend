@@ -1,3 +1,5 @@
+const cheerio = require('cheerio')
+
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
 const varListTemplate = {
   cattle: 'yes',
@@ -61,6 +63,7 @@ describe('Check Answers test', () => {
     }
     const res = await global.__SERVER__.inject(options)
     expect(res.statusCode).toBe(200)
-    expect(res.payload).toContain('Beef and Dairy')
+    const $ = cheerio.load(res.payload)
+    expect($('.govuk-summary-list').text()).toContain('Beef and Dairy')
   })
 })
