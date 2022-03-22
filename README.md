@@ -12,6 +12,24 @@ Optional:
 - Kubernetes
 - Helm
 
+### Environment variables
+
+The following environment variables are required by the application.
+Values for development are set in the Docker Compose configuration. Default
+values for production-like deployments are set in the Helm chart and may be
+overridden by build and release pipelines.
+
+| Name                                    | Description                                                                                      |
+| ----                                    | -----------                                                                                      |
+| MESSAGE_QUEUE_HOST                      | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net`                           |
+| MESSAGE_QUEUE_PASSWORD                  | Azure Service Bus SAS policy key                                                                 |
+| MESSAGE_QUEUE_SUFFIX                    | Developer initials                                                                               |
+| MESSAGE_QUEUE_USER                      | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`                              |
+| NOTIFY_API_KEY                          | GOV.UK Notify API Key                                                                            |
+| NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE | Id of email template used for application complete                                               |
+| NOTIFY_TEMPLATE_ID_FARMER_LOGIN         | Id of email template used for farmer login email                                                 |
+| SERVICE_URI                             | URI of service (used in links, in emails) e.g. `http://localhost:3000` or `https://defra.gov.uk` |
+
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker

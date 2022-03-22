@@ -1,17 +1,15 @@
-function content ($) {
-  expect($('.govuk-heading-l').text()).toEqual('Sign in with your reference number')
-  expect($('label[for=reference]').text()).toEqual('Enter the reference number you received')
-  expect($('label[for=sbi]').text()).toEqual('Enter your SBI number')
+function hasCorrectContent ($) {
+  expect($('.govuk-heading-l').text()).toEqual('Sign in with your email address')
+  expect($('label[for=email]').text()).toEqual('Enter your email address')
 }
 
-function errors ($) {
+function errors ($, expectedMessage) {
   expect($('.govuk-error-summary').length).toEqual(1)
-  expect($('.govuk-error-message').length).toEqual(2)
-  expect($('.govuk-error-message').eq(0).text()).toMatch('"reference" is not allowed to be empty')
-  expect($('.govuk-error-message').eq(1).text()).toMatch('"sbi" is not allowed to be empty')
+  expect($('.govuk-error-message').length).toEqual(1)
+  expect($('.govuk-error-message').eq(0).text()).toMatch(expectedMessage)
 }
 
 module.exports = {
-  content,
-  errors
+  errors,
+  hasCorrectContent
 }

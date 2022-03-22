@@ -5,6 +5,7 @@ services:
     command: >
       sh -c "npm run test:watch:all"
     volumes:
+      - ./app:/home/node/app
       - ./test:/home/node/test
       - ./jest.config.js:/home/node/jest.config.js
       - ./webpack.config.js:/home/node/webpack.config.js

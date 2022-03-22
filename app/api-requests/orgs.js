@@ -1,5 +1,5 @@
-function getOrgByReference (reference) {
-  return getOrgs().find(x => x.reference === reference)
+function getByEmail (email) {
+  return getOrgs().find(x => x.email === email)
 }
 
 function getOrgs () {
@@ -28,6 +28,6 @@ function getOrgs () {
 }
 
 module.exports = {
-  getOrgByReference,
+  getByEmail,
   getOrgs
 }

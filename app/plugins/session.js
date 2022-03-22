@@ -7,7 +7,7 @@ module.exports = {
     maxCookieSize: config.useRedis ? 0 : 1024, // Non-zero cookie size required when not using redis e.g for testing
     storeBlank: true,
     cache: {
-      cache: 'session',
+      cache: config.cache.name,
       expiresIn: config.cache.expiresIn
     },
     cookieOptions: {

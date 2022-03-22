@@ -1,15 +1,14 @@
 const config = require('./config')
 const Hapi = require('@hapi/hapi')
 const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
-const catboxOptions = config.useRedis ? config.cache.options : {}
+const cacheConfig = config.useRedis ? config.cache.options : {}
 
 async function createServer () {
   const server = Hapi.server({
     cache: [{
-      name: 'session',
       provider: {
         constructor: catbox,
-        options: catboxOptions
+        options: cacheConfig
       }
     }],
     port: config.port,
@@ -24,6 +23,9 @@ async function createServer () {
       stripTrailingSlash: true
     }
   })
+
+  const magiclinkCache = server.cache({ expiresIn: 1000 * 60 * 15, segment: 'magiclinks' }) // 15 mins
+  server.app.magiclinkCache = magiclinkCache
 
   // TODO: Add cookie banner plugin
   await server.register(require('@hapi/cookie'))

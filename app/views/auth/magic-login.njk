@@ -1,10 +1,5 @@
 {% extends './layouts/layout.njk' %}
 
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-
 {% block pageTitle %}Sign in{% endblock %}
 
 {% block beforeContent %}
@@ -23,7 +18,7 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Sign in with your reference number</h1>
+        <h1 class="govuk-heading-l">Sign in with your email address</h1>
         {% if errors %}
           <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -42,14 +37,9 @@
         {% endif %}
 
         <div class=govuk-form-group>
-          <label class="govuk-label" for="reference">Enter the reference number you received</label>
-          <div id="reference-hint" class="govuk-hint">The reference number was emailed to you along with the private beta information</div>
-          <input class="govuk-input govuk-!-width-full-width" id="reference" name="reference" type="text" value="{{reference}}">
-        </div>
-        <div class=govuk-form-group>
-          <label class="govuk-label" for="sbi">Enter your SBI number</label>
-          <div id="sbi-hint" class="govuk-hint">The SBI number is for the organisation you are applying for</div>
-          <input class="govuk-input govuk-!-width-full-width" id="sbi" name="sbi" type="text" value="{{sbi}}">
+          <label class="govuk-label" for="email">Enter your email address</label>
+          <div id="email-hint" class="govuk-hint">Use the same email address you received the link to this page from</div>
+          <input class="govuk-input govuk-!-width-full-width" id="email" name="email" type="text" value="{{email}}">
         </div>
 
         {{ govukButton({
