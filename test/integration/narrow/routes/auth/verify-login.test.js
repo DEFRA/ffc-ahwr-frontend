@@ -4,20 +4,9 @@ const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expec
 const { getByEmail } = require('../../../../../app/api-requests/orgs')
 
 describe('Verify login page test', () => {
-  let server
   const url = '/verify-login'
-  const createServer = require('../../../../../app/server')
   const validEmail = 'dairy@ltd.com'
   const validToken = uuid()
-
-  beforeEach(async () => {
-    server = await createServer()
-    await server.initialize()
-  })
-
-  afterEach(async () => {
-    await server.stop()
-  })
 
   test.each([
     { email: null },
@@ -30,7 +19,7 @@ describe('Verify login page test', () => {
       url: `${url}?email=${email}&token=${validToken}`
     }
 
-    const res = await server.inject(options)
+    const res = await global.__SERVER__.inject(options)
 
     expect(res.statusCode).toBe(400)
     const $ = cheerio.load(res.payload)
@@ -48,7 +37,7 @@ describe('Verify login page test', () => {
       url: `${url}?email=${validEmail}&token=${token}`
     }
 
-    const res = await server.inject(options)
+    const res = await global.__SERVER__.inject(options)
 
     expect(res.statusCode).toBe(400)
     const $ = cheerio.load(res.payload)
@@ -61,7 +50,7 @@ describe('Verify login page test', () => {
       url
     }
 
-    const res = await server.inject(options)
+    const res = await global.__SERVER__.inject(options)
 
     expect(res.statusCode).toBe(400)
     const $ = cheerio.load(res.payload)
@@ -74,14 +63,14 @@ describe('Verify login page test', () => {
       url: `${url}?email=${validEmail}&token=${validToken}`
     }
 
-    await server.app.magiclinkCache.set(validEmail, [validToken])
+    await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken])
 
-    const res = await server.inject(options)
+    const res = await global.__SERVER__.inject(options)
 
     expect(res.statusCode).toBe(302)
     expect(res.headers.location).toEqual('farmer-apply/org-review')
     expectVerifyLoginPage.hasCookiesSet(res)
-    expect(await server.app.magiclinkCache.get(validEmail)).toBeNull()
+    expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
     expect(res.request.yar.get('organisation')).toMatchObject(getByEmail(validEmail))
   })
 })

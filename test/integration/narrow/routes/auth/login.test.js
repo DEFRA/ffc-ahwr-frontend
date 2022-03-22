@@ -6,27 +6,19 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
+let sendEmail
+
+beforeAll(async () => {
+  jest.clearAllMocks()
+  jest.resetModules()
+
+  sendEmail = require('../../../../../app/lib/send-email')
+  jest.mock('../../../../../app/lib/send-email')
+})
+
 describe('Login page test', () => {
-  let server
   const url = '/login'
-  const createServer = require('../../../../../app/server')
   const validEmail = 'dairy@ltd.com'
-  let sendEmail
-
-  beforeEach(async () => {
-    jest.clearAllMocks()
-    jest.resetModules()
-
-    sendEmail = require('../../../../../app/lib/send-email')
-    jest.mock('../../../../../app/lib/send-email')
-
-    server = await createServer()
-    await server.initialize()
-  })
-
-  afterEach(async () => {
-    await server.stop()
-  })
 
   describe('GET requests to /login', () => {
     test('GET /login route returns 200', async () => {
@@ -35,7 +27,7 @@ describe('Login page test', () => {
         url
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
@@ -50,7 +42,7 @@ describe('Login page test', () => {
         url
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('farmer-apply/org-review')
@@ -59,7 +51,7 @@ describe('Login page test', () => {
 
   describe('POST requests to /login', () => {
     test('POST to /login route returns 400 when request contains empty payload', async () => {
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -67,7 +59,7 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
@@ -81,7 +73,7 @@ describe('Login page test', () => {
       { email: '', errorMessage: '"email" is not allowed to be empty' },
       { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
     ])('POST to /login route returns 400 when request contains incorrect email', async ({ email, errorMessage }) => {
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -89,7 +81,7 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
@@ -109,7 +101,7 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(403)
       const $ = cheerio.load(res.payload)
@@ -119,7 +111,7 @@ describe('Login page test', () => {
 
     test('POST to /login route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
       sendEmail.mockResolvedValue(true)
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -127,12 +119,12 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      expect(await server.app.magiclinkCache.get(validEmail)).toBeNull()
+      expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
-      const cacheTokens = await server.app.magiclinkCache.get(validEmail)
+      const cacheTokens = await global.__SERVER__.app.magiclinkCache.get(validEmail)
       expect(cacheTokens).toHaveLength(1)
       expect(cacheTokens[0]).toMatch(new RegExp(uuidRegex))
       const $ = cheerio.load(res.payload)
@@ -142,7 +134,7 @@ describe('Login page test', () => {
 
     test('POST to /login route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
       sendEmail.mockResolvedValue(true)
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -150,12 +142,12 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
       const token = uuid()
-      await server.app.magiclinkCache.set(validEmail, [token])
+      await global.__SERVER__.app.magiclinkCache.set(validEmail, [token])
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
-      const cacheTokens = await server.app.magiclinkCache.get(validEmail)
+      const cacheTokens = await global.__SERVER__.app.magiclinkCache.get(validEmail)
       expect(cacheTokens).toHaveLength(2)
       expect(cacheTokens[0]).toEqual(token)
       expect(cacheTokens[1]).toMatch(new RegExp(uuidRegex))
@@ -166,7 +158,7 @@ describe('Login page test', () => {
 
     test('POST to /login route with known email sends email', async () => {
       sendEmail.mockResolvedValue(true)
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -174,7 +166,7 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
       expect(sendEmail).toHaveBeenCalledWith(
@@ -187,7 +179,7 @@ describe('Login page test', () => {
 
     test('POST to /login route with known email returns error when problem sending email', async () => {
       sendEmail.mockResolvedValue(false)
-      const crumb = await getCrumbs(server)
+      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
@@ -195,7 +187,7 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      const res = await server.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
