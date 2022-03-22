@@ -28,13 +28,13 @@ module.exports = {
         console.info('Response received:', util.inspect(response, false, null, true))
       }
       // TODO: Check an email hasn't been sent already and store the fact that this has been sent
-      const result = await sendEmail(templateIdApplicationComplete, organisation.email, { personalisation: { name: organisation.name, reference }, reference })
+      // const result = await sendEmail(templateIdApplicationComplete, organisation.email, { personalisation: { name: organisation.name, reference }, reference })
 
-      if (!result) {
-        return boom.internal()
-      }
+      // if (!result) {
+      //   return boom.internal()
+      // }
 
-      return h.view('farmer-apply/confirmation', { reference })
+      return h.view('farmer-apply/confirmation', { reference: response.applicationId })
     }
   }
 }

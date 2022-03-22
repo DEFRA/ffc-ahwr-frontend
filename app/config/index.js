@@ -43,7 +43,13 @@ const schema = Joi.object({
     type: Joi.string(),
     ...sharedConfigSchema
   },
-  applicationRequestMsgType: Joi.string()
+  applicationRequestMsgType: Joi.string(),
+  applicationResponseQueue: {
+    address: Joi.string().default('applicationResponseQueue'),
+    type: Joi.string(),
+    ...sharedConfigSchema
+  },
+  applicationResponseMsgType: Joi.string()
 })
 
 const sharedConfig = {
@@ -85,7 +91,13 @@ const config = {
     type: 'queue',
     ...sharedConfig
   },
-  applicationRequestMsgType: `${msgTypePrefix}.app.request`
+  applicationRequestMsgType: `${msgTypePrefix}.app.request`,
+  applicationResponseQueue: {
+    address: process.env.APPLICATIONRESPONSE_QUEUE_ADDRESS,
+    type: 'queue',
+    ...sharedConfig
+  },
+  applicationResponseMsgType: `${msgTypePrefix}.app.response`
 }
 
 const { error, value } = schema.validate(config, { abortEarly: false })
