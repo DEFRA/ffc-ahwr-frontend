@@ -41,7 +41,8 @@ overridden by build and release pipelines.
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker
-Compose in development and Kubernetes in production.
+Compose in development and Kubernetes in production. Configuration and secret
+data are held in Azure Key Vault and populated during the deployment.
 
 - A Helm chart is provided for production deployments to Kubernetes.
 
@@ -67,11 +68,8 @@ docker-compose build
 
 ### Start
 
-Use Docker Compose to run service locally.
-
-```sh
-docker-compose up
-```
+Use the [start script](./scripts/start) to run the service locally which in
+turn uses Docker Compose.
 
 ## Test structure
 
@@ -98,7 +96,8 @@ scripts/test -w
 
 ## CI pipeline
 
-This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
+This service uses the
+[FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
 
 ## Licence
 
