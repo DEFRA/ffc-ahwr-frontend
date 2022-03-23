@@ -41,10 +41,20 @@ overridden by build and release pipelines.
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker
-Compose in development and Kubernetes in production. Configuration and secret
-data are held in Azure Key Vault and populated during the deployment.
+Compose in development and Kubernetes in production (a Helm chart is provided
+for production deployments to Kubernetes).
 
-- A Helm chart is provided for production deployments to Kubernetes.
+Configuration and secret data are held in Azure Key Vault and populated during
+the deployment to non-local environments.
+
+*NOTE:*
+User data is currently loaded from a file in Azure Storage, an example file is
+available ([users.json](./data/users.json)) where the structure of the data can
+be seen along with examples.
+When running the application locally this file (or one matching the format)
+needs to be uploaded to Azurite container that starts with the application. The
+storage container the file resides in also needs to be created. The container
+name is `users` and the file name is `users.json`.
 
 ### Build container image
 
