@@ -25,6 +25,7 @@ containerSecret:
 container:
   applicationRequestQueueAddress: ffc-ahwr-application-request
   applicationResponseQueueAddress: ffc-ahwr-application-response
+  azureStorageConnectionString:
   cookiePassword: who-likes-cookies-i-like-cookies-everybody-likes-cookies
   eligibilityRequestQueueAddress: ffc-ahwr-eligibility-request
   eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
