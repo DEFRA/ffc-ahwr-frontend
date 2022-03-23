@@ -4,6 +4,13 @@
 
 ## Prerequisites
 
+- Access to an instance of an
+[Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/).
+- Access to an instance of an
+[Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview).
+  This could be an actual account or
+  [Azurite](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite),
+  a storage emulator
 - Docker
 - Docker Compose
 
@@ -21,6 +28,7 @@ overridden by build and release pipelines.
 
 | Name                                    | Description                                                                                      |
 | ----                                    | -----------                                                                                      |
+| AZURE_STORAGE_CONNECTION_STRING         | Azure Storage connection string                                                                  |
 | MESSAGE_QUEUE_HOST                      | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net`                           |
 | MESSAGE_QUEUE_PASSWORD                  | Azure Service Bus SAS policy key                                                                 |
 | MESSAGE_QUEUE_SUFFIX                    | Developer initials                                                                               |

@@ -51,7 +51,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { email } = request.payload
-      const org = getByEmail(email)
+      const org = await getByEmail(email)
 
       if (!org) {
         const errors = { details: [{ message: `No user found for email '${email}'` }] }

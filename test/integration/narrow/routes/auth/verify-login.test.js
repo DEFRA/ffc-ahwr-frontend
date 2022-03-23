@@ -71,6 +71,6 @@ describe('Verify login page test', () => {
     expect(res.headers.location).toEqual('farmer-apply/org-review')
     expectVerifyLoginPage.hasCookiesSet(res)
     expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
-    expect(res.request.yar.get('organisation')).toMatchObject(getByEmail(validEmail))
+    expect(res.request.yar.get('organisation')).toMatchObject(await getByEmail(validEmail))
   })
 })
