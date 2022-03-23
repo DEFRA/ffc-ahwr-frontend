@@ -4,7 +4,6 @@ data:
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   APPLICATIONREQUEST_QUEUE_ADDRESS: {{ quote .Values.container.applicationRequestQueueAddress }}
   APPLICATIONRESPONSE_QUEUE_ADDRESS: {{ quote .Values.container.applicationResponseQueueAddress }}
-  AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
   ELIGIBILITYREQUEST_QUEUE_ADDRESS: {{ quote .Values.container.eligibilityRequestQueueAddress }}
   ELIGIBILITYRESPONSE_QUEUE_ADDRESS: {{ quote .Values.container.eligibilityResponseQueueAddress }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
