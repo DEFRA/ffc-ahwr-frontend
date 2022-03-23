@@ -1,9 +1,19 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expect')
-const { getByEmail } = require('../../../../../app/api-requests/orgs')
+
+let getByEmail
+
+beforeAll(async () => {
+  jest.clearAllMocks()
+  jest.resetModules()
+
+  const orgs = require('../../../../../app/api-requests/orgs')
+  getByEmail = orgs.getByEmail
+  jest.mock('../../../../../app/api-requests/orgs')
+})
 
 describe('Verify login page test', () => {
+  const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expect')
   const url = '/verify-login'
   const validEmail = 'dairy@ltd.com'
   const validToken = uuid()
@@ -58,6 +68,8 @@ describe('Verify login page test', () => {
   })
 
   test('GET /verify-login route with valid email and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async () => {
+    const org = { name: 'my-org' }
+    getByEmail.mockResolvedValue(org)
     const options = {
       method: 'GET',
       url: `${url}?email=${validEmail}&token=${validToken}`
@@ -71,6 +83,6 @@ describe('Verify login page test', () => {
     expect(res.headers.location).toEqual('farmer-apply/org-review')
     expectVerifyLoginPage.hasCookiesSet(res)
     expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
-    expect(res.request.yar.get('organisation')).toMatchObject(await getByEmail(validEmail))
+    expect(res.request.yar.get('organisation')).toMatchObject(org)
   })
 })
