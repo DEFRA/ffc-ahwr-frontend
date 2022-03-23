@@ -1,4 +1,4 @@
-const { getByEmail } = require('../api-requests/orgs')
+const { getByEmail } = require('../api-requests/users')
 const cookieConfig = require('../config').cookie
 const { getOrganisation, setOrganisation } = require('../session')
 

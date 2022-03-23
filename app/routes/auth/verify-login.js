@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { getByEmail } = require('../../api-requests/orgs')
+const { getByEmail } = require('../../api-requests/users')
 const { setOrganisation } = require('../../session')
 
 module.exports = [{
