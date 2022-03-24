@@ -1,7 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const boom = require('@hapi/boom')
-const { notify: { templateIdApplicationComplete }, applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
-const sendEmail = require('../../lib/send-email')
+const { applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const session = require('../../session')
 const { sendMessage, receiveMessage } = require('../../messaging')
 const util = require('util')
@@ -19,6 +17,7 @@ module.exports = {
       const reference = uuidv4().split('-').shift().toLocaleUpperCase('en-GB')
       session.setApplication(request, 'applicationId', reference)
       session.setApplication(request, 'sessionId', request.yar.id)
+      session.setApplication(request, 'organisation', organisation)
 
       const application = session.getApplication(request)
       sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
@@ -27,14 +26,8 @@ module.exports = {
       if (response) {
         console.info('Response received:', util.inspect(response, false, null, true))
       }
-      // TODO: Check an email hasn't been sent already and store the fact that this has been sent
-      // const result = await sendEmail(templateIdApplicationComplete, organisation.email, { personalisation: { name: organisation.name, reference }, reference })
 
-      // if (!result) {
-      //   return boom.internal()
-      // }
-
-      return h.view('farmer-apply/confirmation', { reference: response.applicationId })
+      return h.view('farmer-apply/confirmation', { reference: response?.applicationId })
     }
   }
 }
