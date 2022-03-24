@@ -125,17 +125,23 @@ describe('Login page test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
 
-      expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
+      const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
+      const cacheSetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'set')
 
       const res = await global.__SERVER__.inject(options)
 
+      expect(cacheGetSpy).toHaveBeenCalledTimes(1)
+      expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
+      expect(cacheSetSpy).toHaveBeenCalledTimes(2)
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), validEmail)
       expect(res.statusCode).toBe(200)
-      const cacheTokens = await global.__SERVER__.app.magiclinkCache.get(validEmail)
-      expect(cacheTokens).toHaveLength(1)
-      expect(cacheTokens[0]).toMatch(new RegExp(uuidRegex))
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
       expect($('form input[name=email]').val()).toEqual(validEmail)
+
+      cacheGetSpy.mockRestore()
+      cacheSetSpy.mockRestore()
     })
 
     test('POST to /login route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
@@ -151,16 +157,23 @@ describe('Login page test', () => {
       const token = uuid()
       await global.__SERVER__.app.magiclinkCache.set(validEmail, [token])
 
+      const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
+      const cacheSetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'set')
+
       const res = await global.__SERVER__.inject(options)
 
+      expect(cacheGetSpy).toHaveBeenCalledTimes(1)
+      expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
+      expect(cacheSetSpy).toHaveBeenCalledTimes(2)
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), validEmail)
       expect(res.statusCode).toBe(200)
-      const cacheTokens = await global.__SERVER__.app.magiclinkCache.get(validEmail)
-      expect(cacheTokens).toHaveLength(2)
-      expect(cacheTokens[0]).toEqual(token)
-      expect(cacheTokens[1]).toMatch(new RegExp(uuidRegex))
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
       expect($('form input[name=email]').val()).toEqual(validEmail)
+
+      cacheGetSpy.mockRestore()
+      cacheSetSpy.mockRestore()
     })
 
     test('POST to /login route with known email sends email', async () => {
