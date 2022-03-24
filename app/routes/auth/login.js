@@ -17,7 +17,7 @@ async function createAndCacheToken (req, email) {
 }
 
 async function sendLoginEmail (email, token) {
-  return await sendEmail(templateIdFarmerLogin, email, {
+  return sendEmail(templateIdFarmerLogin, email, {
     personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
     reference: token
   })

@@ -21,7 +21,7 @@ async function clearCache (request, email) {
 
 async function lookupToken (request, token) {
   const { magiclinkCache } = request.server.app
-  return await magiclinkCache.get(token)
+  return magiclinkCache.get(token)
 }
 
 module.exports = [{
