@@ -1,18 +1,18 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
 
-let getByEmail
-
-beforeAll(async () => {
-  jest.clearAllMocks()
-  jest.resetModules()
-
-  const orgs = require('../../../../../app/api-requests/users')
-  getByEmail = orgs.getByEmail
-  jest.mock('../../../../../app/api-requests/users')
-})
-
 describe('Verify login page test', () => {
+  let getByEmail
+
+  beforeAll(async () => {
+    jest.clearAllMocks()
+    jest.resetModules()
+
+    const orgs = require('../../../../../app/api-requests/users')
+    getByEmail = orgs.getByEmail
+    jest.mock('../../../../../app/api-requests/users')
+  })
+
   const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expect')
   const url = '/verify-login'
   const validEmail = 'dairy@ltd.com'

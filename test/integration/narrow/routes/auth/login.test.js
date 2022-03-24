@@ -6,22 +6,22 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
-let sendEmail
-let getByEmail
-const org = { name: 'my-org' }
-
-beforeAll(async () => {
-  jest.clearAllMocks()
-  jest.resetModules()
-
-  sendEmail = require('../../../../../app/lib/send-email')
-  jest.mock('../../../../../app/lib/send-email')
-  const orgs = require('../../../../../app/api-requests/users')
-  getByEmail = orgs.getByEmail
-  jest.mock('../../../../../app/api-requests/users')
-})
-
 describe('Login page test', () => {
+  let sendEmail
+  let getByEmail
+  const org = { name: 'my-org' }
+
+  beforeAll(async () => {
+    jest.clearAllMocks()
+    jest.resetModules()
+
+    sendEmail = require('../../../../../app/lib/send-email')
+    jest.mock('../../../../../app/lib/send-email')
+    const orgs = require('../../../../../app/api-requests/users')
+    getByEmail = orgs.getByEmail
+    jest.mock('../../../../../app/api-requests/users')
+  })
+
   const url = '/login'
   const validEmail = 'dairy@ltd.com'
 
