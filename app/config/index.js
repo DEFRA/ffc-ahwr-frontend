@@ -30,6 +30,11 @@ const schema = Joi.object({
   port: Joi.number().default(3000),
   serviceName: Joi.string().default('Review the health and welfare of your livestock'),
   serviceUri: Joi.string().uri(),
+  storage: {
+    connectionString: Joi.string().required(),
+    usersContainer: Joi.string().default('users'),
+    usersFile: Joi.string().default('users.json')
+  },
   useRedis: Joi.boolean().default(false)
 })
 
@@ -58,6 +63,9 @@ const config = {
   },
   port: process.env.PORT,
   serviceUri: process.env.SERVICE_URI,
+  storage: {
+    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
+  },
   useRedis: process.env.NODE_ENV !== 'test'
 }
 

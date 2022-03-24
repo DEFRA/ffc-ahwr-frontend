@@ -4,6 +4,13 @@
 
 ## Prerequisites
 
+- Access to an instance of an
+[Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/).
+- Access to an instance of an
+[Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview).
+  This could be an actual account or
+  [Azurite](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite),
+  a storage emulator
 - Docker
 - Docker Compose
 
@@ -21,6 +28,7 @@ overridden by build and release pipelines.
 
 | Name                                    | Description                                                                                      |
 | ----                                    | -----------                                                                                      |
+| AZURE_STORAGE_CONNECTION_STRING         | Azure Storage connection string                                                                  |
 | MESSAGE_QUEUE_HOST                      | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net`                           |
 | MESSAGE_QUEUE_PASSWORD                  | Azure Service Bus SAS policy key                                                                 |
 | MESSAGE_QUEUE_SUFFIX                    | Developer initials                                                                               |
@@ -33,9 +41,20 @@ overridden by build and release pipelines.
 ## Running the application
 
 The application is designed to run in containerised environments, using Docker
-Compose in development and Kubernetes in production.
+Compose in development and Kubernetes in production (a Helm chart is provided
+for production deployments to Kubernetes).
 
-- A Helm chart is provided for production deployments to Kubernetes.
+Configuration and secret data are held in Azure Key Vault and populated during
+the deployment to non-local environments.
+
+*NOTE:*
+User data is currently loaded from a file in Azure Storage, an example file is
+available ([users.json](./data/users.json)) where the structure of the data can
+be seen along with examples.
+When running the application locally this file (or one matching the format)
+needs to be uploaded to Azurite container that starts with the application. The
+storage container the file resides in also needs to be created. The container
+name is `users` and the file name is `users.json`.
 
 ### Build container image
 
@@ -59,11 +78,8 @@ docker-compose build
 
 ### Start
 
-Use Docker Compose to run service locally.
-
-```sh
-docker-compose up
-```
+Use the [start script](./scripts/start) to run the service locally which in
+turn uses Docker Compose.
 
 ## Test structure
 
@@ -90,7 +106,8 @@ scripts/test -w
 
 ## CI pipeline
 
-This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
+This service uses the
+[FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
 
 ## Licence
 

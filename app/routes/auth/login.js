@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
 const { v4: uuid } = require('uuid')
-const { getByEmail } = require('../../api-requests/orgs')
+const { getByEmail } = require('../../api-requests/users')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../config')
 const sendEmail = require('../../lib/send-email')
 
@@ -51,7 +51,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { email } = request.payload
-      const org = getByEmail(email)
+      const org = await getByEmail(email)
 
       if (!org) {
         const errors = { details: [{ message: `No user found for email '${email}'` }] }

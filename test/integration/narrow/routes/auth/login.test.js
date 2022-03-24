@@ -6,17 +6,22 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
-let sendEmail
-
-beforeAll(async () => {
-  jest.clearAllMocks()
-  jest.resetModules()
-
-  sendEmail = require('../../../../../app/lib/send-email')
-  jest.mock('../../../../../app/lib/send-email')
-})
-
 describe('Login page test', () => {
+  let sendEmail
+  let getByEmail
+  const org = { name: 'my-org' }
+
+  beforeAll(async () => {
+    jest.clearAllMocks()
+    jest.resetModules()
+
+    sendEmail = require('../../../../../app/lib/send-email')
+    jest.mock('../../../../../app/lib/send-email')
+    const orgs = require('../../../../../app/api-requests/users')
+    getByEmail = orgs.getByEmail
+    jest.mock('../../../../../app/api-requests/users')
+  })
+
   const url = '/login'
   const validEmail = 'dairy@ltd.com'
 
@@ -110,6 +115,7 @@ describe('Login page test', () => {
     })
 
     test('POST to /login route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
+      getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
@@ -133,6 +139,7 @@ describe('Login page test', () => {
     })
 
     test('POST to /login route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
+      getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
@@ -157,6 +164,7 @@ describe('Login page test', () => {
     })
 
     test('POST to /login route with known email sends email', async () => {
+      getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
@@ -178,6 +186,7 @@ describe('Login page test', () => {
     })
 
     test('POST to /login route with known email returns error when problem sending email', async () => {
+      getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(false)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {

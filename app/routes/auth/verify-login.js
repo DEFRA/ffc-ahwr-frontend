@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { getByEmail } = require('../../api-requests/orgs')
+const { getByEmail } = require('../../api-requests/users')
 const { setOrganisation } = require('../../session')
 
 module.exports = [{
@@ -26,7 +26,7 @@ module.exports = [{
         return h.view('auth/verify-login-failed').code(400)
       }
 
-      const organisation = getByEmail(email)
+      const organisation = await getByEmail(email)
       request.cookieAuth.set({ email })
       Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
       await magiclinkCache.drop(email)
