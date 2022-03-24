@@ -12,7 +12,15 @@ async function createAndCacheToken (req, email) {
   const tokens = await magiclinkCache.get(email) ?? []
   tokens.push(token)
   await magiclinkCache.set(email, tokens)
+  await magiclinkCache.set(token, email)
   return token
+}
+
+async function sendLoginEmail (email, token) {
+  return sendEmail(templateIdFarmerLogin, email, {
+    personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
+    reference: token
+  })
 }
 
 module.exports = [{
@@ -60,10 +68,7 @@ module.exports = [{
 
       const token = await createAndCacheToken(request, email)
 
-      const result = await sendEmail(templateIdFarmerLogin, email, {
-        personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
-        reference: token
-      })
+      const result = await sendLoginEmail(email, token)
 
       if (!result) {
         return boom.internal()

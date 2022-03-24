@@ -76,13 +76,64 @@ describe('Verify login page test', () => {
     }
 
     await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken])
+    await global.__SERVER__.app.magiclinkCache.set(validToken, validEmail)
+
+    const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
+    const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
 
     const res = await global.__SERVER__.inject(options)
 
+    expect(cacheGetSpy).toHaveBeenCalledTimes(2)
+    expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
+    expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
+    expect(cacheDropSpy).toHaveBeenCalledTimes(2)
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(1, validToken)
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(2, validEmail)
     expect(res.statusCode).toBe(302)
     expect(res.headers.location).toEqual('farmer-apply/org-review')
     expectVerifyLoginPage.hasCookiesSet(res)
     expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
     expect(res.request.yar.get('organisation')).toMatchObject(org)
+
+    cacheGetSpy.mockRestore()
+    cacheDropSpy.mockRestore()
+  })
+
+  test('GET /verify-login route for valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async () => {
+    const org = { name: 'my-org' }
+    getByEmail.mockResolvedValue(org)
+    const options = {
+      method: 'GET',
+      url: `${url}?email=${validEmail}&token=${validToken}`
+    }
+
+    const oldTokens = [uuid(), uuid(), uuid()]
+    await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken, ...oldTokens])
+    await global.__SERVER__.app.magiclinkCache.set(validToken, validEmail)
+    await global.__SERVER__.app.magiclinkCache.set(oldTokens[0], validEmail)
+    await global.__SERVER__.app.magiclinkCache.set(oldTokens[1], validEmail)
+
+    const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
+    const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
+
+    const res = await global.__SERVER__.inject(options)
+
+    expect(cacheGetSpy).toHaveBeenCalledTimes(2)
+    expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
+    expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
+    expect(cacheDropSpy).toHaveBeenCalledTimes(5)
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(1, validToken)
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(2, oldTokens[0])
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(3, oldTokens[1])
+    expect(cacheDropSpy).toHaveBeenNthCalledWith(4, oldTokens[2])
+    expect(cacheDropSpy).toHaveBeenLastCalledWith(validEmail)
+    expect(res.statusCode).toBe(302)
+    expect(res.headers.location).toEqual('farmer-apply/org-review')
+    expectVerifyLoginPage.hasCookiesSet(res)
+    expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
+    expect(res.request.yar.get('organisation')).toMatchObject(org)
+
+    cacheGetSpy.mockRestore()
+    cacheDropSpy.mockRestore()
   })
 })
