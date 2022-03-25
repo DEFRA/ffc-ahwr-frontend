@@ -25,7 +25,7 @@ describe('Get users', () => {
   test.each([
     { fileContent: null },
     { fileContent: undefined }
-  ])('return undefined when blob content is null or undefined', async ({ fileContent }) => {
+  ])('return undefined when blob content is $fileContent', async ({ fileContent }) => {
     downloadBlobMock.mockResolvedValue(fileContent)
 
     const res = await getByEmail('email')
