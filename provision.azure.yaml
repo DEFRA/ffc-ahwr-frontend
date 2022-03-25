@@ -1,10 +1,5 @@
 resources:
   queues:
     - name: applicationRequest
-      enableSessions: true
     - name: applicationResponse
-      enableSessions: true
-    - name: eligibilityRequest
-      enableSessions: true
-    - name: eligibilityResponse
       enableSessions: true

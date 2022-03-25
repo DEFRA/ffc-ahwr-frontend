@@ -1,0 +1,33 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}Sign in{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+        text: "Back",
+        href: "/",
+        attributes: {
+          id: "back"
+        }
+      })
+    }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Email has been sent</h1>
+
+    <p>An email has been sent with a link to login. Please check your emails, including the spam folder and be patient as it might take a few minutes to arrive.</p>
+    <p>If it hasn't arrived after 5 minutes request a new link to login by clicking the button below.</p>
+
+    <form method="POST">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      <input type="hidden" name="email" value="{{email}}"/>
+      {{ govukButton({
+        text: "Request new link to login"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

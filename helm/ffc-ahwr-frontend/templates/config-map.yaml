@@ -9,6 +9,7 @@ data:
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   NODE_ENV: {{ quote .Values.environment }}
   NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE: {{ quote .Values.container.notifyTemplateIdApplicationComplete }}
+  NOTIFY_TEMPLATE_ID_FARMER_LOGIN: {{ quote .Values.container.notifyTemplateIdFarmerLogin }}
   PORT: {{ quote .Values.container.port }}
   {{- if .Values.container.redisHostname }}
   REDIS_HOSTNAME: {{ quote .Values.container.redisHostname }}
@@ -19,4 +20,5 @@ data:
   REDIS_PARTITION: {{ quote .Values.container.redisPartition }}
   {{- end }}
   REDIS_PORT: {{ quote .Values.container.redisPort }}
+  SERVICE_URI: {{ quote .Values.container.serviceUri }}
 {{- end -}}

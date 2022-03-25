@@ -1,6 +1,5 @@
 const Joi = require('joi')
-
-const uuidRegex = '[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}'
+const uuidRegex = require('./uuid-regex')
 const notifyApiKeyRegex = new RegExp(`.*-${uuidRegex}-${uuidRegex}`)
 const msgTypePrefix = 'uk.gov.ffc.ahwr'
 
@@ -13,7 +12,7 @@ const sharedConfigSchema = {
 }
 const schema = Joi.object({
   cache: {
-    expiresIn: Joi.number().default(1000 * 3600 * 24 * 3),
+    expiresIn: Joi.number().default(1000 * 3600 * 24 * 3), // 3 days
     options: {
       host: Joi.string().default('redis-hostname.default'),
       partition: Joi.string().default('ffc-ahwr-frontend'),
@@ -33,11 +32,11 @@ const schema = Joi.object({
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
-    templateIdApplicationComplete: Joi.string().uuid()
+    templateIdApplicationComplete: Joi.string().uuid(),
+    templateIdFarmerLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
   serviceName: Joi.string().default('Review the health and welfare of your livestock'),
-  useRedis: Joi.boolean().default(false),
   applicationRequestQueue: {
     address: Joi.string().default('applicationRequestQueue'),
     type: Joi.string(),
@@ -49,7 +48,14 @@ const schema = Joi.object({
     type: Joi.string(),
     ...sharedConfigSchema
   },
-  applicationResponseMsgType: Joi.string()
+  applicationResponseMsgType: Joi.string(),
+  serviceUri: Joi.string().uri(),
+  storage: {
+    connectionString: Joi.string().required(),
+    usersContainer: Joi.string().default('users'),
+    usersFile: Joi.string().default('users.json')
+  },
+  useRedis: Joi.boolean().default(false)
 })
 
 const sharedConfig = {
@@ -61,10 +67,8 @@ const sharedConfig = {
 }
 const config = {
   cache: {
-    expiresIn: process.env.SESSION_CACHE_TTL,
     options: {
       host: process.env.REDIS_HOSTNAME,
-      partition: process.env.REDIS_PARTITION ?? 'ffc-ahwr-frontend',
       password: process.env.REDIS_PASSWORD,
       port: process.env.REDIS_PORT,
       tls: process.env.NODE_ENV === 'production' ? {} : undefined
@@ -81,11 +85,11 @@ const config = {
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
-    templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE
+    templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE,
+    templateIdFarmerLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_LOGIN
   },
   port: process.env.PORT,
   serviceName: process.env.SERVICE_NAME,
-  useRedis: process.env.NODE_ENV !== 'test',
   applicationRequestQueue: {
     address: process.env.APPLICATIONREQUEST_QUEUE_ADDRESS,
     type: 'queue',
@@ -97,7 +101,12 @@ const config = {
     type: 'queue',
     ...sharedConfig
   },
-  applicationResponseMsgType: `${msgTypePrefix}.app.response`
+  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
+  serviceUri: process.env.SERVICE_URI,
+  storage: {
+    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
+  },
+  useRedis: process.env.NODE_ENV !== 'test'
 }
 
 const { error, value } = schema.validate(config, { abortEarly: false })

@@ -10,6 +10,7 @@ module.exports = {
     'lcov'
   ],
   coveragePathIgnorePatterns: [
+    '<rootDir>/app/frontend/',
     '<rootDir>/node_modules/',
     '<rootDir>/test-output/',
     '<rootDir>/test/',
@@ -31,5 +32,9 @@ module.exports = {
   ],
   testEnvironment: 'node',
   testPathIgnorePatterns: [],
-  verbose: true
+  verbose: true,
+  setupFilesAfterEnv: [
+    '<rootDir>/test/setup.js',
+    '<rootDir>/test/teardown.js'
+  ]
 }
