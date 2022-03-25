@@ -27,7 +27,9 @@ module.exports = {
             result.valid = true
           } else {
             const org = await getByEmail(session.email)
-            Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
+            if (org) {
+              Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
+            }
             result.valid = !!org
           }
 
