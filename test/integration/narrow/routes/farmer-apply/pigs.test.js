@@ -2,7 +2,7 @@ const cheerio = require('cheerio')
 
 const getCrumbs = require('../../../../utils/get-crumbs')
 
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
+const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
 describe('Pigs test', () => {
   test('GET /farmer-apply/pigs route returns 200', async () => {

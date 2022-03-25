@@ -2,7 +2,7 @@ const cheerio = require('cheerio')
 
 const getCrumbs = require('../../../../utils/get-crumbs')
 
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
+const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
 jest.mock('../../../../../app/lib/send-email', () => () => {
   return jest.fn().mockReturnValueOnce(true)

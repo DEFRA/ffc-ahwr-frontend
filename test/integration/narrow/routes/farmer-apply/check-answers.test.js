@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
 
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
+const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 const varListTemplate = {
   cattle: 'yes',
   pig: 'yes',

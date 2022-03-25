@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
 
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
+const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
 describe('Declaration test', () => {
   test('GET /farmer-apply/declaration route returns 200', async () => {
