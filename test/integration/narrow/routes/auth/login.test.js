@@ -12,8 +12,7 @@ describe('Login page test', () => {
   const org = { name: 'my-org' }
 
   beforeAll(async () => {
-    jest.clearAllMocks()
-    jest.resetModules()
+    jest.resetAllMocks()
 
     sendEmail = require('../../../../../app/lib/send-email')
     jest.mock('../../../../../app/lib/send-email')
@@ -26,7 +25,7 @@ describe('Login page test', () => {
   const validEmail = 'dairy@ltd.com'
 
   describe('GET requests to /login', () => {
-    test('GET /login route returns 200', async () => {
+    test('returns 200', async () => {
       const options = {
         method: 'GET',
         url
@@ -40,9 +39,9 @@ describe('Login page test', () => {
       expectLoginPage.hasCorrectContent($)
     })
 
-    test('GET to /login route when already logged in redirects to /farmer-apply/org-review', async () => {
+    test('route when already logged in redirects to org-review', async () => {
       const options = {
-        auth: { credentials: { email: validEmail }, strategy: 'basic', isAuthenticated: true },
+        auth: { credentials: { email: validEmail }, strategy: 'cookie', isAuthenticated: true },
         method: 'GET',
         url
       }
@@ -55,7 +54,7 @@ describe('Login page test', () => {
   })
 
   describe('POST requests to /login', () => {
-    test('POST to /login route returns 400 when request contains empty payload', async () => {
+    test('request contains empty payload', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -77,7 +76,7 @@ describe('Login page test', () => {
       { email: 'not-an-email', errorMessage: '"email" must be a valid email' },
       { email: '', errorMessage: '"email" is not allowed to be empty' },
       { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
-    ])('POST to /login route returns 400 when request contains incorrect email', async ({ email, errorMessage }) => {
+    ])('route returns 400 when request contains incorrect email - %s', async ({ email, errorMessage }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -98,7 +97,7 @@ describe('Login page test', () => {
     test.each([
       { crumb: '' },
       { crumb: undefined }
-    ])('POST to /login route returns 403 when request does not contain crumb', async ({ crumb }) => {
+    ])('route returns 403 when request does not contain crumb - $crumb', async ({ crumb }) => {
       const options = {
         method: 'POST',
         url,
@@ -114,7 +113,7 @@ describe('Login page test', () => {
       expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
     })
 
-    test('POST to /login route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
+    test('route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -144,7 +143,7 @@ describe('Login page test', () => {
       cacheSetSpy.mockRestore()
     })
 
-    test('POST to /login route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
+    test('route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -176,7 +175,7 @@ describe('Login page test', () => {
       cacheSetSpy.mockRestore()
     })
 
-    test('POST to /login route with known email sends email', async () => {
+    test('route with known email sends email', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -198,7 +197,7 @@ describe('Login page test', () => {
       )
     })
 
-    test('POST to /login route with known email returns error when problem sending email', async () => {
+    test('route with known email returns error when problem sending email', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(false)
       const crumb = await getCrumbs(global.__SERVER__)

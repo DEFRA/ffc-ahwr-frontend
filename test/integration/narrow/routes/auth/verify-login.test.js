@@ -5,8 +5,7 @@ describe('Verify login page test', () => {
   let getByEmail
 
   beforeAll(async () => {
-    jest.clearAllMocks()
-    jest.resetModules()
+    jest.resetAllMocks()
 
     const orgs = require('../../../../../app/api-requests/users')
     getByEmail = orgs.getByEmail
@@ -23,7 +22,7 @@ describe('Verify login page test', () => {
     { email: '' },
     { email: 'not-an-email' },
     { email: 'email@not-on-list.com' }
-  ])('GET /verify-login route returns 400 when request does not include a valid email', async ({ email }) => {
+  ])('GET /verify-login route returns 400 when request does not include a valid email - $email', async ({ email }) => {
     const options = {
       method: 'GET',
       url: `${url}?email=${email}&token=${validToken}`
@@ -41,7 +40,7 @@ describe('Verify login page test', () => {
     { token: '' },
     { token: 'not-a-uuid' },
     { token: validToken }
-  ])('GET /verify-login route returns 400 when request does not include a valid token', async ({ token }) => {
+  ])('GET /verify-login route returns 400 when request does not include a valid token - $token', async ({ token }) => {
     const options = {
       method: 'GET',
       url: `${url}?email=${validEmail}&token=${token}`
