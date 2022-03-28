@@ -6,7 +6,6 @@ module.exports = {
   path: '/farmer-apply/org-review',
   options: {
     handler: async (request, h) => {
-      // Take org from cache - should be ok!
       const organisation = session.getOrganisation(request)
       if (!organisation) {
         return boom.notFound()
