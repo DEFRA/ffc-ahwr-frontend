@@ -6,69 +6,100 @@ describe('Sheep test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
   const url = '/farmer-apply/sheep'
 
-  test(`GET ${url} route returns 200`, async () => {
-    const options = {
-      method: 'GET',
-      url,
-      auth
-    }
-    const res = await global.__SERVER__.inject(options)
-    expect(res.statusCode).toBe(200)
+  describe(`GET ${url} route`, () => {
+    const session = require('../../../../../app/session')
+    jest.mock('../../../../../app/session')
+
+    test('returns 200 with backlink to cattle when no answers exist for cattle', async () => {
+      const options = {
+        method: 'GET',
+        url,
+        auth
+      }
+      session.getApplication.mockReturnValue(undefined)
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('.govuk-back-link').attr('href')).toEqual('/farmer-apply/cattle')
+    })
+
+    test('returns 200 with backlink to cattle-type when answers exist for cattle', async () => {
+      const options = {
+        method: 'GET',
+        url,
+        auth
+      }
+      session.getApplication.mockReturnValue('yes')
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('.govuk-back-link').attr('href')).toEqual('/farmer-apply/cattle-type')
+    })
+
+    test('when not logged in redirects to /login with last page as next param', async () => {
+      const options = {
+        method: 'GET',
+        url
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+    })
   })
 
-  test(`GET ${url} route when not logged in redirects to /login with last page as next param`, async () => {
-    const options = {
-      method: 'GET',
-      url
-    }
+  describe(`POST ${url} route`, () => {
+    test('returns 302 to pigs route', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, sheep: 'yes' },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await global.__SERVER__.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
-  })
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual('/farmer-apply/pigs')
+    })
 
-  test(`POST ${url} route returns 302`, async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
-    const options = {
-      method: 'POST',
-      url,
-      payload: { crumb, sheep: 'yes' },
-      auth,
-      headers: { cookie: `crumb=${crumb}` }
-    }
-    const res = await global.__SERVER__.inject(options)
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual('/farmer-apply/pigs')
-  })
+    test('returns Error when payload is invalid', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, sheep: null },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-  test(`POST ${url} route returns Error`, async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
-    const options = {
-      method: 'POST',
-      url,
-      payload: { crumb, sheep: null },
-      auth,
-      headers: { cookie: `crumb=${crumb}` }
-    }
-    const res = await global.__SERVER__.inject(options)
-    const $ = cheerio.load(res.payload)
-    expect($('p.govuk-error-message').text()).toMatch('Select yes if you keep more than 20 sheep')
-    expect(res.statusCode).toBe(200)
-  })
+      const res = await global.__SERVER__.inject(options)
 
-  test(`POST ${url} route when not logged in redirects to /login with last page as next param`, async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
-    const options = {
-      method: 'POST',
-      url,
-      payload: { crumb, sheep: 'no' },
-      headers: { cookie: `crumb=${crumb}` }
-    }
+      const $ = cheerio.load(res.payload)
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you keep more than 20 sheep')
+      expect(res.statusCode).toBe(200)
+    })
 
-    const res = await global.__SERVER__.inject(options)
+    test('when not logged in redirects to /login with last page as next param', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, sheep: 'no' },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+    })
   })
 })
