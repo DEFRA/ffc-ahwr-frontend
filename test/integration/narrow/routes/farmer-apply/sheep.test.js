@@ -10,13 +10,20 @@ describe('Sheep test', () => {
     const session = require('../../../../../app/session')
     jest.mock('../../../../../app/session')
 
-    test('returns 200 with backlink to cattle when no answers exist for cattle', async () => {
+    afterAll(() => {
+      jest.resetAllMocks()
+    })
+
+    test.each([
+      { answer: 'no' },
+      { answer: undefined }
+    ])('returns 200 with backlink to cattle when no answers exist for cattle - %s', async ({ answer }) => {
       const options = {
         method: 'GET',
         url,
         auth
       }
-      session.getApplication.mockReturnValue(undefined)
+      session.getApplication.mockReturnValue(answer)
 
       const res = await global.__SERVER__.inject(options)
 
