@@ -4,18 +4,34 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
-jest.mock('../../../../../app/lib/send-email', () => () => {
+jest.mock('../../../../../app/lib/send-email', () => {
   return jest.fn().mockReturnValueOnce(true)
 })
+const mockMessage = {
+  sendMessage: (body, type, config, options) => {
+    return 'nothing'
+  },
+  receiveMessage: (messageId, config) => {
+    return {
+      applicationId: 123123123
+    }
+  }
+}
 
 const mockSession = {
   getOrganisation: (request) => {
     return 'dummy-org'
+  },
+  setApplication: (request, key, value) => {
+    return 'dummy-app'
+  },
+  getApplication: (request, key) => {
+    return 'dummy-app'
   }
 }
 
 jest.mock('../../../../../app/session', () => mockSession)
-
+jest.mock('../../../../../app/messaging', () => mockMessage)
 describe('Confirmation test', () => {
   const url = '/farmer-apply/confirmation'
 
