@@ -6,7 +6,7 @@ describe('Download blob tests', () => {
   const file = 'file'
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
     jest.resetModules()
 
     const storageBlobMock = require('@azure/storage-blob')

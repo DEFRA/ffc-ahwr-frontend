@@ -1,22 +1,24 @@
 const cheerio = require('cheerio')
 
-const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'basic' }
 const varListTemplate = {
   cattle: 'yes',
-  pig: 'yes',
+  pigs: 'yes',
   sheep: 'yes',
   cattleType: 'both'
 }
 
 let varList
 const mockSession = {
-  getApplication: (request, key) => {
+  getApplication: () => {
     return varList
   }
 }
 
 jest.mock('../../../../../app/session', () => mockSession)
 describe('Check Answers test', () => {
+  const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
+  const url = '/farmer-apply/check-answers'
+
   beforeEach(() => {
     varList = { ...varListTemplate }
   })
@@ -24,46 +26,98 @@ describe('Check Answers test', () => {
   afterAll(() => {
     jest.resetAllMocks()
   })
-  test('GET /farmer-apply/check-answers route returns 200', async () => {
+
+  test(`GET ${url} route returns 200`, async () => {
     const options = {
       method: 'GET',
-      url: '/farmer-apply/check-answers',
+      url,
       auth
     }
+
     const res = await global.__SERVER__.inject(options)
+
     expect(res.statusCode).toBe(200)
   })
-  test('GET /farmer-apply/check-answers route returns 302', async () => {
+
+  test(`GET ${url} route returns 302 when there is no eligible livestock`, async () => {
     varList = {
       cattle: 'no',
-      pig: 'no',
+      pigs: 'no',
       sheep: 'no',
       cattleType: 'both'
     }
     const options = {
       method: 'GET',
-      url: '/farmer-apply/check-answers',
+      url,
       auth
     }
+
     const res = await global.__SERVER__.inject(options)
+
     expect(res.statusCode).toBe(302)
     expect(res.headers.location).toEqual('/farmer-apply/not-eligible')
   })
-  test('GET /farmer-apply/check-answers route returns 302', async () => {
+
+  test.each([
+    { cattleType: 'beef', text: 'Beef' },
+    { cattleType: 'both', text: 'Beef and Dairy' },
+    { cattleType: 'dairy', text: 'Dairy' }
+  ])(`GET ${url} route shows beef and dairy option when cattleType is both - %s`, async ({ cattleType, text }) => {
     varList = {
       cattle: 'yes',
-      pig: 'no',
+      pigs: 'no',
       sheep: 'no',
-      cattleType: 'both'
+      cattleType
     }
     const options = {
       method: 'GET',
-      url: '/farmer-apply/check-answers',
+      url,
       auth
     }
+
     const res = await global.__SERVER__.inject(options)
+
     expect(res.statusCode).toBe(200)
     const $ = cheerio.load(res.payload)
-    expect($('.govuk-summary-list').text()).toContain('Beef and Dairy')
+    expect($('.govuk-summary-list__row').length).toEqual(2)
+    expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Livestock')
+    expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 10 cattle')
+    expect($('.govuk-summary-list__key').eq(1).text()).toMatch('Cattle type')
+    expect($('.govuk-summary-list__value').eq(1).text()).toMatch(text)
+  })
+
+  test(`GET ${url} route does not show beef and dairy option when cattle is not selected is both`, async () => {
+    varList = {
+      cattle: 'no',
+      pigs: 'yes',
+      sheep: 'yes',
+      cattleType: ''
+    }
+    const options = {
+      method: 'GET',
+      url,
+      auth
+    }
+
+    const res = await global.__SERVER__.inject(options)
+
+    expect(res.statusCode).toBe(200)
+    const $ = cheerio.load(res.payload)
+    expect($('.govuk-summary-list__row').length).toEqual(1)
+    expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Livestock')
+    expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 50 pigs')
+    expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 20 sheep')
+  })
+
+  test(`GET ${url} route when not logged in redirects to /login with last page as next param`, async () => {
+    const options = {
+      method: 'GET',
+      url
+    }
+
+    const res = await global.__SERVER__.inject(options)
+
+    expect(res.statusCode).toBe(302)
+    expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
   })
 })
