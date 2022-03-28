@@ -7,8 +7,7 @@ describe('Org review page test', () => {
 
   describe(`GET ${url} route when logged in`, () => {
     beforeAll(async () => {
-      jest.clearAllMocks()
-      jest.resetModules()
+      jest.resetAllMocks()
 
       session = require('../../../../../app/session')
       jest.mock('../../../../../app/session')

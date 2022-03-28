@@ -12,8 +12,7 @@ describe('Login page test', () => {
   const org = { name: 'my-org' }
 
   beforeAll(async () => {
-    jest.clearAllMocks()
-    jest.resetModules()
+    jest.resetAllMocks()
 
     sendEmail = require('../../../../../app/lib/send-email')
     jest.mock('../../../../../app/lib/send-email')

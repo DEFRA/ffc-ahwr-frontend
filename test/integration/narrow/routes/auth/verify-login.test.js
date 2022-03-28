@@ -5,8 +5,7 @@ describe('Verify login page test', () => {
   let getByEmail
 
   beforeAll(async () => {
-    jest.clearAllMocks()
-    jest.resetModules()
+    jest.resetAllMocks()
 
     const orgs = require('../../../../../app/api-requests/users')
     getByEmail = orgs.getByEmail

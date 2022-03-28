@@ -5,7 +5,7 @@ describe('Get users', () => {
   let getByEmail
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
     jest.resetModules()
 
     downloadBlobMock = require('../../../../app/lib/download-blob')
