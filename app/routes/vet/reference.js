@@ -29,8 +29,7 @@ module.exports = [{
         }).required()
       }),
       failAction: async (request, h, error) => {
-        console.log('error', error)
-        return h.view('vet/reference', { ...request.payload, errors: error }).code(400).takeover()
+        return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
       }
     },
     handler: async (request, h) => {

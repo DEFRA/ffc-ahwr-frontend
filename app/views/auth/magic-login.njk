@@ -19,28 +19,20 @@
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
         <h1 class="govuk-heading-l">Sign in with your email address</h1>
-        {% if errors %}
-          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">
-              There is a problem
-            </h2>
-            <div class="govuk-error-summary__body">
-              <ul class="govuk-list govuk-error-summary__list">
-                {% for errorDetail in errors.details %}
-                  <span class="govuk-error-message">
-                    <span class="govuk-visually-hidden">Error:</span> {{ errorDetail.message }}
-                  </span>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        {% endif %}
 
-        <div class=govuk-form-group>
-          <label class="govuk-label" for="email">Enter your email address</label>
-          <div id="email-hint" class="govuk-hint">Use the same email address you received the link to this page from</div>
-          <input class="govuk-input govuk-!-width-full-width" id="email" name="email" type="text" value="{{email}}">
-        </div>
+        {{ govukInput({
+          label: {
+            text: "Enter your email address"
+          },
+          hint: {
+            text: "Use the same email address you received the link to this page from"
+          },
+          classes: "govuk-input-!-width-full",
+          id: "email",
+          name: "email",
+          value: email,
+          errorMessage: errorMessage
+        }) }}
 
         {{ govukButton({
           text: "Sign in",
