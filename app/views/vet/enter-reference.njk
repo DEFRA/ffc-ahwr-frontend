@@ -36,10 +36,19 @@
           </div>
         {% endif %}
 
-        <div class=govuk-form-group>
-          <label class="govuk-label" for="reference">Reference number</label>
-          <input class="govuk-input govuk-!-width-one-third" id="reference" name="reference" type="text" value="{{reference}}">
-        </div>
+        {{ govukInput({
+          label: {
+            isPageHeading: true,
+            text: "Reference number"
+          },
+          hint: {
+            text: "This is the reference number Defra gave the farmer when they applied"
+          },
+          classes: "govuk-input--width-10",
+          id: "reference",
+          name: "reference",
+          value: reference
+        }) }}
 
         {{ govukButton({
           text: "Continue",
