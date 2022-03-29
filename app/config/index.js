@@ -1,7 +1,15 @@
 const Joi = require('joi')
 const uuidRegex = require('./uuid-regex')
 const notifyApiKeyRegex = new RegExp(`.*-${uuidRegex}-${uuidRegex}`)
+const msgTypePrefix = 'uk.gov.ffc.ahwr'
 
+const sharedConfigSchema = {
+  appInsights: Joi.object(),
+  host: Joi.string().default('localhost'),
+  password: Joi.string(),
+  username: Joi.string(),
+  useCredentialChain: Joi.bool().default(false)
+}
 const schema = Joi.object({
   cache: {
     expiresIn: Joi.number().default(1000 * 3600 * 24 * 3), // 3 days
@@ -29,6 +37,18 @@ const schema = Joi.object({
   },
   port: Joi.number().default(3000),
   serviceName: Joi.string().default('Review the health and welfare of your livestock'),
+  applicationRequestQueue: {
+    address: Joi.string().default('applicationRequestQueue'),
+    type: Joi.string(),
+    ...sharedConfigSchema
+  },
+  applicationRequestMsgType: Joi.string(),
+  applicationResponseQueue: {
+    address: Joi.string().default('applicationResponseQueue'),
+    type: Joi.string(),
+    ...sharedConfigSchema
+  },
+  applicationResponseMsgType: Joi.string(),
   serviceUri: Joi.string().uri(),
   storage: {
     connectionString: Joi.string().required(),
@@ -38,6 +58,13 @@ const schema = Joi.object({
   useRedis: Joi.boolean().default(false)
 })
 
+const sharedConfig = {
+  appInsights: require('applicationinsights'),
+  host: process.env.MESSAGE_QUEUE_HOST,
+  password: process.env.MESSAGE_QUEUE_PASSWORD,
+  username: process.env.MESSAGE_QUEUE_USER,
+  useCredentialChain: process.env.NODE_ENV === 'production'
+}
 const config = {
   cache: {
     options: {
@@ -62,6 +89,18 @@ const config = {
     templateIdFarmerLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_LOGIN
   },
   port: process.env.PORT,
+  applicationRequestQueue: {
+    address: process.env.APPLICATIONREQUEST_QUEUE_ADDRESS,
+    type: 'queue',
+    ...sharedConfig
+  },
+  applicationRequestMsgType: `${msgTypePrefix}.app.request`,
+  applicationResponseQueue: {
+    address: process.env.APPLICATIONRESPONSE_QUEUE_ADDRESS,
+    type: 'queue',
+    ...sharedConfig
+  },
+  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
   serviceUri: process.env.SERVICE_URI,
   storage: {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING

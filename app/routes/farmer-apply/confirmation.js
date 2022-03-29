@@ -1,30 +1,28 @@
-const { v4: uuid } = require('uuid')
 const boom = require('@hapi/boom')
-const { notify: { templateIdApplicationComplete } } = require('../../config')
-const sendEmail = require('../../lib/send-email')
+const { applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const session = require('../../session')
+const { sendMessage, receiveMessage } = require('../../messaging')
+const util = require('util')
 
-// TODO: Where should a GET request to the route go?
 module.exports = {
   method: 'POST',
   path: '/farmer-apply/confirmation',
   options: {
     handler: async (request, h) => {
-      // TODO: Get this data based on eligibility or the applicant
-      // const { sbi } = request.payload
       const organisation = session.getOrganisation(request)
+      session.setApplication(request, 'sessionId', request.yar.id)
+      session.setApplication(request, 'organisation', organisation)
 
-      // TODO: should the reference number be a particular format?
-      const reference = uuid().split('-').shift().toLocaleUpperCase('en-GB')
-
-      // TODO: Check an email hasn't been sent already and store the fact that this has been sent
-      const result = await sendEmail(templateIdApplicationComplete, organisation.email, { personalisation: { name: organisation.name, reference }, reference })
-
-      if (!result) {
+      const application = session.getApplication(request)
+      sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
+      const response = await receiveMessage(request.yar.id, applicationResponseQueue)
+      if (!response) {
         return boom.internal()
+      } else {
+        console.info('Response received:', util.inspect(response, false, null, true))
       }
 
-      return h.view('farmer-apply/confirmation', { reference })
+      return h.view('farmer-apply/confirmation', { reference: response?.applicationId })
     }
   }
 }
