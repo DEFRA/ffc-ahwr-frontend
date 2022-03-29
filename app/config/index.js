@@ -36,7 +36,6 @@ const schema = Joi.object({
     templateIdFarmerLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
-  serviceName: Joi.string().default('Review the health and welfare of your livestock'),
   applicationRequestQueue: {
     address: Joi.string().default('applicationRequestQueue'),
     type: Joi.string(),
@@ -89,7 +88,6 @@ const config = {
     templateIdFarmerLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_LOGIN
   },
   port: process.env.PORT,
-  serviceName: process.env.SERVICE_NAME,
   applicationRequestQueue: {
     address: process.env.APPLICATIONREQUEST_QUEUE_ADDRESS,
     type: 'queue',
