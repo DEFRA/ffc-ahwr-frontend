@@ -51,7 +51,12 @@ module.exports = [{
     },
     validate: {
       payload: Joi.object({
-        email: Joi.string().email()
+        email: Joi.string().email().messages({
+          'any.required': 'Enter an email address',
+          'string.base': 'Enter an email address',
+          'string.email': 'Enter a valid email address',
+          'string.empty': 'Enter an email address'
+        }).required()
       }),
       failAction: async (request, h, error) => {
         return h.view('auth/magic-login', { ...request.payload, errors: error }).code(400).takeover()
@@ -62,7 +67,7 @@ module.exports = [{
       const org = await getByEmail(email)
 
       if (!org) {
-        const errors = { details: [{ message: `No user found for email '${email}'` }] }
+        const errors = { details: [{ message: `No user found with email address "${email}"` }] }
         return h.view('auth/magic-login', { ...request.payload, errors }).code(400).takeover()
       }
 

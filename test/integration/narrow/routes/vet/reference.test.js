@@ -30,6 +30,7 @@ describe('Vet, enter reference test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
+      { reference: undefined, errorMessage: 'Enter the reference number' },
       { reference: null, errorMessage: 'Enter the reference number' },
       { reference: '', errorMessage: 'Enter the reference number' },
       { reference: 'not-valid-ref', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"' },

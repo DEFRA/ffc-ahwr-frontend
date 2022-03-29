@@ -22,10 +22,11 @@ module.exports = [{
     validate: {
       payload: Joi.object({
         reference: Joi.string().pattern(/vv-[0-9a-f]{4}-[0-9a-f]{4}/i).messages({
+          'any.required': 'Enter the reference number',
           'string.base': 'Enter the reference number',
           'string.empty': 'Enter the reference number',
           'string.pattern.base': 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
-        })
+        }).required()
       }),
       failAction: async (request, h, error) => {
         console.log('error', error)

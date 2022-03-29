@@ -55,28 +55,12 @@ describe('Login page test', () => {
   })
 
   describe('POST requests to /login', () => {
-    test('request contains empty payload', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
-      const options = {
-        method: 'POST',
-        url,
-        payload: { crumb, email: '' },
-        headers: { cookie: `crumb=${crumb}` }
-      }
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(400)
-      const $ = cheerio.load(res.payload)
-      expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
-      pageExpects.errors($, '"email" is not allowed to be empty')
-    })
-
     test.each([
-      { email: 'not-an-email', errorMessage: '"email" must be a valid email' },
-      { email: '', errorMessage: '"email" is not allowed to be empty' },
-      { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
+      { email: 'not-an-email', errorMessage: 'Enter a valid email address' },
+      { email: '', errorMessage: 'Enter an email address' },
+      { email: null, errorMessage: 'Enter an email address' },
+      { email: undefined, errorMessage: 'Enter an email address' },
+      { email: 'missing@email.com', errorMessage: 'No user found with email address "missing@email.com"' }
     ])('route returns 400 when request contains incorrect email - %p', async ({ email, errorMessage }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {

@@ -34,7 +34,7 @@ module.exports = [
         payload: Joi.object({
           sheep: Joi.string().valid('yes', 'no').required()
         }),
-        failAction: (request, h, err) => {
+        failAction: (request, h, _) => {
           return h.view('farmer-apply/sheep', {
             ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.sheep), errorText),
             backLink: getBackLink(request)
