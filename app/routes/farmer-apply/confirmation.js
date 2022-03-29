@@ -10,7 +10,6 @@ module.exports = {
   options: {
     handler: async (request, h) => {
       const organisation = session.getOrganisation(request)
-      session.setApplication(request, 'applicationId', '')
       session.setApplication(request, 'sessionId', request.yar.id)
       session.setApplication(request, 'organisation', organisation)
 
