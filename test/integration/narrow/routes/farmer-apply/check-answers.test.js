@@ -62,7 +62,7 @@ describe('Check Answers test', () => {
     { cattleType: 'beef', text: 'Beef' },
     { cattleType: 'both', text: 'Beef and Dairy' },
     { cattleType: 'dairy', text: 'Dairy' }
-  ])(`GET ${url} route shows beef and dairy option when cattleType is both - %s`, async ({ cattleType, text }) => {
+  ])(`GET ${url} route shows beef and dairy option when cattleType is both - %p`, async ({ cattleType, text }) => {
     varList = {
       cattle: 'yes',
       pigs: 'no',
