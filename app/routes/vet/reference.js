@@ -7,16 +7,16 @@ function getApplication (reference) {
 
 module.exports = [{
   method: 'GET',
-  path: '/vet/enter-reference',
+  path: '/vet/reference',
   options: {
     auth: false,
     handler: async (_, h) => {
-      return h.view('vet/enter-reference')
+      return h.view('vet/reference')
     }
   }
 }, {
   method: 'POST',
-  path: '/vet/enter-reference',
+  path: '/vet/reference',
   options: {
     auth: false,
     validate: {
@@ -29,7 +29,7 @@ module.exports = [{
       }),
       failAction: async (request, h, error) => {
         console.log('error', error)
-        return h.view('vet/enter-reference', { ...request.payload, errors: error }).code(400).takeover()
+        return h.view('vet/reference', { ...request.payload, errors: error }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
@@ -39,7 +39,7 @@ module.exports = [{
 
       if (!application) {
         const errors = { details: [{ message: `No application found for reference "${reference}"` }] }
-        return h.view('vet/enter-reference', { ...request.payload, errors }).code(404).takeover()
+        return h.view('vet/reference', { ...request.payload, errors }).code(404).takeover()
       }
 
       return h.redirect('/vet/practice')

@@ -10,7 +10,7 @@ function expectPageContentOk ($) {
 }
 
 describe('Vet, enter reference test', () => {
-  const url = '/vet/enter-reference'
+  const url = '/vet/reference'
 
   describe(`GET ${url} route`, () => {
     test('returns 200 when not logged in', async () => {

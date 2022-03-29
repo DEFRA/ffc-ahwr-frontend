@@ -15,7 +15,7 @@ const routes = [].concat(
   require('../routes/farmer-apply/pigs'),
   require('../routes/farmer-apply/sheep'),
   require('../routes/vet'),
-  require('../routes/vet/enter-reference')
+  require('../routes/vet/reference')
 )
 
 module.exports = {

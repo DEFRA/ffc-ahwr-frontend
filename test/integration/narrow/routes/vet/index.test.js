@@ -14,7 +14,7 @@ describe('Vet home page test', () => {
     const $ = cheerio.load(res.payload)
     expect($('.govuk-heading-l').text()).toEqual('Record Animal Health and Welfare Review data')
     const button = $('.govuk-button')
-    expect(button.attr('href')).toMatch('/vet/enter-reference')
+    expect(button.attr('href')).toMatch('/vet/reference')
     expect(button.text()).toMatch('Start now')
     expectPhaseBanner.ok($)
   })
