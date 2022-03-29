@@ -36,6 +36,7 @@ const schema = Joi.object({
     templateIdFarmerLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
+  serviceName: Joi.string().default('Review the health and welfare of your livestock'),
   applicationRequestQueue: {
     address: Joi.string().default('applicationRequestQueue'),
     type: Joi.string(),

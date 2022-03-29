@@ -17,7 +17,7 @@ module.exports = {
       const application = session.getApplication(request)
       sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)
-      if (!response.valid) {
+      if (!response) {
         return boom.internal()
       } else {
         console.info('Response received:', util.inspect(response, false, null, true))
