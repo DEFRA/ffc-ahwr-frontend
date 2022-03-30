@@ -1,14 +1,10 @@
 const Joi = require('joi')
 const session = require('../../session')
+const { reference: referenceErrorMessages } = require('../../../app/lib/error-messages')
 
 // TODO: implement proper application lookup
 function getApplication (reference) {
   return true
-}
-
-const errorMessages = {
-  enterRef: 'Enter the reference number',
-  formatRef: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
 }
 
 module.exports = [{
@@ -29,10 +25,10 @@ module.exports = [{
       payload: Joi.object({
         reference: Joi.string().pattern(/vv-[0-9a-f]{4}-[0-9a-f]{4}/i).required()
           .messages({
-            'any.required': errorMessages.enterRef,
-            'string.base': errorMessages.enterRef,
-            'string.empty': errorMessages.enterRef,
-            'string.pattern.base': errorMessages.formatRef
+            'any.required': referenceErrorMessages.enterRef,
+            'string.base': referenceErrorMessages.enterRef,
+            'string.empty': referenceErrorMessages.enterRef,
+            'string.pattern.base': referenceErrorMessages.formatRef
           })
       }),
       failAction: async (request, h, error) => {

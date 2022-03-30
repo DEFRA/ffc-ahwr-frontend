@@ -4,6 +4,7 @@ const { v4: uuid } = require('uuid')
 const { getByEmail } = require('../../api-requests/users')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../config')
 const sendEmail = require('../../lib/send-email')
+const { email: emailErrorMessages } = require('../../../app/lib/error-messages')
 
 async function createAndCacheToken (req, email) {
   const { magiclinkCache } = req.server.app
@@ -51,12 +52,13 @@ module.exports = [{
     },
     validate: {
       payload: Joi.object({
-        email: Joi.string().email().messages({
-          'any.required': 'Enter an email address',
-          'string.base': 'Enter an email address',
-          'string.email': 'Enter a valid email address',
-          'string.empty': 'Enter an email address'
-        }).required()
+        email: Joi.string().email().required()
+          .messages({
+            'any.required': emailErrorMessages.enterEmail,
+            'string.base': emailErrorMessages.enterEmail,
+            'string.email': emailErrorMessages.validEmail,
+            'string.empty': emailErrorMessages.enterEmail
+          })
       }),
       failAction: async (request, h, error) => {
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()

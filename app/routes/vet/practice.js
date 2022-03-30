@@ -1,10 +1,6 @@
 const Joi = require('joi')
 const session = require('../../session')
-
-const errorMessages = {
-  enterName: 'Enter the name of the practice',
-  nameLength: 'Practice name must be 100 characters or fewer'
-}
+const { practice: practiceErrorMessages } = require('../../../app/lib/error-messages')
 
 module.exports = [{
   method: 'GET',
@@ -24,10 +20,10 @@ module.exports = [{
       payload: Joi.object({
         practice: Joi.string().max(100).required()
           .messages({
-            'any.required': errorMessages.enterName,
-            'string.base': errorMessages.enterName,
-            'string.empty': errorMessages.enterName,
-            'string.max': errorMessages.nameLength
+            'any.required': practiceErrorMessages.enterName,
+            'string.base': practiceErrorMessages.enterName,
+            'string.empty': practiceErrorMessages.enterName,
+            'string.max': practiceErrorMessages.nameLength
           })
       }),
       failAction: async (request, h, error) => {
