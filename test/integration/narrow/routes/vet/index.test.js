@@ -16,6 +16,7 @@ describe('Vet home page test', () => {
     const button = $('.govuk-button')
     expect(button.attr('href')).toMatch('/vet/reference')
     expect(button.text()).toMatch('Start now')
+    expect($('title').text()).toEqual('Record Animal Health and Welfare Review data')
     expectPhaseBanner.ok($)
   })
 })

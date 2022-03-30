@@ -8,6 +8,7 @@ function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the name of the vet who undertook the visit')
   expect($('label[for=name]').text()).toMatch('Name of the vet')
   expect($('.govuk-button').text()).toMatch('Continue')
+  expect($('title').text()).toEqual('Enter name of vet')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/rcvs')
