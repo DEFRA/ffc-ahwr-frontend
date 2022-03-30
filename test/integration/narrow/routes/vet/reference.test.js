@@ -73,7 +73,7 @@ describe('Vet, enter reference test', () => {
       pageExpects.errors($, `No application found for reference "${reference}"`)
     })
 
-    test('returns 200 when payload is valid', async () => {
+    test('returns 200 when payload is valid and stores in session', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -85,7 +85,7 @@ describe('Vet, enter reference test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/practice')
+      expect(res.headers.location).toEqual('/vet/rcvs')
     })
   })
 })

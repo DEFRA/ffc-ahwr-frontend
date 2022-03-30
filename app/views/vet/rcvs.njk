@@ -1,11 +1,11 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Enter application reference number{% endblock %}
+{% block pageTitle %}Enter RCVS number{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: "/vet",
+    href: "/vet/reference",
     attributes: {
       id: "back"
     }
@@ -17,19 +17,19 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Enter the funding application reference number</h1>
+        <h1 class="govuk-heading-l">Enter the RCVS number of the vet who undertook the visit</h1>
 
         {{ govukInput({
           label: {
-            text: "Reference number"
+            text: "RCVS number"
           },
           hint: {
-            text: "This is the reference number Defra gave the farmer when they applied"
+            text: "This is the RCVS number of the vet who undertook the visit"
           },
           classes: "govuk-input--width-10",
-          id: "reference",
-          name: "reference",
-          value: reference,
+          id: "rcvs",
+          name: "rcvs",
+          value: rcvs,
           errorMessage: errorMessage
         }) }}
 
