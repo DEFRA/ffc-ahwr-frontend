@@ -1,6 +1,7 @@
 const entries = {
   application: 'application',
-  organisation: 'organisation'
+  organisation: 'organisation',
+  vetSignup: 'vetSignup'
 }
 
 function set (request, entryKey, key, value) {
@@ -21,6 +22,10 @@ function setOrganisation (request, key, value) {
   set(request, entries.organisation, key, value)
 }
 
+function setVetSignup (request, key, value) {
+  set(request, entries.vetSignup, key, value)
+}
+
 function getApplication (request, key) {
   return get(request, entries.application, key)
 }
@@ -29,9 +34,15 @@ function getOrganisation (request, key) {
   return get(request, entries.organisation, key)
 }
 
+function getVetSignup (request, key) {
+  return get(request, entries.vetSignup, key)
+}
+
 module.exports = {
+  getApplication,
+  getOrganisation,
+  getVetSignup,
   setApplication,
   setOrganisation,
-  getApplication,
-  getOrganisation
+  setVetSignup
 }

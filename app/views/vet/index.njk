@@ -1,0 +1,38 @@
+{% extends './layouts/layout.njk' %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      {
+        text: "Home",
+        href: "/"
+      },
+      {
+        text: "Start",
+        href: "/vet"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Record Animal Health and Welfare Review data</h1>
+
+    <p>Use this service to record data following a farm visit.</p>
+
+    <h2 class="govuk-heading-m">You'll need to know</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the reference number Defra gave the farmer when they applied</li>
+    </ul>
+
+    {{ govukButton({
+      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-8",
+      href: "/vet/reference",
+      isStartButton: true,
+      text: "Start now"
+    }) }}
+  </div>
+</div>
+{% endblock %}

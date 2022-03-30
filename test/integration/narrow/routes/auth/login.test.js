@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectLoginPage = require('../../../../utils/login-page-expect')
+const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
@@ -54,29 +55,13 @@ describe('Login page test', () => {
   })
 
   describe('POST requests to /login', () => {
-    test('request contains empty payload', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
-      const options = {
-        method: 'POST',
-        url,
-        payload: { crumb, email: '' },
-        headers: { cookie: `crumb=${crumb}` }
-      }
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(400)
-      const $ = cheerio.load(res.payload)
-      expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
-      expectLoginPage.errors($, '"email" is not allowed to be empty')
-    })
-
     test.each([
-      { email: 'not-an-email', errorMessage: '"email" must be a valid email' },
-      { email: '', errorMessage: '"email" is not allowed to be empty' },
-      { email: 'missing@email.com', errorMessage: 'No user found for email \'missing@email.com\'' }
-    ])('route returns 400 when request contains incorrect email - %s', async ({ email, errorMessage }) => {
+      { email: 'not-an-email', errorMessage: 'Enter a valid email address' },
+      { email: '', errorMessage: 'Enter an email address' },
+      { email: null, errorMessage: 'Enter an email address' },
+      { email: undefined, errorMessage: 'Enter an email address' },
+      { email: 'missing@email.com', errorMessage: 'No user found with email address "missing@email.com"' }
+    ])('route returns 400 when request contains incorrect email - %p', async ({ email, errorMessage }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -91,7 +76,7 @@ describe('Login page test', () => {
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
       expectLoginPage.hasCorrectContent($)
-      expectLoginPage.errors($, errorMessage)
+      pageExpects.errors($, errorMessage)
     })
 
     test.each([

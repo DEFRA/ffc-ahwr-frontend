@@ -17,7 +17,7 @@ describe('Sheep test', () => {
     test.each([
       { answer: 'no' },
       { answer: undefined }
-    ])('returns 200 with backlink to cattle when no answers exist for cattle - %s', async ({ answer }) => {
+    ])('returns 200 with backlink to cattle when no answers exist for cattle - %p', async ({ answer }) => {
       const options = {
         method: 'GET',
         url,
