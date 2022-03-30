@@ -1,14 +1,14 @@
 const cheerio = require('cheerio')
-
 const getCrumbs = require('../../../../utils/get-crumbs')
+const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
 const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
 const mockMessage = {
-  sendMessage: (body, type, config, options) => {
+  sendMessage: () => {
     return 'nothing'
   },
-  receiveMessage: (messageId, config) => {
+  receiveMessage: () => {
     return {
       applicationId: 123123123
     }
@@ -16,13 +16,13 @@ const mockMessage = {
 }
 
 const mockSession = {
-  getOrganisation: (request) => {
+  getOrganisation: () => {
     return 'dummy-org'
   },
-  setApplication: (request, key, value) => {
+  setApplication: () => {
     return 'dummy-app'
   },
-  getApplication: (request, key) => {
+  getApplication: () => {
     return 'dummy-app'
   }
 }
@@ -36,33 +36,37 @@ describe('Confirmation test', () => {
     jest.resetAllMocks()
   })
 
-  test(`POST ${url} route returns 200`, async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
-    const options = {
-      method: 'POST',
-      url,
-      payload: { crumb },
-      auth,
-      headers: { cookie: `crumb=${crumb}` }
-    }
-    const res = await global.__SERVER__.inject(options)
-    expect(res.statusCode).toBe(200)
-    const $ = cheerio.load(res.payload)
-    expect($('h1').text()).toMatch('Application complete')
-  })
+  describe(`POST ${url} route`, () => {
+    test('returns 200', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
+      const res = await global.__SERVER__.inject(options)
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toMatch('Application complete')
+      expect($('title').text()).toEqual('Confirmation')
+      expectPhaseBanner.ok($)
+    })
 
-  test(`POST ${url} route when not logged in redirects to /login with last page as next param`, async () => {
-    const crumb = await getCrumbs(global.__SERVER__)
-    const options = {
-      method: 'POST',
-      url,
-      payload: { crumb },
-      headers: { cookie: `crumb=${crumb}` }
-    }
+    test('when not logged in redirects to /login with last page as next param', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb },
+        headers: { cookie: `crumb=${crumb}` }
+      }
 
-    const res = await global.__SERVER__.inject(options)
+      const res = await global.__SERVER__.inject(options)
 
-    expect(res.statusCode).toBe(302)
-    expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+    })
   })
 })

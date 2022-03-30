@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
-
 const getCrumbs = require('../../../../utils/get-crumbs')
+const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
 describe('Sheep test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
@@ -30,6 +30,9 @@ describe('Sheep test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('.govuk-back-link').attr('href')).toEqual('/farmer-apply/cattle')
+      expect($('h1').text()).toMatch('Do you keep more than 20 sheep?')
+      expect($('title').text()).toEqual('Sheep Numbers')
+      expectPhaseBanner.ok($)
     })
 
     test('returns 200 with backlink to cattle-type when answers exist for cattle', async () => {
