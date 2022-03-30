@@ -33,7 +33,7 @@ module.exports = [{
     handler: async (request, h) => {
       const { email } = request.payload
       session.setVetSignup(request, 'email', email)
-      return h.redirect('/vet/email-sent')
+      return h.redirect('/vet/check-email')
     }
   }
 }]

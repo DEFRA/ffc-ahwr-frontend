@@ -78,7 +78,7 @@ describe('Vet, enter email name test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/email-sent')
+      expect(res.headers.location).toEqual('/vet/check-email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'email', validEmail)
     })
