@@ -7,6 +7,9 @@ function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the funding application reference number')
   expect($('label[for=reference]').text()).toMatch('Reference number')
   expect($('.govuk-button').text()).toMatch('Continue')
+  const backLink = $('.govuk-back-link')
+  expect(backLink.text()).toMatch('Back')
+  expect(backLink.attr('href')).toMatch('/vet')
 }
 
 describe('Vet, enter reference test', () => {
