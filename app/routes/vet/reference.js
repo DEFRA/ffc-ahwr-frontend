@@ -5,6 +5,11 @@ function getApplication (reference) {
   return true
 }
 
+const errorMessages = {
+  enterRef: 'Enter the reference number',
+  formatRef: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
+}
+
 module.exports = [{
   method: 'GET',
   path: '/vet/reference',
@@ -21,12 +26,13 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        reference: Joi.string().pattern(/vv-[0-9a-f]{4}-[0-9a-f]{4}/i).messages({
-          'any.required': 'Enter the reference number',
-          'string.base': 'Enter the reference number',
-          'string.empty': 'Enter the reference number',
-          'string.pattern.base': 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
-        }).required()
+        reference: Joi.string().pattern(/vv-[0-9a-f]{4}-[0-9a-f]{4}/i).required()
+          .messages({
+            'any.required': errorMessages.enterRef,
+            'string.base': errorMessages.enterRef,
+            'string.empty': errorMessages.enterRef,
+            'string.pattern.base': errorMessages.formatRef
+          })
       }),
       failAction: async (request, h, error) => {
         return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
