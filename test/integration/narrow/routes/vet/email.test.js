@@ -5,8 +5,8 @@ const pageExpects = require('../../../../utils/page-expects')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('What is the name of the practice the vet works for?')
-  expect($('label[for=email]').text()).toMatch('Vet practice name')
+  expect($('h1').text()).toMatch('Enter your email address')
+  expect($('label[for=email]').text()).toMatch('Enter your email address')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('Enter email of vet')
   const backLink = $('.govuk-back-link')

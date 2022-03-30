@@ -17,22 +17,21 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">What is the name of the practice the vet works for?</h1>
 
         {{ govukInput({
           label: {
-            text: "Vet practice name"
+            classes: "govuk-label--l",
+            isPageHeading: true,
+            text: "Enter your email address"
           },
-          hint: {
-            text: "This is the name of the practice where the vet who undertook the visit works"
-          },
-          classes: "govuk-input--width-10",
+          classes: "govuk-input-!-width-full",
           id: "email",
           name: "email",
           value: email,
           errorMessage: errorMessage
         }) }}
 
+        <p>We'll send you a link to confirm that you have access.</p>
         {{ govukButton({
           text: "Continue",
           attributes: {
