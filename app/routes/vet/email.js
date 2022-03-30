@@ -27,7 +27,6 @@ module.exports = [{
           })
       }),
       failAction: async (request, h, error) => {
-        console.log(error)
         return h.view('vet/email', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
       }
     },

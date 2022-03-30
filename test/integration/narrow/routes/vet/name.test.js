@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
+const { name: nameErrorMessages } = require('../../../../../app/lib/error-messages')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the name of the vet who undertook the visit')
@@ -40,10 +41,10 @@ describe('Vet, enter name test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { name: undefined, errorMessage: 'Enter the name of the vet', expectedVal: undefined },
-      { name: null, errorMessage: 'Enter the name of the vet', expectedVal: undefined },
-      { name: '', errorMessage: 'Enter the name of the vet', expectedVal: undefined },
-      { name: 'a'.repeat(101), errorMessage: 'Name must be 100 characters or fewer', expectedVal: 'a'.repeat(101) }
+      { name: undefined, errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: null, errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: '', errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: 'a'.repeat(101), errorMessage: nameErrorMessages.nameLength, expectedVal: 'a'.repeat(101) }
     ])('returns 400 when payload is invalid - %p', async ({ name, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {

@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
+const { rcvs: rcvsErrorMessages } = require('../../../../../app/lib/error-messages')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the RCVS number of the vet who undertook the visit')
@@ -40,11 +41,11 @@ describe('Vet, enter rcvs test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { rcvs: undefined, errorMessage: 'Enter the RCVS number', expectedVal: undefined },
-      { rcvs: null, errorMessage: 'Enter the RCVS number', expectedVal: undefined },
-      { rcvs: '', errorMessage: 'Enter the RCVS number', expectedVal: undefined },
-      { rcvs: 'not-valid-ref', errorMessage: 'Enter a valid RCVS number', expectedVal: 'not-valid-ref' },
-      { rcvs: '123456A', errorMessage: 'Enter a valid RCVS number', expectedVal: '123456A' }
+      { rcvs: undefined, errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
+      { rcvs: null, errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
+      { rcvs: '', errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
+      { rcvs: 'not-valid-ref', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: 'not-valid-ref' },
+      { rcvs: '123456A', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '123456A' }
     ])('returns 400 when payload is invalid - %p', async ({ rcvs, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {

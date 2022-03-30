@@ -13,10 +13,10 @@ module.exports = {
   },
   rcvs: {
     enterRCVS: 'Enter the RCVS number',
-    formatRCVS: 'Enter a valid RCVS number'
+    validRCVS: 'Enter a valid RCVS number'
   },
   reference: {
     enterRef: 'Enter the reference number',
-    formatRef: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
+    validRef: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"'
   }
 }

@@ -28,7 +28,7 @@ module.exports = [{
             'any.required': referenceErrorMessages.enterRef,
             'string.base': referenceErrorMessages.enterRef,
             'string.empty': referenceErrorMessages.enterRef,
-            'string.pattern.base': referenceErrorMessages.formatRef
+            'string.pattern.base': referenceErrorMessages.validRef
           })
       }),
       failAction: async (request, h, error) => {

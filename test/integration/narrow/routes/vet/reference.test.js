@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
+const { reference: referenceErrorMessages } = require('../../../../../app/lib/error-messages')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the funding application reference number')
@@ -40,11 +41,11 @@ describe('Vet, enter reference test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { reference: undefined, errorMessage: 'Enter the reference number', expectedVal: undefined },
-      { reference: null, errorMessage: 'Enter the reference number', expectedVal: undefined },
-      { reference: '', errorMessage: 'Enter the reference number', expectedVal: undefined },
-      { reference: 'not-valid-ref', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"', expectedVal: 'not-valid-ref' },
-      { reference: 'VV-1234-567G', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"', expectedVal: 'VV-1234-567G' }
+      { reference: undefined, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { reference: null, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { reference: '', errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { reference: 'not-valid-ref', errorMessage: referenceErrorMessages.validRef, expectedVal: 'not-valid-ref' },
+      { reference: 'VV-1234-567G', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-567G' }
     ])('returns 400 when payload is invalid - %p', async ({ reference, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {

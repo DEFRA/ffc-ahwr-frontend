@@ -23,7 +23,7 @@ module.exports = [{
             'any.required': rcvsErrorMessages.enterRCVS,
             'string.base': rcvsErrorMessages.enterRCVS,
             'string.empty': rcvsErrorMessages.enterRCVS,
-            'string.pattern.base': rcvsErrorMessages.formatRCVS
+            'string.pattern.base': rcvsErrorMessages.validRCVS
           })
       }),
       failAction: async (request, h, error) => {
