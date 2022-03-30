@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const session = require('../../session')
 
 const errorMessages = {
   enterRCVS: 'Enter the RCVS number',
@@ -30,13 +31,12 @@ module.exports = [{
           })
       }),
       failAction: async (request, h, error) => {
-        console.log(error)
-        console.log(request.payload)
         return h.view('vet/rcvs', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      // TODO: store in session
+      const { rcvs } = request.payload
+      session.setVetSignup(request, 'rcvs', rcvs)
       return h.redirect('/vet/name')
     }
   }

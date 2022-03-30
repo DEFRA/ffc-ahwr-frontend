@@ -12,8 +12,15 @@ function expectPageContentOk ($) {
   expect(backLink.attr('href')).toMatch('/vet')
 }
 
+const session = require('../../../../../app/session')
+jest.mock('../../../../../app/session')
+
 describe('Vet, enter reference test', () => {
   const url = '/vet/reference'
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   describe(`GET ${url} route`, () => {
     test('returns 200 when not logged in', async () => {
@@ -78,11 +85,12 @@ describe('Vet, enter reference test', () => {
     })
 
     test('returns 200 when payload is valid and stores in session', async () => {
+      const reference = 'VV-1234-5678'
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, reference: 'VV-1234-5678' },
+        payload: { crumb, reference },
         url
       }
 
@@ -90,6 +98,8 @@ describe('Vet, enter reference test', () => {
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/rcvs')
+      expect(session.setVetSignup).toHaveBeenCalledTimes(1)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'reference', reference)
     })
   })
 })

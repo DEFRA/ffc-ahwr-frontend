@@ -12,8 +12,15 @@ function expectPageContentOk ($) {
   expect(backLink.attr('href')).toMatch('/vet/reference')
 }
 
+const session = require('../../../../../app/session')
+jest.mock('../../../../../app/session')
+
 describe('Vet, enter rcvs test', () => {
   const url = '/vet/rcvs'
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   describe(`GET ${url} route`, () => {
     test('returns 200 when not logged in', async () => {
@@ -73,6 +80,8 @@ describe('Vet, enter rcvs test', () => {
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/name')
+      expect(session.setVetSignup).toHaveBeenCalledTimes(1)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'rcvs', rcvs)
     })
   })
 })

@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const session = require('../../session')
 
 // TODO: implement proper application lookup
 function getApplication (reference) {
@@ -40,7 +41,6 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { reference } = request.payload
-      // TODO: Store in session
       // TODO: Send request to application to check it is valid
       const application = getApplication(reference)
 
@@ -48,6 +48,8 @@ module.exports = [{
         const errors = { details: [{ message: `No application found for reference "${reference}"` }] }
         return h.view('vet/reference', { ...request.payload, errors }).code(404).takeover()
       }
+
+      session.setVetSignup(request, 'reference', reference)
 
       return h.redirect('/vet/rcvs')
     }
