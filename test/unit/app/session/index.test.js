@@ -56,7 +56,7 @@ describe('session', () => {
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: false, value: objectValue },
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: null, value: objectValue },
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: undefined, value: objectValue }
-  ])('$func sets value in $expectedSectionKey based on the key (key value - $key) when no value exists in section', async ({ func, expectedSectionKey, key, value }) => {
+  ])('$func sets value in $expectedSectionKey based on the key (key value - $key) when no value exists in $expectedSectionKey', async ({ func, expectedSectionKey, key, value }) => {
     const yarMock = {
       get: jest.fn(),
       set: jest.fn()
@@ -87,7 +87,7 @@ describe('session', () => {
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: false, value: objectValue },
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: null, value: objectValue },
     { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: undefined, value: objectValue }
-  ])('$func sets value in $expectedSectionKey based on the key (key value - $key) when no value exists in section', async ({ func, expectedSectionKey, key, value }) => {
+  ])('$func sets value in $expectedSectionKey based on the key (key value - $key) when a value already exists in $expectedSectionKey', async ({ func, expectedSectionKey, key, value }) => {
     const existingValue = { existingKey: 'existing-value' }
     const yarMock = {
       get: jest.fn(() => existingValue),
