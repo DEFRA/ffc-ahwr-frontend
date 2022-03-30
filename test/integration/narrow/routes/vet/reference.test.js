@@ -33,12 +33,12 @@ describe('Vet, enter reference test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { reference: undefined, errorMessage: 'Enter the reference number' },
-      { reference: null, errorMessage: 'Enter the reference number' },
-      { reference: '', errorMessage: 'Enter the reference number' },
-      { reference: 'not-valid-ref', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"' },
-      { reference: 'VV-1234-567G', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"' }
-    ])('returns 400 when payload is invalid - %p', async ({ reference, errorMessage }) => {
+      { reference: undefined, errorMessage: 'Enter the reference number', expectedVal: undefined },
+      { reference: null, errorMessage: 'Enter the reference number', expectedVal: undefined },
+      { reference: '', errorMessage: 'Enter the reference number', expectedVal: undefined },
+      { reference: 'not-valid-ref', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"', expectedVal: 'not-valid-ref' },
+      { reference: 'VV-1234-567G', errorMessage: 'The reference number has the format begining "VV-" followed by two groups of four characters e.g. "VV-A2C4-EF78"', expectedVal: 'VV-1234-567G' }
+    ])('returns 400 when payload is invalid - %p', async ({ reference, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -54,6 +54,7 @@ describe('Vet, enter reference test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
       pageExpects.errors($, errorMessage)
+      expect($('#reference').val()).toEqual(expectedVal)
     })
 
     // TODO: remove skip when application lookup functionality plugged in

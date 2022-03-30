@@ -33,12 +33,12 @@ describe('Vet, enter rcvs test', () => {
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { rcvs: undefined, errorMessage: 'Enter the RCVS number' },
-      { rcvs: null, errorMessage: 'Enter the RCVS number' },
-      { rcvs: '', errorMessage: 'Enter the RCVS number' },
-      { rcvs: 'not-valid-ref', errorMessage: 'Enter a valid RCVS number' },
-      { rcvs: '123456A', errorMessage: 'Enter a valid RCVS number' }
-    ])('returns 400 when payload is invalid - %p', async ({ rcvs, errorMessage }) => {
+      { rcvs: undefined, errorMessage: 'Enter the RCVS number', expectedVal: undefined },
+      { rcvs: null, errorMessage: 'Enter the RCVS number', expectedVal: undefined },
+      { rcvs: '', errorMessage: 'Enter the RCVS number', expectedVal: undefined },
+      { rcvs: 'not-valid-ref', errorMessage: 'Enter a valid RCVS number', expectedVal: 'not-valid-ref' },
+      { rcvs: '123456A', errorMessage: 'Enter a valid RCVS number', expectedVal: '123456A' }
+    ])('returns 400 when payload is invalid - %p', async ({ rcvs, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -54,6 +54,7 @@ describe('Vet, enter rcvs test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
       pageExpects.errors($, errorMessage)
+      expect($('#rcvs').val()).toEqual(expectedVal)
     })
 
     test.each([
