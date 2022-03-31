@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const { practice: practiceErrorMessages } = require('../../../../../app/lib/error-messages')
+const { vetSignup: { practice: practiceKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('What is the name of the practice the vet works for?')
@@ -99,7 +100,7 @@ describe('Vet, enter practice name test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'practice', practice)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, practiceKey, practice)
     })
   })
 })

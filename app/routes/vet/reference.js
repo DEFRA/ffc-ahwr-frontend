@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const session = require('../../session')
+const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const { reference: referenceErrorMessages } = require('../../../app/lib/error-messages')
 
 // TODO: implement proper application lookup
@@ -13,7 +14,7 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      const reference = session.getVetSignup(request, 'reference')
+      const reference = session.getVetSignup(request, referenceKey)
       return h.view('vet/reference', { reference })
     }
   }
@@ -46,7 +47,7 @@ module.exports = [{
         return h.view('vet/reference', { ...request.payload, errors }).code(404).takeover()
       }
 
-      session.setVetSignup(request, 'reference', reference)
+      session.setVetSignup(request, referenceKey, reference)
 
       return h.redirect('/vet/rcvs')
     }

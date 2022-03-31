@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const session = require('../../session')
+const { vetSignup: { rcvs: rcvsKey } } = require('../../session/keys')
 const { rcvs: rcvsErrorMessages } = require('../../../app/lib/error-messages')
 
 module.exports = [{
@@ -8,7 +9,7 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      const rcvs = session.getVetSignup(request, 'rcvs')
+      const rcvs = session.getVetSignup(request, rcvsKey)
       return h.view('vet/rcvs', { rcvs })
     }
   }
@@ -33,7 +34,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { rcvs } = request.payload
-      session.setVetSignup(request, 'rcvs', rcvs)
+      session.setVetSignup(request, rcvsKey, rcvs)
       return h.redirect('/vet/name')
     }
   }

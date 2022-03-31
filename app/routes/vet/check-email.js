@@ -1,4 +1,5 @@
 const session = require('../../session')
+const { vetSignup: { email: emailKey } } = require('../../session/keys')
 
 module.exports = {
   method: 'GET',
@@ -6,7 +7,7 @@ module.exports = {
   options: {
     auth: false,
     handler: async (request, h) => {
-      const email = session.getVetSignup(request, 'email')
+      const email = session.getVetSignup(request, emailKey)
       return h.view('vet/check-email', { email })
     }
   }

@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const { reference: referenceErrorMessages } = require('../../../../../app/lib/error-messages')
+const { vetSignup: { reference: referenceKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the funding application reference number')
@@ -118,7 +119,7 @@ describe('Vet, enter reference test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/rcvs')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'reference', reference)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, referenceKey, reference)
     })
   })
 })

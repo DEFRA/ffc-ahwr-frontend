@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
+const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
   expect($('h1').text()).toMatch('Enter your email address')
@@ -96,7 +97,7 @@ describe('Vet, enter email name test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/check-email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, 'email', validEmail)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
     })
   })
 })

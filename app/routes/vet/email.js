@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const session = require('../../session')
+const { vetSignup: { email: emailKey } } = require('../../session/keys')
 const { email: emailErrorMessages } = require('../../../app/lib/error-messages')
 
 module.exports = [{
@@ -8,7 +9,7 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      const email = session.getVetSignup(request, 'email')
+      const email = session.getVetSignup(request, emailKey)
       return h.view('vet/email', { email })
     }
   }
@@ -33,7 +34,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { email } = request.payload
-      session.setVetSignup(request, 'email', email)
+      session.setVetSignup(request, emailKey, email)
       return h.redirect('/vet/check-email')
     }
   }

@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const session = require('../../session')
+const { vetSignup: { name: nameKey } } = require('../../session/keys')
 const { name: nameErrorMessages } = require('../../../app/lib/error-messages')
 
 module.exports = [{
@@ -8,7 +9,7 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      const name = session.getVetSignup(request, 'name')
+      const name = session.getVetSignup(request, nameKey)
       return h.view('vet/name', { name })
     }
   }
@@ -33,7 +34,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { name } = request.payload
-      session.setVetSignup(request, 'name', name)
+      session.setVetSignup(request, nameKey, name)
       return h.redirect('/vet/practice')
     }
   }
