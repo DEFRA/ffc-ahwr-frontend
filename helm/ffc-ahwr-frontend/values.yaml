@@ -36,6 +36,7 @@ container:
   notifyApiKey:
   notifyTemplateIdApplicationComplete:
   notifyTemplateIdFarmerLogin:
+  notifyTemplateIdVetLogin:
   port: 3000
   requestCpu: 100m
   requestMemory: 200Mi

@@ -1,28 +1,9 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
-const { v4: uuid } = require('uuid')
 const { getByEmail } = require('../../api-requests/users')
-const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../config')
-const sendEmail = require('../../lib/send-email')
+const { notify: { templateIdFarmerLogin } } = require('../../config')
+const sendMagicLinkEmail = require('../../lib/email/send-magic-link-email')
 const { email: emailErrorMessages } = require('../../../app/lib/error-messages')
-
-async function createAndCacheToken (req, email) {
-  const { magiclinkCache } = req.server.app
-
-  const token = uuid()
-  const tokens = await magiclinkCache.get(email) ?? []
-  tokens.push(token)
-  await magiclinkCache.set(email, tokens)
-  await magiclinkCache.set(token, email)
-  return token
-}
-
-async function sendLoginEmail (email, token) {
-  return sendEmail(templateIdFarmerLogin, email, {
-    personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
-    reference: token
-  })
-}
 
 module.exports = [{
   method: 'GET',
@@ -72,9 +53,7 @@ module.exports = [{
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: `No user found with email address "${email}"` } }).code(400).takeover()
       }
 
-      const token = await createAndCacheToken(request, email)
-
-      const result = await sendLoginEmail(email, token)
+      const result = await sendMagicLinkEmail(request, email, templateIdFarmerLogin)
 
       if (!result) {
         return boom.internal()

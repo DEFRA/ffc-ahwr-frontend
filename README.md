@@ -36,6 +36,7 @@ overridden by build and release pipelines.
 | NOTIFY_API_KEY                          | GOV.UK Notify API Key                                                                            |
 | NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE | Id of email template used for application complete                                               |
 | NOTIFY_TEMPLATE_ID_FARMER_LOGIN         | Id of email template used for farmer login email                                                 |
+| NOTIFY_TEMPLATE_ID_VET_LOGIN            | Id of email template used for vet login email                                                    |
 | SERVICE_URI                             | URI of service (used in links, in emails) e.g. `http://localhost:3000` or `https://defra.gov.uk` |
 
 ## Running the application
