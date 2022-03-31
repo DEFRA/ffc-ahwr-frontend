@@ -15,8 +15,8 @@ describe('Login page test', () => {
   beforeAll(async () => {
     jest.resetAllMocks()
 
-    sendEmail = require('../../../../../app/lib/send-email')
-    jest.mock('../../../../../app/lib/send-email')
+    sendEmail = require('../../../../../app/lib/email/send-email')
+    jest.mock('../../../../../app/lib/email/send-email')
     const orgs = require('../../../../../app/api-requests/users')
     getByEmail = orgs.getByEmail
     jest.mock('../../../../../app/api-requests/users')
