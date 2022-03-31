@@ -64,7 +64,8 @@ describe('Vet, enter reference test', () => {
       { reference: null, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
       { reference: '', errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
       { reference: 'not-valid-ref', errorMessage: referenceErrorMessages.validRef, expectedVal: 'not-valid-ref' },
-      { reference: 'VV-1234-567G', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-567G' }
+      { reference: 'VV-1234-567G', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-567G' },
+      { reference: 'VV-1234-5678-more', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-5678-more' }
     ])('returns 400 when payload is invalid - %p', async ({ reference, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
@@ -104,8 +105,10 @@ describe('Vet, enter reference test', () => {
       pageExpects.errors($, `No application found for reference "${reference}"`)
     })
 
-    test('returns 200 when payload is valid and stores in session', async () => {
-      const reference = 'VV-1234-5678'
+    test.each([
+      { reference: 'VV-1234-5678' },
+      { reference: '  VV-1234-5678  ' }
+    ])('returns 200 when payload is valid and stores in session', async ({ reference }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -119,7 +122,7 @@ describe('Vet, enter reference test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/rcvs')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, referenceKey, reference)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, referenceKey, reference.trim())
     })
   })
 })
