@@ -1,7 +1,9 @@
 module.exports = {
-  application: {
-  },
-  organisation: {
+  answers: {
+    cattle: 'cattle',
+    cattleType: 'cattleType',
+    pigs: 'pigs',
+    sheep: 'sheep'
   },
   vetSignup: {
     email: 'email',

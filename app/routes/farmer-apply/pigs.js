@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { cacheKeys: { answers } } = require('../../config/constants')
+const { answers } = require('../../session/keys')
 const getYesNoRadios = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
