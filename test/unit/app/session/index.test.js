@@ -102,4 +102,44 @@ describe('session', () => {
     expect(requestSetMock.yar.set).toHaveBeenCalledTimes(1)
     expect(requestSetMock.yar.set).toHaveBeenCalledWith(expectedSectionKey, { ...{ [key]: value }, ...existingValue })
   })
+
+  test.each([
+    { func: setApplication, expectedSectionKey: applicationSectionKey, key: 'key', value: '    to be trimmed   ' },
+    { func: setOrganisation, expectedSectionKey: organisationSectionKey, key: 'key', value: '    to be trimmed   ' },
+    { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: 'key', value: '    to be trimmed   ' }
+  ])('$func sets value once trimmed when the value is a string (value = "$value")', async ({ func, expectedSectionKey, value }) => {
+    const key = 'key'
+    const yarMock = {
+      get: jest.fn(),
+      set: jest.fn()
+    }
+    const requestSetMock = { yar: yarMock }
+
+    session[func](requestSetMock, key, value)
+
+    expect(requestSetMock.yar.get).toHaveBeenCalledTimes(1)
+    expect(requestSetMock.yar.get).toHaveBeenCalledWith(expectedSectionKey)
+    expect(requestSetMock.yar.set).toHaveBeenCalledTimes(1)
+    expect(requestSetMock.yar.set).toHaveBeenCalledWith(expectedSectionKey, { [key]: value.trim() })
+  })
+
+  test.each([
+    { func: setApplication, expectedSectionKey: applicationSectionKey, key: 'key', value: objectValue },
+    { func: setOrganisation, expectedSectionKey: organisationSectionKey, key: 'key', value: objectValue },
+    { func: setVetSignup, expectedSectionKey: vetSignupSectionKey, key: 'key', value: objectValue }
+  ])('$func does not trim value when the value is not a string (value = "$value")', async ({ func, expectedSectionKey, value }) => {
+    const key = 'key'
+    const yarMock = {
+      get: jest.fn(),
+      set: jest.fn()
+    }
+    const requestSetMock = { yar: yarMock }
+
+    session[func](requestSetMock, key, value)
+
+    expect(requestSetMock.yar.get).toHaveBeenCalledTimes(1)
+    expect(requestSetMock.yar.get).toHaveBeenCalledWith(expectedSectionKey)
+    expect(requestSetMock.yar.set).toHaveBeenCalledTimes(1)
+    expect(requestSetMock.yar.set).toHaveBeenCalledWith(expectedSectionKey, { [key]: value })
+  })
 })
