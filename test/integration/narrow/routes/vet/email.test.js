@@ -11,7 +11,7 @@ function expectPageContentOk ($) {
   expect($('title').text()).toEqual('Enter email of vet')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
-  expect(backLink.attr('href')).toMatch('/vet/name')
+  expect(backLink.attr('href')).toMatch('/vet/practice')
 }
 
 const session = require('../../../../../app/session')
