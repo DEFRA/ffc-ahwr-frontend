@@ -64,7 +64,8 @@ describe('Vet, enter rcvs test', () => {
       { rcvs: null, errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
       { rcvs: '', errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
       { rcvs: 'not-valid-ref', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: 'not-valid-ref' },
-      { rcvs: '123456A', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '123456A' }
+      { rcvs: '123456A', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '123456A' },
+      { rcvs: '12345678', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '12345678' }
     ])('returns 400 when payload is invalid - %p', async ({ rcvs, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
