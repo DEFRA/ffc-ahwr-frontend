@@ -85,8 +85,9 @@ describe('Vet, enter practice name test', () => {
 
     test.each([
       { practice: 'a' },
-      { practice: 'a'.repeat(100) }
-    ])('returns 200 when payload is valid and stores in session', async ({ practice }) => {
+      { practice: 'a'.repeat(100) },
+      { practice: `  ${'a'.repeat(100)}  ` }
+    ])('returns 200 when payload is valid and stores in session (practice = $practice)', async ({ practice }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -100,7 +101,7 @@ describe('Vet, enter practice name test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, practiceKey, practice)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, practiceKey, practice.trim())
     })
   })
 })

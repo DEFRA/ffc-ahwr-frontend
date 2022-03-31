@@ -20,7 +20,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        rcvs: Joi.string().pattern(/^[0-9]{6}[0-9X]{1}$/i).required()
+        rcvs: Joi.string().trim().pattern(/^[0-9]{6}[0-9X]{1}$/i).required()
           .messages({
             'any.required': rcvsErrorMessages.enterRCVS,
             'string.base': rcvsErrorMessages.enterRCVS,

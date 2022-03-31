@@ -83,12 +83,15 @@ describe('Vet, enter email name test', () => {
       expect($('#email').val()).toEqual(expectedVal)
     })
 
-    test('returns 200 when payload is valid and stores in session', async () => {
+    test.each([
+      { email: validEmail },
+      { email: `  ${validEmail}  ` }
+    ])('returns 200 when payload is valid and stores in session (email = "$email")', async ({ email }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, email: validEmail },
+        payload: { crumb, email },
         url
       }
 
@@ -97,7 +100,7 @@ describe('Vet, enter email name test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/check-email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
     })
   })
 })

@@ -20,7 +20,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        email: Joi.string().email().required()
+        email: Joi.string().trim().email().required()
           .messages({
             'any.required': emailErrorMessages.enterEmail,
             'string.base': emailErrorMessages.enterEmail,

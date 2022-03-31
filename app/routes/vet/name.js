@@ -20,7 +20,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        name: Joi.string().max(100).required()
+        name: Joi.string().trim().max(100).required()
           .messages({
             'any.required': nameErrorMessages.enterName,
             'string.base': nameErrorMessages.enterName,

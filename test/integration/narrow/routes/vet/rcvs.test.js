@@ -87,8 +87,9 @@ describe('Vet, enter rcvs test', () => {
 
     test.each([
       { rcvs: '1234567' },
-      { rcvs: '123456X' }
-    ])('returns 200 when payload is valid and stores in session', async ({ rcvs }) => {
+      { rcvs: '123456X' },
+      { rcvs: '  123456X  ' }
+    ])('returns 200 when payload is valid and stores in session (rcvs = $rcvs)', async ({ rcvs }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -102,7 +103,7 @@ describe('Vet, enter rcvs test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/name')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, rcvsKey, rcvs)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, rcvsKey, rcvs.trim())
     })
   })
 })

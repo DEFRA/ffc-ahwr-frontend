@@ -108,7 +108,7 @@ describe('Vet, enter reference test', () => {
     test.each([
       { reference: 'VV-1234-5678' },
       { reference: '  VV-1234-5678  ' }
-    ])('returns 200 when payload is valid and stores in session', async ({ reference }) => {
+    ])('returns 200 when payload is valid and stores in session (reference = $reference)', async ({ reference }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
