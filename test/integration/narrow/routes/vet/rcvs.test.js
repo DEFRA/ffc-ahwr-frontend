@@ -38,6 +38,23 @@ describe('Vet, enter rcvs test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
     })
+
+    test('loads rcvs number if in session', async () => {
+      const rcvs = '1234567'
+      const options = {
+        method: 'GET',
+        url
+      }
+      session.getVetSignup.mockReturnValue(rcvs)
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPageContentOk($)
+      expectPhaseBanner.ok($)
+      expect($('#rcvs').val()).toEqual(rcvs)
+    })
   })
 
   describe(`POST to ${url} route`, () => {

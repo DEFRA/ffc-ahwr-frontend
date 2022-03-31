@@ -12,8 +12,9 @@ module.exports = [{
   path: '/vet/reference',
   options: {
     auth: false,
-    handler: async (_, h) => {
-      return h.view('vet/reference')
+    handler: async (request, h) => {
+      const reference = session.getVetSignup(request, 'reference')
+      return h.view('vet/reference', { reference })
     }
   }
 }, {

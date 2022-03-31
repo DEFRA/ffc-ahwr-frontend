@@ -38,6 +38,23 @@ describe('Vet, enter reference test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
     })
+
+    test('loads reference if in session', async () => {
+      const reference = 'a-reference-number'
+      const options = {
+        method: 'GET',
+        url
+      }
+      session.getVetSignup.mockReturnValue(reference)
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPageContentOk($)
+      expectPhaseBanner.ok($)
+      expect($('#reference').val()).toEqual(reference)
+    })
   })
 
   describe(`POST to ${url} route`, () => {

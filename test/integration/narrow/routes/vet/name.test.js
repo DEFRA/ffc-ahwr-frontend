@@ -38,6 +38,23 @@ describe('Vet, enter name test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
     })
+
+    test('loads name if in session', async () => {
+      const name = 'vet name'
+      const options = {
+        method: 'GET',
+        url
+      }
+      session.getVetSignup.mockReturnValue(name)
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPageContentOk($)
+      expectPhaseBanner.ok($)
+      expect($('#name').val()).toEqual(name)
+    })
   })
 
   describe(`POST to ${url} route`, () => {

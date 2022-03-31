@@ -19,6 +19,7 @@ jest.mock('../../../../../app/session')
 
 describe('Vet, enter email name test', () => {
   const url = '/vet/email'
+  const validEmail = 'email@test.com'
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -37,6 +38,22 @@ describe('Vet, enter email name test', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
+    })
+
+    test('loads email if in session', async () => {
+      const options = {
+        method: 'GET',
+        url
+      }
+      session.getVetSignup.mockReturnValue(validEmail)
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPageContentOk($)
+      expectPhaseBanner.ok($)
+      expect($('#email').val()).toEqual(validEmail)
     })
   })
 
@@ -66,7 +83,6 @@ describe('Vet, enter email name test', () => {
     })
 
     test('returns 200 when payload is valid and stores in session', async () => {
-      const validEmail = 'email@test.com'
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },

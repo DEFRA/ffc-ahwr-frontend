@@ -7,8 +7,9 @@ module.exports = [{
   path: '/vet/name',
   options: {
     auth: false,
-    handler: async (_, h) => {
-      return h.view('vet/name')
+    handler: async (request, h) => {
+      const name = session.getVetSignup(request, 'name')
+      return h.view('vet/name', { name })
     }
   }
 }, {
