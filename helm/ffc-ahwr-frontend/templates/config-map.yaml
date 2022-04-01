@@ -10,6 +10,7 @@ data:
   NODE_ENV: {{ quote .Values.environment }}
   NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE: {{ quote .Values.container.notifyTemplateIdApplicationComplete }}
   NOTIFY_TEMPLATE_ID_FARMER_LOGIN: {{ quote .Values.container.notifyTemplateIdFarmerLogin }}
+  NOTIFY_TEMPLATE_ID_VET_LOGIN: {{ quote .Values.container.notifyTemplateIdVetLogin }}
   PORT: {{ quote .Values.container.port }}
   {{- if .Values.container.redisHostname }}
   REDIS_HOSTNAME: {{ quote .Values.container.redisHostname }}

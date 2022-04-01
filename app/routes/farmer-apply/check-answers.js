@@ -1,4 +1,4 @@
-const { cacheKeys: { answers } } = require('../../config/constants')
+const { answers } = require('../../session/keys')
 const session = require('../../session')
 
 const backLink = '/farmer-apply/pigs'

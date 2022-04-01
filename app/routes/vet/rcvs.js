@@ -1,18 +1,16 @@
 const Joi = require('joi')
 const session = require('../../session')
-
-const errorMessages = {
-  enterRCVS: 'Enter the RCVS number',
-  formatRCVS: 'Enter a valid RCVS number'
-}
+const { vetSignup: { rcvs: rcvsKey } } = require('../../session/keys')
+const { rcvs: rcvsErrorMessages } = require('../../../app/lib/error-messages')
 
 module.exports = [{
   method: 'GET',
   path: '/vet/rcvs',
   options: {
     auth: false,
-    handler: async (_, h) => {
-      return h.view('vet/rcvs')
+    handler: async (request, h) => {
+      const rcvs = session.getVetSignup(request, rcvsKey)
+      return h.view('vet/rcvs', { rcvs })
     }
   }
 }, {
@@ -22,12 +20,12 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        rcvs: Joi.string().pattern(/[0-9]{6}[0-9X]{1}/i).required()
+        rcvs: Joi.string().trim().pattern(/^\d{6}[\dX]{1}$/i).required()
           .messages({
-            'any.required': errorMessages.enterRCVS,
-            'string.base': errorMessages.enterRCVS,
-            'string.empty': errorMessages.enterRCVS,
-            'string.pattern.base': errorMessages.formatRCVS
+            'any.required': rcvsErrorMessages.enterRCVS,
+            'string.base': rcvsErrorMessages.enterRCVS,
+            'string.empty': rcvsErrorMessages.enterRCVS,
+            'string.pattern.base': rcvsErrorMessages.validRCVS
           })
       }),
       failAction: async (request, h, error) => {
@@ -36,7 +34,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { rcvs } = request.payload
-      session.setVetSignup(request, 'rcvs', rcvs)
+      session.setVetSignup(request, rcvsKey, rcvs)
       return h.redirect('/vet/name')
     }
   }

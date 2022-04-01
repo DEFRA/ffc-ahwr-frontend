@@ -15,6 +15,10 @@ const routes = [].concat(
   require('../routes/farmer-apply/pigs'),
   require('../routes/farmer-apply/sheep'),
   require('../routes/vet'),
+  require('../routes/vet/check-email'),
+  require('../routes/vet/email'),
+  require('../routes/vet/name'),
+  require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
   require('../routes/vet/reference')
 )

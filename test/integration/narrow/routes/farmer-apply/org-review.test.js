@@ -44,6 +44,7 @@ describe('Org review page test', () => {
       expect(values.eq(2).text()).toMatch(org.address)
       expect(keys.eq(3).text()).toMatch('Contact email address')
       expect(values.eq(3).text()).toMatch(org.email)
+      expect($('title').text()).toEqual('Health and welfare review funding for this organisation')
       expectPhaseBanner.ok($)
     })
 

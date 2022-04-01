@@ -6,13 +6,13 @@ const notifyClient = require('./notify-client')
  * [Notify](https://docs.notifications.service.gov.uk/node.html#send-an-email-arguments)
  *
  * @param {string} templateId UUID of the email template.
- * @param {string} email address to send email to.
+ * @param {string} emailAddress address to send email to.
  * @param {object} options for personalisation, etc.
  */
-module.exports = async (templateId, email, options) => {
+module.exports = async (templateId, emailAddress, options) => {
   let success = true
   try {
-    await notifyClient.sendEmail(templateId, email, options)
+    await notifyClient.sendEmail(templateId, emailAddress, options)
   } catch (e) {
     success = false
     console.error('Error occurred during sending email', e.response.data)

@@ -1,0 +1,45 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}Enter email of vet{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/vet/practice",
+    attributes: {
+      id: "back"
+    }
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="POST">
+        <input type="hidden" name="crumb" value="{{crumb}}"/>
+
+        {{ govukInput({
+          label: {
+            classes: "govuk-label--l",
+            isPageHeading: true,
+            text: "Enter your email address"
+          },
+          classes: "govuk-input-!-width-full",
+          id: "email",
+          name: "email",
+          value: email,
+          errorMessage: errorMessage
+        }) }}
+
+        <p>We'll send you a link to confirm that you have access.</p>
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+            id: "continue"
+          }
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

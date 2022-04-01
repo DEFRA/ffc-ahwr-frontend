@@ -15,8 +15,8 @@ describe('Login page test', () => {
   beforeAll(async () => {
     jest.resetAllMocks()
 
-    sendEmail = require('../../../../../app/lib/send-email')
-    jest.mock('../../../../../app/lib/send-email')
+    sendEmail = require('../../../../../app/lib/email/send-email')
+    jest.mock('../../../../../app/lib/email/send-email')
     const orgs = require('../../../../../app/api-requests/users')
     getByEmail = orgs.getByEmail
     jest.mock('../../../../../app/api-requests/users')
@@ -160,14 +160,17 @@ describe('Login page test', () => {
       cacheSetSpy.mockRestore()
     })
 
-    test('route with known email sends email', async () => {
+    test.each([
+      { email: validEmail },
+      { email: `  ${validEmail}  ` }
+    ])('route with known email sends email (email = $email)', async ({ email }) => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
-        payload: { crumb, email: validEmail },
+        payload: { crumb, email },
         headers: { cookie: `crumb=${crumb}` }
       }
 

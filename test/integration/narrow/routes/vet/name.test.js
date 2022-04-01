@@ -2,24 +2,24 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
-const { rcvs: rcvsErrorMessages } = require('../../../../../app/lib/error-messages')
-const { vetSignup: { rcvs: rcvsKey } } = require('../../../../../app/session/keys')
+const { name: nameErrorMessages } = require('../../../../../app/lib/error-messages')
+const { vetSignup: { name: nameKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('Enter the RCVS number of the vet who undertook the visit')
-  expect($('label[for=rcvs]').text()).toMatch('RCVS number')
+  expect($('.govuk-heading-l').text()).toEqual('Enter the name of the vet who undertook the visit')
+  expect($('label[for=name]').text()).toMatch('Name of the vet')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual('Enter RCVS number')
+  expect($('title').text()).toEqual('Enter name of vet')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
-  expect(backLink.attr('href')).toMatch('/vet/reference')
+  expect(backLink.attr('href')).toMatch('/vet/rcvs')
 }
 
 const session = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
 
-describe('Vet, enter rcvs test', () => {
-  const url = '/vet/rcvs'
+describe('Vet, enter name test', () => {
+  const url = '/vet/name'
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -40,13 +40,13 @@ describe('Vet, enter rcvs test', () => {
       expectPhaseBanner.ok($)
     })
 
-    test('loads rcvs number if in session', async () => {
-      const rcvs = '1234567'
+    test('loads name if in session', async () => {
+      const name = 'vet name'
       const options = {
         method: 'GET',
         url
       }
-      session.getVetSignup.mockReturnValue(rcvs)
+      session.getVetSignup.mockReturnValue(name)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -54,24 +54,22 @@ describe('Vet, enter rcvs test', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      expect($('#rcvs').val()).toEqual(rcvs)
+      expect($('#name').val()).toEqual(name)
     })
   })
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { rcvs: undefined, errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
-      { rcvs: null, errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
-      { rcvs: '', errorMessage: rcvsErrorMessages.enterRCVS, expectedVal: undefined },
-      { rcvs: 'not-valid-ref', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: 'not-valid-ref' },
-      { rcvs: '123456A', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '123456A' },
-      { rcvs: '12345678', errorMessage: rcvsErrorMessages.validRCVS, expectedVal: '12345678' }
-    ])('returns 400 when payload is invalid - %p', async ({ rcvs, errorMessage, expectedVal }) => {
+      { name: undefined, errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: null, errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: '', errorMessage: nameErrorMessages.enterName, expectedVal: undefined },
+      { name: 'a'.repeat(101), errorMessage: nameErrorMessages.nameLength, expectedVal: 'a'.repeat(101) }
+    ])('returns 400 when payload is invalid - %p', async ({ name, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, rcvs },
+        payload: { crumb, name },
         url
       }
 
@@ -82,28 +80,28 @@ describe('Vet, enter rcvs test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
       pageExpects.errors($, errorMessage)
-      expect($('#rcvs').val()).toEqual(expectedVal)
+      expect($('#name').val()).toEqual(expectedVal)
     })
 
     test.each([
-      { rcvs: '1234567' },
-      { rcvs: '123456X' },
-      { rcvs: '  123456X  ' }
-    ])('returns 200 when payload is valid and stores in session (rcvs = $rcvs)', async ({ rcvs }) => {
+      { name: 'a' },
+      { name: 'a'.repeat(100) },
+      { name: `  ${'a'.repeat(100)}  ` }
+    ])('returns 200 when payload is valid and stores in session (name = $name)', async ({ name }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, rcvs },
+        payload: { crumb, name },
         url
       }
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/name')
+      expect(res.headers.location).toEqual('/vet/practice')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, rcvsKey, rcvs.trim())
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, nameKey, name.trim())
     })
   })
 })

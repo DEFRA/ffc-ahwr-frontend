@@ -1,5 +1,5 @@
-const sendEmail = require('../../../../app/lib/send-email')
-const notifyClient = require('../../../../app/lib/notify-client')
+const sendEmail = require('../../../../../app/lib/email/send-email')
+const notifyClient = require('../../../../../app/lib/email/notify-client')
 const error = new Error('Test exception')
 error.response = { data: 'failed to send email' }
 
