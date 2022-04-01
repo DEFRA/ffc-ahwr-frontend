@@ -3,7 +3,7 @@ const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
 const { notify: { templateIdFarmerLogin } } = require('../../config')
 const sendMagicLinkEmail = require('../../lib/email/send-magic-link-email')
-const { email: emailErrorMessages } = require('../../../app/lib/error-messages')
+const { email: emailValidation } = require('../../../app/lib/validation/email')
 
 module.exports = [{
   method: 'GET',
@@ -33,13 +33,7 @@ module.exports = [{
     },
     validate: {
       payload: Joi.object({
-        email: Joi.string().trim().email().required()
-          .messages({
-            'any.required': emailErrorMessages.enterEmail,
-            'string.base': emailErrorMessages.enterEmail,
-            'string.email': emailErrorMessages.validEmail,
-            'string.empty': emailErrorMessages.enterEmail
-          })
+        email: emailValidation
       }),
       failAction: async (request, h, error) => {
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
