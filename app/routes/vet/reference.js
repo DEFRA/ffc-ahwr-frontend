@@ -25,7 +25,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        reference: Joi.string().trim().pattern(/^vv-[0-9a-f]{4}-[0-9a-f]{4}$/i).required()
+        reference: Joi.string().trim().pattern(/^vv-[\da-f]{4}-[\da-f]{4}$/i).required()
           .messages({
             'any.required': referenceErrorMessages.enterRef,
             'string.base': referenceErrorMessages.enterRef,
