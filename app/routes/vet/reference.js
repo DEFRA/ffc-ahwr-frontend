@@ -2,10 +2,13 @@ const Joi = require('joi')
 const session = require('../../session')
 const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const { reference: referenceErrorMessages } = require('../../../app/lib/error-messages')
+const { fetchApplicationRequestQueue, fetchApplicationRequestMsgType, fetchApplicationResponseQueue } = require('../../config')
+const { sendMessage, receiveMessage } = require('../../messaging')
 
 // TODO: implement proper application lookup
-function getApplication (reference) {
-  return true
+function getApplication (reference, sessionId) {
+  sendMessage({ application: reference }, fetchApplicationRequestMsgType, fetchApplicationRequestQueue, { sessionId })
+  return receiveMessage(sessionId, fetchApplicationResponseQueue)  
 }
 
 module.exports = [{
@@ -40,7 +43,7 @@ module.exports = [{
     handler: async (request, h) => {
       const { reference } = request.payload
       // TODO: Send request to application to check it is valid
-      const application = getApplication(reference)
+      const application = await getApplication(reference, request.yar.id)
 
       if (!application) {
         const errors = { details: [{ message: `No application found for reference "${reference}"` }] }
