@@ -7,7 +7,7 @@ const { sendMessage, receiveMessage } = require('../../messaging')
 
 // TODO: implement proper application lookup
 function getApplication (reference, sessionId) {
-  sendMessage({ application: reference }, fetchApplicationRequestMsgType, fetchApplicationRequestQueue, { sessionId })
+  sendMessage({ application: reference, sessionId }, fetchApplicationRequestMsgType, fetchApplicationRequestQueue, { sessionId })
   return receiveMessage(sessionId, fetchApplicationResponseQueue)  
 }
 
@@ -46,8 +46,8 @@ module.exports = [{
       const application = await getApplication(reference, request.yar.id)
 
       if (!application) {
-        const errors = { details: [{ message: `No application found for reference "${reference}"` }] }
-        return h.view('vet/reference', { ...request.payload, errors }).code(404).takeover()
+        const error = { details: [{ message: `No application found for reference "${reference}"` }] }
+        return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(404).takeover()
       }
 
       session.setVetSignup(request, referenceKey, reference)
