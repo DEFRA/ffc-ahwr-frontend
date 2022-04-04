@@ -18,6 +18,9 @@ function expectPageContentOk ($) {
 const session = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
 
+const messaging = require('../../../../../app/messaging')
+jest.mock('../../../../../app/messaging')
+
 describe('Vet, enter reference test', () => {
   const url = '/vet/reference'
 
@@ -85,8 +88,8 @@ describe('Vet, enter reference test', () => {
       expect($('#reference').val()).toEqual(expectedVal)
     })
 
-    // TODO: remove skip when application lookup functionality plugged in
-    test.skip('returns 404 when payload is valid', async () => {
+    messaging.receiveMessage = jest.fn().mockReturnValueOnce(null).mockReturnValue({ applicationId: 'VV-1234-5678' })
+    test('returns 404 when payload is valid', async () => {
       const reference = 'VV-1234-5678'
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
