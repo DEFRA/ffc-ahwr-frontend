@@ -2,13 +2,13 @@ const Joi = require('joi')
 const session = require('../../session')
 const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const { reference: referenceErrorMessages } = require('../../../app/lib/error-messages')
-const { fetchApplicationRequestQueue, fetchApplicationRequestMsgType, fetchApplicationResponseQueue } = require('../../config')
+const { applicationRequestQueue, fetchApplicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const { sendMessage, receiveMessage } = require('../../messaging')
 
 // TODO: implement proper application lookup
 function getApplication (reference, sessionId) {
-  sendMessage({ application: reference, sessionId }, fetchApplicationRequestMsgType, fetchApplicationRequestQueue, { sessionId })
-  return receiveMessage(sessionId, fetchApplicationResponseQueue)
+  sendMessage({ application: reference, sessionId }, fetchApplicationRequestMsgType, applicationRequestQueue, { sessionId })
+  return receiveMessage(sessionId, applicationResponseQueue)
 }
 
 module.exports = [{
