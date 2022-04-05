@@ -47,7 +47,7 @@ module.exports = [{
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: `No user found with email address "${email}"` } }).code(400).takeover()
       }
 
-      const result = await sendMagicLinkEmail(request, email, templateIdFarmerLogin)
+      const result = await sendMagicLinkEmail(request, email, templateIdFarmerLogin, 'farmer-apply/org-review')
 
       if (!result) {
         return boom.internal()
