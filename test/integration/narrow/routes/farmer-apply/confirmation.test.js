@@ -54,7 +54,7 @@ describe('Confirmation test', () => {
       expectPhaseBanner.ok($)
     })
 
-    test('when not logged in redirects to /login with last page as next param', async () => {
+    test('when not logged in redirects to /farmer-apply/login with last page as next param', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -66,7 +66,7 @@ describe('Confirmation test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+      expect(res.headers.location).toEqual(`/farmer-apply/login?next=${encodeURIComponent(url)}`)
     })
   })
 })

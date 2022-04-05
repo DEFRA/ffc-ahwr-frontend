@@ -22,10 +22,10 @@ describe('Login page test', () => {
     jest.mock('../../../../../app/api-requests/users')
   })
 
-  const url = '/login'
+  const url = '/farmer-apply/login'
   const validEmail = 'dairy@ltd.com'
 
-  describe('GET requests to /login', () => {
+  describe('GET requests to /farmer-apply/login', () => {
     test('returns 200', async () => {
       const options = {
         method: 'GET',
@@ -50,11 +50,11 @@ describe('Login page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('farmer-apply/org-review')
+      expect(res.headers.location).toEqual('/farmer-apply/org-review')
     })
   })
 
-  describe('POST requests to /login route', () => {
+  describe('POST requests to /farmer-apply/login route', () => {
     test.each([
       { email: 'not-an-email', errorMessage: 'Enter a valid email address' },
       { email: '', errorMessage: 'Enter an email address' },
