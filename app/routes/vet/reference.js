@@ -5,9 +5,8 @@ const { reference: referenceErrorMessages } = require('../../../app/lib/error-me
 const { applicationRequestQueue, fetchApplicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const { sendMessage, receiveMessage } = require('../../messaging')
 
-// TODO: implement proper application lookup
-function getApplication (reference, sessionId) {
-  sendMessage({ application: reference, sessionId }, fetchApplicationRequestMsgType, applicationRequestQueue, { sessionId })
+function getApplication (applicationReference, sessionId) {
+  sendMessage({ applicationReference, sessionId }, fetchApplicationRequestMsgType, applicationRequestQueue, { sessionId })
   return receiveMessage(sessionId, applicationResponseQueue)
 }
 
@@ -17,8 +16,8 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      const reference = session.getVetSignup(request, referenceKey)
-      return h.view('vet/reference', { reference })
+      const applicationReference = session.getVetSignup(request, referenceKey)
+      return h.view('vet/reference', { applicationReference })
     }
   }
 }, {
@@ -28,7 +27,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        reference: Joi.string().trim().pattern(/^vv-[\da-f]{4}-[\da-f]{4}$/i).required()
+        applicationReference: Joi.string().trim().pattern(/^vv-[\da-f]{4}-[\da-f]{4}$/i).required()
           .messages({
             'any.required': referenceErrorMessages.enterRef,
             'string.base': referenceErrorMessages.enterRef,
@@ -41,16 +40,16 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      const { reference } = request.payload
+      const { applicationReference } = request.payload
       // TODO: Send request to application to check it is valid
-      const application = await getApplication(reference, request.yar.id)
+      const application = await getApplication(applicationReference, request.yar.id)
 
       if (!application) {
-        const error = { details: [{ message: `No application found for reference "${reference}"` }] }
+        const error = { details: [{ message: `No application found for reference "${applicationReference}"` }] }
         return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(404).takeover()
       }
 
-      session.setVetSignup(request, referenceKey, reference)
+      session.setVetSignup(request, referenceKey, applicationReference)
 
       return h.redirect('/vet/rcvs')
     }

@@ -22,7 +22,7 @@ module.exports = {
         console.info('Response received:', util.inspect(response, false, null, true))
       }
 
-      return h.view('farmer-apply/confirmation', { reference: response?.applicationId })
+      return h.view('farmer-apply/confirmation', { reference: response?.applicationReference })
     }
   }
 }

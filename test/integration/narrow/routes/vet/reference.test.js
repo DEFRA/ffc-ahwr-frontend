@@ -7,7 +7,7 @@ const { vetSignup: { reference: referenceKey } } = require('../../../../../app/s
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter the funding application reference number')
-  expect($('label[for=reference]').text()).toMatch('Reference number')
+  expect($('label[for=applicationReference]').text()).toMatch('Reference number')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('Enter application reference number')
   const backLink = $('.govuk-back-link')
@@ -44,12 +44,12 @@ describe('Vet, enter reference test', () => {
     })
 
     test('loads reference if in session', async () => {
-      const reference = 'a-reference-number'
+      const applicationReference = 'a-reference-number'
       const options = {
         method: 'GET',
         url
       }
-      session.getVetSignup.mockReturnValue(reference)
+      session.getVetSignup.mockReturnValue(applicationReference)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -57,24 +57,24 @@ describe('Vet, enter reference test', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      expect($('#reference').val()).toEqual(reference)
+      expect($('#applicationReference').val()).toEqual(applicationReference)
     })
   })
 
   describe(`POST to ${url} route`, () => {
     test.each([
-      { reference: undefined, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
-      { reference: null, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
-      { reference: '', errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
-      { reference: 'not-valid-ref', errorMessage: referenceErrorMessages.validRef, expectedVal: 'not-valid-ref' },
-      { reference: 'VV-1234-567G', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-567G' },
-      { reference: 'VV-1234-5678-more', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-5678-more' }
-    ])('returns 400 when payload is invalid - %p', async ({ reference, errorMessage, expectedVal }) => {
+      { applicationReference: undefined, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { applicationReference: null, errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { applicationReference: '', errorMessage: referenceErrorMessages.enterRef, expectedVal: undefined },
+      { applicationReference: 'not-valid-ref', errorMessage: referenceErrorMessages.validRef, expectedVal: 'not-valid-ref' },
+      { applicationReference: 'VV-1234-567G', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-567G' },
+      { applicationReference: 'VV-1234-5678-more', errorMessage: referenceErrorMessages.validRef, expectedVal: 'VV-1234-5678-more' }
+    ])('returns 400 when payload is invalid - %p', async ({ applicationReference, errorMessage, expectedVal }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, reference },
+        payload: { crumb, applicationReference },
         url
       }
 
@@ -85,17 +85,17 @@ describe('Vet, enter reference test', () => {
       expectPageContentOk($)
       expectPhaseBanner.ok($)
       pageExpects.errors($, errorMessage)
-      expect($('#reference').val()).toEqual(expectedVal)
+      expect($('#applicationReference').val()).toEqual(expectedVal)
     })
 
-    messaging.receiveMessage = jest.fn().mockReturnValueOnce(null).mockReturnValue({ applicationId: 'VV-1234-5678' })
+    messaging.receiveMessage = jest.fn().mockReturnValueOnce(null).mockReturnValue({ applicationReference: 'VV-1234-5678' })
     test('returns 404 when payload is valid', async () => {
-      const reference = 'VV-1234-5678'
+      const applicationReference = 'VV-1234-5678'
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, reference },
+        payload: { crumb, applicationReference },
         url
       }
 
@@ -105,18 +105,18 @@ describe('Vet, enter reference test', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      pageExpects.errors($, `No application found for reference "${reference}"`)
+      pageExpects.errors($, `No application found for reference "${applicationReference}"`)
     })
 
     test.each([
-      { reference: 'VV-1234-5678' },
-      { reference: '  VV-1234-5678  ' }
-    ])('returns 200 when payload is valid and stores in session (reference = $reference)', async ({ reference }) => {
+      { applicationReference: 'VV-1234-5678' },
+      { applicationReference: '  VV-1234-5678  ' }
+    ])('returns 200 when payload is valid and stores in session (reference = $reference)', async ({ applicationReference }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
         method: 'POST',
-        payload: { crumb, reference },
+        payload: { crumb, applicationReference },
         url
       }
 
@@ -125,7 +125,7 @@ describe('Vet, enter reference test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet/rcvs')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
-      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, referenceKey, reference.trim())
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, referenceKey, applicationReference.trim())
     })
   })
 })
