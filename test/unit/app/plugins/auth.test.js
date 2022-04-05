@@ -17,6 +17,7 @@ describe('Auth plugin test', () => {
 
   const url = '/login'
   const validEmail = 'dairy@ltd.com'
+  const redirectTo = 'farmer-apply/org-review'
 
   describe('GET requests to /login', () => {
     async function login () {
@@ -28,7 +29,7 @@ describe('Auth plugin test', () => {
       }
 
       await global.__SERVER__.app.magiclinkCache.set(email, [token])
-      await global.__SERVER__.app.magiclinkCache.set(token, email)
+      await global.__SERVER__.app.magiclinkCache.set(token, { email, redirectTo })
 
       return global.__SERVER__.inject(options)
     }
@@ -48,7 +49,7 @@ describe('Auth plugin test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('farmer-apply/org-review')
+      expect(res.headers.location).toEqual(redirectTo)
       expect(session.setOrganisation).toHaveBeenCalledTimes(1)
       expect(session.setOrganisation).toHaveBeenCalledWith(res.request, 'name', org.name)
 

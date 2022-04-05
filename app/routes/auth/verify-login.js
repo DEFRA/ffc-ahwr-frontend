@@ -12,16 +12,29 @@ function setAuthCookie (request, email) {
   console.log(`Logged in user '${email}'.`)
 }
 
-async function clearCache (request, email) {
+/**
+ * Clear all tokens in the `magiclinkCache` associated to the email.
+ *
+ * @param {object} request object containing the `magiclinkCache`.
+ * @param {string} emailAddress address to clear tokens from.
+ */
+async function clearCache (request, emailAddress) {
   const { magiclinkCache } = request.server.app
-  const emailTokens = await magiclinkCache.get(email)
+  const emailTokens = await magiclinkCache.get(emailAddress)
   Promise.all(emailTokens.map(async (token) => await magiclinkCache.drop(token)))
-  await magiclinkCache.drop(email)
+  await magiclinkCache.drop(emailAddress)
 }
 
+/**
+ * Returns the object associated to the token or an empty object if not found.
+ *
+ * @param {object} request object containing the `magiclinkCache`.
+ * @param {token} token UUID to look up.
+ * @return {object} value from cache or empty if token not found in cache.
+ */
 async function lookupToken (request, token) {
   const { magiclinkCache } = request.server.app
-  return magiclinkCache.get(token)
+  return (await magiclinkCache.get(token)) ?? {}
 }
 
 module.exports = [{
@@ -42,7 +55,7 @@ module.exports = [{
     handler: async (request, h) => {
       const { email, token } = request.query
 
-      const cachedEmail = await lookupToken(request, token)
+      const { email: cachedEmail, redirectTo } = await lookupToken(request, token)
       if (!cachedEmail || email !== cachedEmail) {
         return h.view('auth/verify-login-failed').code(400)
       }
@@ -53,7 +66,7 @@ module.exports = [{
 
       await clearCache(request, email)
 
-      return h.redirect('farmer-apply/org-review')
+      return h.redirect(redirectTo)
     }
   }
 }]

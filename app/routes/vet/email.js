@@ -33,7 +33,7 @@ module.exports = [{
       const { email } = request.payload
       session.setVetSignup(request, emailKey, email)
 
-      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin)
+      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date')
 
       if (!result) {
         return boom.internal()

@@ -106,7 +106,7 @@ describe('Vet, enter email name test', () => {
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
       expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin)
+      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin, 'vet/visit-date')
     })
 
     test('returns 500 when problem sending email', async () => {
@@ -124,7 +124,7 @@ describe('Vet, enter email name test', () => {
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
       expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin)
+      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin, 'vet/visit-date')
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Sorry, there is a problem with the service')
