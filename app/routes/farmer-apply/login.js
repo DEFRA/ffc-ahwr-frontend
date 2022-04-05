@@ -7,7 +7,7 @@ const { email: emailValidation } = require('../../../app/lib/validation/email')
 
 module.exports = [{
   method: 'GET',
-  path: '/login',
+  path: '/farmer-apply/login',
   options: {
     auth: {
       mode: 'try'
@@ -19,14 +19,14 @@ module.exports = [{
     },
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return h.redirect(request.query?.next || 'farmer-apply/org-review')
+        return h.redirect(request.query?.next || '/farmer-apply/org-review')
       }
       return h.view('auth/magic-login')
     }
   }
 }, {
   method: 'POST',
-  path: '/login',
+  path: '/farmer-apply/login',
   options: {
     auth: {
       mode: 'try'

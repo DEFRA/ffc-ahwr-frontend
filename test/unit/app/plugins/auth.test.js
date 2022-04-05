@@ -15,11 +15,11 @@ describe('Auth plugin test', () => {
     jest.mock('../../../../app/api-requests/users')
   })
 
-  const url = '/login'
+  const url = '/farmer-apply/login'
   const validEmail = 'dairy@ltd.com'
-  const redirectTo = 'farmer-apply/org-review'
+  const redirectTo = '/farmer-apply/org-review'
 
-  describe('GET requests to /login', () => {
+  describe('GET requests to /farmer-apply/login', () => {
     async function login () {
       const email = uuid() + validEmail
       const token = uuid()
@@ -56,7 +56,7 @@ describe('Auth plugin test', () => {
       const resTwo = await global.__SERVER__.inject(options)
 
       expect(resTwo.statusCode).toBe(302)
-      expect(resTwo.headers.location).toEqual('farmer-apply/org-review')
+      expect(resTwo.headers.location).toEqual('/farmer-apply/org-review')
     })
   })
 })

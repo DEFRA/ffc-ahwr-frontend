@@ -19,7 +19,7 @@ module.exports = {
           path: '/'
         },
         keepAlive: true,
-        redirectTo: '/login',
+        redirectTo: '/farmer-apply/login',
         appendNext: true,
         validateFunc: async (request, session) => {
           const result = { }
