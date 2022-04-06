@@ -50,6 +50,8 @@ const schema = Joi.object({
     ...sharedConfigSchema
   },
   applicationResponseMsgType: Joi.string(),
+  fetchApplicationRequestMsgType: Joi.string(),
+  fetchApplicationResponseMsgType: Joi.string(),
   serviceUri: Joi.string().uri(),
   storage: {
     connectionString: Joi.string().required(),
@@ -103,6 +105,8 @@ const config = {
     ...sharedConfig
   },
   applicationResponseMsgType: `${msgTypePrefix}.app.response`,
+  fetchApplicationRequestMsgType: `${msgTypePrefix}.fetch.app.request`,
+  fetchApplicationResponseMsgType: `${msgTypePrefix}.fetch.app.response`,
   serviceUri: process.env.SERVICE_URI,
   storage: {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
