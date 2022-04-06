@@ -1,5 +1,6 @@
 const { getByEmail } = require('../api-requests/users')
 const cookieConfig = require('../config').cookie
+const { farmer, vet } = require('../config/user-types')
 const { getOrganisation, setOrganisation } = require('../session')
 
 function isOrgInSession (request) {
@@ -27,18 +28,25 @@ module.exports = {
           return '/farmer-apply/login'
         },
         validateFunc: async (request, session) => {
-          const result = { }
-          if (isOrgInSession(request)) {
-            result.valid = true
-          } else {
-            const org = await getByEmail(session.email)
-            if (org) {
-              Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
-            }
-            result.valid = !!org
-          }
+          const { path } = request
+          const { userType } = session
 
-          return result
+          if (path.startsWith('/farmer-apply') && userType === farmer) {
+            const result = { }
+            if (isOrgInSession(request)) {
+              result.valid = true
+            } else {
+              const org = await getByEmail(session.email)
+              if (org) {
+                Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
+              }
+              result.valid = !!org
+            }
+            return result
+          } else if (path.startsWith('/vet') && userType === vet) {
+            return { valid: true }
+          }
+          return { valid: false }
         }
       })
       server.auth.default({ strategy: 'session', mode: 'required' })

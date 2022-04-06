@@ -2,14 +2,14 @@ const { v4: uuid } = require('uuid')
 const sendEmail = require('./send-email')
 const { serviceUri } = require('../../config')
 
-async function createAndCacheToken (request, email, redirectTo) {
+async function createAndCacheToken (request, email, redirectTo, userType) {
   const { magiclinkCache } = request.server.app
 
   const token = uuid()
   const tokens = await magiclinkCache.get(email) ?? []
   tokens.push(token)
   await magiclinkCache.set(email, tokens)
-  await magiclinkCache.set(token, { email, redirectTo })
+  await magiclinkCache.set(token, { email, redirectTo, userType })
   return token
 }
 
@@ -26,9 +26,12 @@ async function createAndCacheToken (request, email, redirectTo) {
  * @param {string} templateId UUID of the email template with `magiclink`
  * variable set for personalisation.
  * @param {string} redirectTo the route to redirect the user to once logged in.
+ * @param {string} userType the type of user.
+ * @return {boolean} value indicating whether the email send was successful or
+ * not.
  */
-module.exports = async (request, emailAddress, templateId, redirectTo) => {
-  const token = await createAndCacheToken(request, emailAddress, redirectTo)
+module.exports = async (request, emailAddress, templateId, redirectTo, userType) => {
+  const token = await createAndCacheToken(request, emailAddress, redirectTo, userType)
 
   return sendEmail(templateId, emailAddress, {
     personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${emailAddress}` },

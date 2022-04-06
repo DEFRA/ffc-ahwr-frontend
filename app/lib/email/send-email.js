@@ -8,6 +8,8 @@ const notifyClient = require('./notify-client')
  * @param {string} templateId UUID of the email template.
  * @param {string} emailAddress address to send email to.
  * @param {object} options for personalisation, etc.
+ * @return {boolean} value indicating whether the email send was successful or
+ * not.
  */
 module.exports = async (templateId, emailAddress, options) => {
   let success = true

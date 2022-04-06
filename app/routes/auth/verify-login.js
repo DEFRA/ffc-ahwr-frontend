@@ -7,9 +7,9 @@ async function cacheUserData (request, email) {
   Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
 }
 
-function setAuthCookie (request, email) {
-  request.cookieAuth.set({ email })
-  console.log(`Logged in user '${email}'.`)
+function setAuthCookie (request, email, userType) {
+  request.cookieAuth.set({ email, userType })
+  console.log(`Logged in user of type '${userType}' with email '${email}'.`)
 }
 
 /**
@@ -55,12 +55,12 @@ module.exports = [{
     handler: async (request, h) => {
       const { email, token } = request.query
 
-      const { email: cachedEmail, redirectTo } = await lookupToken(request, token)
+      const { email: cachedEmail, redirectTo, userType } = await lookupToken(request, token)
       if (!cachedEmail || email !== cachedEmail) {
         return h.view('auth/verify-login-failed').code(400)
       }
 
-      setAuthCookie(request, email)
+      setAuthCookie(request, email, userType)
 
       await cacheUserData(request, email)
 

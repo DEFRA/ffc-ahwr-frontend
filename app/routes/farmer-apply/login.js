@@ -2,6 +2,7 @@ const boom = require('@hapi/boom')
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
 const { notify: { templateIdFarmerLogin } } = require('../../config')
+const { farmer } = require('../../config/user-types')
 const sendMagicLinkEmail = require('../../lib/email/send-magic-link-email')
 const { email: emailValidation } = require('../../../app/lib/validation/email')
 
@@ -47,7 +48,7 @@ module.exports = [{
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: `No user found with email address "${email}"` } }).code(400).takeover()
       }
 
-      const result = await sendMagicLinkEmail(request, email, templateIdFarmerLogin, 'farmer-apply/org-review')
+      const result = await sendMagicLinkEmail(request, email, templateIdFarmerLogin, 'farmer-apply/org-review', farmer)
 
       if (!result) {
         return boom.internal()
