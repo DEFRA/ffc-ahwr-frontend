@@ -19,8 +19,13 @@ module.exports = {
           path: '/'
         },
         keepAlive: true,
-        redirectTo: '/farmer-apply/login',
-        appendNext: true,
+        redirectTo: (request) => {
+          const { path } = request
+          if (path.startsWith('/vet')) {
+            return '/vet'
+          }
+          return '/farmer-apply/login'
+        },
         validateFunc: async (request, session) => {
           const result = { }
           if (isOrgInSession(request)) {

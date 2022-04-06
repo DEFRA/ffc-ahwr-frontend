@@ -115,7 +115,7 @@ describe('Check Answers test', () => {
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 20 sheep')
     })
 
-    test('when not logged in redirects to /farmer-apply/login with last page as next param', async () => {
+    test('when not logged in redirects to /farmer-apply/login', async () => {
       const options = {
         method: 'GET',
         url
@@ -124,7 +124,7 @@ describe('Check Answers test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/farmer-apply/login?next=${encodeURIComponent(url)}`)
+      expect(res.headers.location).toEqual('/farmer-apply/login')
     })
   })
 })
