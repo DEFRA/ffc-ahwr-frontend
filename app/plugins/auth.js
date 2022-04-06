@@ -31,22 +31,19 @@ module.exports = {
           const { path } = request
           const { userType } = session
 
+          const result = { valid: false }
           if (path.startsWith('/farmer-apply') && userType === farmer) {
-            const result = { }
             if (isOrgInSession(request)) {
               result.valid = true
             } else {
-              const org = await getByEmail(session.email)
-              if (org) {
-                Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
-              }
+              const org = (await getByEmail(session.email)) ?? {}
+              Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
               result.valid = !!org
             }
-            return result
           } else if (path.startsWith('/vet') && userType === vet) {
-            return { valid: true }
+            result.valid = true
           }
-          return { valid: false }
+          return result
         }
       })
       server.auth.default({ strategy: 'session', mode: 'required' })
