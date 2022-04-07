@@ -20,7 +20,8 @@ const routes = [].concat(
   require('../routes/vet/name'),
   require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
-  require('../routes/vet/reference')
+  require('../routes/vet/reference'),
+  require('../routes/accessibility')
 )
 
 module.exports = {
