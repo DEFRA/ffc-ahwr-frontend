@@ -1,4 +1,5 @@
 const routes = [].concat(
+  require('../routes/accessibility'),
   require('../routes/assets'),
   require('../routes/healthy'),
   require('../routes/healthz'),
@@ -20,8 +21,7 @@ const routes = [].concat(
   require('../routes/vet/name'),
   require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
-  require('../routes/vet/reference'),
-  require('../routes/accessibility')
+  require('../routes/vet/reference')
 )
 
 module.exports = {

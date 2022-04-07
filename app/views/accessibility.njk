@@ -1,13 +1,13 @@
 {% extends './layouts/layout.njk' %}
 {% block pageTitle %}
-  Accessibility statement - {{siteTitle}}
+  Accessibility statement - {{ serviceName }}
 {% endblock %}
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">Accessibility statement for [website name] service</h1>
+      <h1 class="govuk-heading-l">Accessibility statement for {{ serviceName }} service</h1>
       <p class="govuk-body">
-        This accessibility statement applies to the service [website name]. 
+        This accessibility statement applies to the service {{ serviceName }}. 
         <br/><br/>
         This service is run by the Rural Payments Agency (RPA). We want as many people as possible to be able to use this website. For example, that means you should be able to: 
         <ul class="govuk-list govuk-list--bullet">
@@ -67,9 +67,10 @@
         This website is fully compliant with the <a class="govuk-link" href="https://www.w3.org/TR/WCAG21">Web Content Accessibility Guidelines version 2.1</a> AA standard.
       </p>
       <h2 class="govuk-heading-l">Preparation of this accessibility statement </h2>
+      {# @todo change TBC with correct date #}
       <p class="govuk-body">
-        This statement was prepared on 5 August 2021.<br/><br/>
-        This service was last tested on 4 August 2021. The test was carried out by the Digital Accessibility Centre (DAC).
+        This statement was prepared on TBC<br/><br/>
+        This service was last tested on TBC. The test was carried out by the Digital Accessibility Centre (DAC).
       </p>
     </div>
   </div>
