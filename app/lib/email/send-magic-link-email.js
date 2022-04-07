@@ -22,7 +22,7 @@ async function createAndCacheToken (request, email, redirectTo, userType) {
  * the route exists prior to sending the email.
  *
  * @param {object} request object containing the `magiclinkCache`.
- * @param {string} emailAddress address to send email to.
+ * @param {string} email address to send email to.
  * @param {string} templateId UUID of the email template with `magiclink`
  * variable set for personalisation.
  * @param {string} redirectTo the route to redirect the user to once logged in.
@@ -30,11 +30,11 @@ async function createAndCacheToken (request, email, redirectTo, userType) {
  * @return {boolean} value indicating whether the email send was successful or
  * not.
  */
-module.exports = async (request, emailAddress, templateId, redirectTo, userType) => {
-  const token = await createAndCacheToken(request, emailAddress, redirectTo, userType)
+module.exports = async (request, email, templateId, redirectTo, userType) => {
+  const token = await createAndCacheToken(request, email, redirectTo, userType)
 
-  return sendEmail(templateId, emailAddress, {
-    personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${emailAddress}` },
+  return sendEmail(templateId, email, {
+    personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
     reference: token
   })
 }

@@ -16,13 +16,13 @@ function setAuthCookie (request, email, userType) {
  * Clear all tokens in the `magiclinkCache` associated to the email.
  *
  * @param {object} request object containing the `magiclinkCache`.
- * @param {string} emailAddress address to clear tokens from.
+ * @param {string} email address to clear tokens from.
  */
-async function clearCache (request, emailAddress) {
+async function clearCache (request, email) {
   const { magiclinkCache } = request.server.app
-  const emailTokens = await magiclinkCache.get(emailAddress)
+  const emailTokens = await magiclinkCache.get(email)
   Promise.all(emailTokens.map(async (token) => await magiclinkCache.drop(token)))
-  await magiclinkCache.drop(emailAddress)
+  await magiclinkCache.drop(email)
 }
 
 /**
