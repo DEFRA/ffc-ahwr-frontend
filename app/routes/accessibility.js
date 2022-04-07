@@ -3,7 +3,7 @@ module.exports = {
   path: '/accessibility',
   options: {
     auth: false,
-    handler: async (request, h) => {
+    handler: async (_, h) => {
       return h.view('accessibility', { accessibility: 'accessibility' })
     }
   }
