@@ -1,4 +1,5 @@
 const { v4: uuid } = require('uuid')
+const { farmer } = require('../../../../app/config/user-types')
 
 describe('Auth plugin test', () => {
   let getByEmail
@@ -15,10 +16,11 @@ describe('Auth plugin test', () => {
     jest.mock('../../../../app/api-requests/users')
   })
 
-  const url = '/login'
+  const url = '/farmer-apply/login'
   const validEmail = 'dairy@ltd.com'
+  const redirectTo = '/farmer-apply/org-review'
 
-  describe('GET requests to /login', () => {
+  describe('GET requests to /farmer-apply/login', () => {
     async function login () {
       const email = uuid() + validEmail
       const token = uuid()
@@ -28,7 +30,7 @@ describe('Auth plugin test', () => {
       }
 
       await global.__SERVER__.app.magiclinkCache.set(email, [token])
-      await global.__SERVER__.app.magiclinkCache.set(token, email)
+      await global.__SERVER__.app.magiclinkCache.set(token, { email, redirectTo, userType: farmer })
 
       return global.__SERVER__.inject(options)
     }
@@ -48,14 +50,14 @@ describe('Auth plugin test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('farmer-apply/org-review')
+      expect(res.headers.location).toEqual(redirectTo)
       expect(session.setOrganisation).toHaveBeenCalledTimes(1)
       expect(session.setOrganisation).toHaveBeenCalledWith(res.request, 'name', org.name)
 
       const resTwo = await global.__SERVER__.inject(options)
 
       expect(resTwo.statusCode).toBe(302)
-      expect(resTwo.headers.location).toEqual('farmer-apply/org-review')
+      expect(resTwo.headers.location).toEqual('/farmer-apply/org-review')
     })
   })
 })

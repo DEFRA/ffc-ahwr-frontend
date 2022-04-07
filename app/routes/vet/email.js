@@ -1,6 +1,7 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
 const { notify: { templateIdVetLogin } } = require('../../config')
+const { vet } = require('../../config/user-types')
 const sendMagicLinkEmail = require('../../lib/email/send-magic-link-email')
 const session = require('../../session')
 const { vetSignup: { email: emailKey } } = require('../../session/keys')
@@ -33,7 +34,7 @@ module.exports = [{
       const { email } = request.payload
       session.setVetSignup(request, emailKey, email)
 
-      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin)
+      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet)
 
       if (!result) {
         return boom.internal()

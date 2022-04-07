@@ -1,26 +1,23 @@
 [
   {
-    "reference": "1111",
-    "name": "My Dairy Ltd",
+    "name": "The Dairy Ltd",
     "sbi": "111111111",
     "cph": "11/111/1111",
-    "address": "1 long lane, longton, AA11 1AA",
-    "email": "dairy@ltd.com"
+    "address": "1 Long Lane, Longton, AA11 1AA",
+    "email": "admin@the-dairy.com"
   },
   {
-    "reference": "2222",
-    "name": "A Beer Farm",
+    "name": "Hopping beasts",
     "sbi": "222222222",
     "cph": "22/222/2222",
-    "address": "road end, roadton, BB22 2BB",
-    "email": "beer@farm.com"
+    "address": "Road end, Roadton, BB22 2BB",
+    "email": "beasts@road-end.com"
   },
   {
-    "reference": "3333",
-    "name": "Ploughing troughs",
+    "name": "My Farm",
     "sbi": "333333333",
     "cph": "33/333/3333",
-    "address": "suburbs, suburbia, suburito, CC33 3CC",
-    "email": "ploughing@troughs.com"
+    "address": "Long dusty road, Middle-of-knowhere, In the countryside, CC33 3CC",
+    "email": "farm@livestock-keeper.com"
   }
 ]

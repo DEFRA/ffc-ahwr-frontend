@@ -65,7 +65,7 @@ describe('Org review page test', () => {
   })
 
   describe(`GET ${url} route when not logged in`, () => {
-    test('redirects to /login with last page as next param', async () => {
+    test('redirects to /farmer-apply/login', async () => {
       const options = {
         method: 'GET',
         url
@@ -74,7 +74,7 @@ describe('Org review page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+      expect(res.headers.location).toEqual('/farmer-apply/login')
     })
   })
 })

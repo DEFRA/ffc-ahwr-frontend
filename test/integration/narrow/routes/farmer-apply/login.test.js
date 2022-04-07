@@ -5,6 +5,7 @@ const expectLoginPage = require('../../../../utils/login-page-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerLogin }, serviceUri } = require('../../../../../app/config')
+const { farmer } = require('../../../../../app/config/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
 describe('Login page test', () => {
@@ -22,10 +23,10 @@ describe('Login page test', () => {
     jest.mock('../../../../../app/api-requests/users')
   })
 
-  const url = '/login'
+  const url = '/farmer-apply/login'
   const validEmail = 'dairy@ltd.com'
 
-  describe('GET requests to /login', () => {
+  describe('GET requests to /farmer-apply/login', () => {
     test('returns 200', async () => {
       const options = {
         method: 'GET',
@@ -50,18 +51,18 @@ describe('Login page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('farmer-apply/org-review')
+      expect(res.headers.location).toEqual('/farmer-apply/org-review')
     })
   })
 
-  describe('POST requests to /login', () => {
+  describe('POST requests to /farmer-apply/login route', () => {
     test.each([
       { email: 'not-an-email', errorMessage: 'Enter a valid email address' },
       { email: '', errorMessage: 'Enter an email address' },
       { email: null, errorMessage: 'Enter an email address' },
       { email: undefined, errorMessage: 'Enter an email address' },
       { email: 'missing@email.com', errorMessage: 'No user found with email address "missing@email.com"' }
-    ])('route returns 400 when request contains incorrect email - %p', async ({ email, errorMessage }) => {
+    ])('returns 400 when request contains incorrect email - %p', async ({ email, errorMessage }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -82,7 +83,7 @@ describe('Login page test', () => {
     test.each([
       { crumb: '' },
       { crumb: undefined }
-    ])('route returns 403 when request does not contain crumb - $crumb', async ({ crumb }) => {
+    ])('returns 403 when request does not contain crumb - $crumb', async ({ crumb }) => {
       const options = {
         method: 'POST',
         url,
@@ -98,7 +99,7 @@ describe('Login page test', () => {
       expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
     })
 
-    test('route with known email for the first time redirects to email sent page with form filled with email and adds token to cache', async () => {
+    test('with known email for the first time redirects to email sent page with form filled with email and adds token to cache with redirectTo for farmer', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -118,7 +119,7 @@ describe('Login page test', () => {
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), validEmail)
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-apply/org-review', userType: farmer })
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
@@ -128,7 +129,7 @@ describe('Login page test', () => {
       cacheSetSpy.mockRestore()
     })
 
-    test('route with known email with an existing token redirects to email sent page and adds token to cache', async () => {
+    test('with known email with an existing token redirects to email sent page and adds token to cache with redirectTo for farmer', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -150,7 +151,7 @@ describe('Login page test', () => {
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), validEmail)
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-apply/org-review', userType: farmer })
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
@@ -163,7 +164,7 @@ describe('Login page test', () => {
     test.each([
       { email: validEmail },
       { email: `  ${validEmail}  ` }
-    ])('route with known email sends email (email = $email)', async ({ email }) => {
+    ])('with known email sends email (email = $email)', async ({ email }) => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -185,7 +186,7 @@ describe('Login page test', () => {
       )
     })
 
-    test('route with known email returns error when problem sending email', async () => {
+    test('with known email returns error when problem sending email', async () => {
       getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(false)
       const crumb = await getCrumbs(global.__SERVER__)

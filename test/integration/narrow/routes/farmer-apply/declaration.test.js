@@ -20,7 +20,7 @@ describe('Declaration test', () => {
       expectPhaseBanner.ok($)
     })
 
-    test('when not logged in redirects to /login with last page as next param', async () => {
+    test('when not logged in redirects to /farmer-apply/login', async () => {
       const options = {
         method: 'GET',
         url
@@ -29,7 +29,7 @@ describe('Declaration test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/login?next=${encodeURIComponent(url)}`)
+      expect(res.headers.location).toEqual('/farmer-apply/login')
     })
   })
 })

@@ -7,11 +7,17 @@ async function cacheUserData (request, email) {
   Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
 }
 
-function setAuthCookie (request, email) {
-  request.cookieAuth.set({ email })
-  console.log(`Logged in user '${email}'.`)
+function setAuthCookie (request, email, userType) {
+  request.cookieAuth.set({ email, userType })
+  console.log(`Logged in user of type '${userType}' with email '${email}'.`)
 }
 
+/**
+ * Clear all tokens in the `magiclinkCache` associated to the email.
+ *
+ * @param {object} request object containing the `magiclinkCache`.
+ * @param {string} email address to clear tokens from.
+ */
 async function clearCache (request, email) {
   const { magiclinkCache } = request.server.app
   const emailTokens = await magiclinkCache.get(email)
@@ -19,9 +25,16 @@ async function clearCache (request, email) {
   await magiclinkCache.drop(email)
 }
 
+/**
+ * Returns the object associated to the token or an empty object if not found.
+ *
+ * @param {object} request object containing the `magiclinkCache`.
+ * @param {token} token UUID to look up.
+ * @return {object} value from cache or empty if token not found in cache.
+ */
 async function lookupToken (request, token) {
   const { magiclinkCache } = request.server.app
-  return magiclinkCache.get(token)
+  return (await magiclinkCache.get(token)) ?? {}
 }
 
 module.exports = [{
@@ -42,18 +55,18 @@ module.exports = [{
     handler: async (request, h) => {
       const { email, token } = request.query
 
-      const cachedEmail = await lookupToken(request, token)
+      const { email: cachedEmail, redirectTo, userType } = await lookupToken(request, token)
       if (!cachedEmail || email !== cachedEmail) {
         return h.view('auth/verify-login-failed').code(400)
       }
 
-      setAuthCookie(request, email)
+      setAuthCookie(request, email, userType)
 
       await cacheUserData(request, email)
 
       await clearCache(request, email)
 
-      return h.redirect('farmer-apply/org-review')
+      return h.redirect(redirectTo)
     }
   }
 }]
