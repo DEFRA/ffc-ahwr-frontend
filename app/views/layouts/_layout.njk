@@ -4,6 +4,7 @@
 {% from "govuk/components/breadcrumbs/macro.njk"  import govukBreadcrumbs %}
 {% from "govuk/components/button/macro.njk"       import govukButton %}
 {% from "govuk/components/details/macro.njk"      import govukDetails %}
+{% from "govuk/components/footer/macro.njk"       import govukFooter %}
 {% from "govuk/components/input/macro.njk"        import govukInput %}
 {% from "govuk/components/panel/macro.njk"        import govukPanel %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
@@ -48,17 +49,15 @@
 
 {% block footer %}
   {{ govukFooter({
-  meta: {
-  html: '<h2 class="govuk-visually-hidden">Support links</h2>
-          <ul class="govuk-footer__inline-list">
-            <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/accessibility" rel="noopener noreferrer">
-                Accessibility
-              </a>
-            </li>
-          </ul>'
+    meta: {
+      items: [
+        {
+          href: "/accessibility",
+          text: "Accessibility"
+        }
+      ]
     }
-}) }}
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}
