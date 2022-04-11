@@ -1,57 +1,61 @@
 const Joi = require('joi')
 const session = require('../../session')
 const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
+const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
+const createItems = require('../../lib/visit-date/date-input-items')
+const { isDateInFutureOrBeforeStartDate } = require('../../lib/visit-date/validation')
+const { labels } = require('../../config/visit-date')
+
+const templatePath = 'vet/visit-date'
+const path = `/${templatePath}`
 
 module.exports = [{
   method: 'GET',
-  path: '/vet/visit-date',
+  path,
   options: {
     handler: async (request, h) => {
       const reference = session.getVetSignup(request, referenceKey)
-      return h.view('vet/visit-date', { reference })
+      return h.view(templatePath, { reference })
     }
   }
 }, {
   method: 'POST',
-  path: '/vet/visit-date',
+  path,
   options: {
     validate: {
       payload: Joi.object({
-        'visit-date-day': Joi.number().min(1).max(31).required(),
-        'visit-date-month': Joi.number().min(1).max(12).required(),
-        'visit-date-year': Joi.number().min(2022).max(2022).required()
+        [labels.day]: Joi.number().min(1)
+          .when(labels.month, {
+            switch: [
+              { is: 2, then: Joi.number().max(28) },
+              { is: Joi.number().valid(4, 6, 9, 11), then: Joi.number().max(30), otherwise: Joi.number().max(31) }
+            ]
+          })
+          .required(),
+        [labels.month]: Joi.number().min(1).max(12).required(),
+        [labels.year]: Joi.number().min(2022).max(2022).required()
       }),
-      // payload: async (val, options) => {
-      //   console.log('payload for validation', val)
-      //   const { 'visit-date-day': day, 'visit-date-month': month, 'visit-date-year': year } = val
-      //   // const date = new Date(year, month, day)
-      //   const date = `${month}-${day}-${year}`
-      //   console.log('validating', date)
-      //   const dateSchema = Joi.date().max('now').required()
-      //   const res = dateSchema.validate(date)
-      //   console.log('res', res)
-      //   console.log('res', res.error.details)
-      //   throw new Error(res.error.details)
-      // },
       failAction: async (request, h, error) => {
-        console.log('fail', error)
-        return h.view('vet/visit-date', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
+        const dateInputErrors = getDateInputErrors(error.details, request.payload)
+        return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      console.log('HANDLER', request.payload)
-      // const { date } = request.payload
-      // TODO: Send request to application to check it is valid
-      // const application = getApplication(reference)
+      const { payload } = request
+      const day = payload[labels.day]
+      const month = payload[labels.month]
+      const year = payload[labels.year]
+      const inputDate = new Date(year, month - 1, day)
 
-      // if (!application) {
-      //   const errors = { details: [{ message: `No application found for reference "${reference}"` }] }
-      //   return h.view('vet/reference', { ...request.payload, errors }).code(404).takeover()
-      // }
-
-      // session.setVetSignup(request, referenceKey, reference)
-
-      return h.redirect('/vet/visit-date')
+      const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(inputDate)
+      if (!isDateValid) {
+        const dateInputErrors = {
+          errorMessage,
+          items: createItems(payload, true)
+        }
+        return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
+      }
+      return h.redirect('/vet/species')
     }
   }
 }]
