@@ -28,6 +28,13 @@ const schema = Joi.object({
     isSecure: Joi.boolean().default(true),
     password: Joi.string().min(32).required()
   },
+  cookiePolicy: {    
+    encoding: 'base64json',
+    ttl: 1000000000000,
+    clearInvalid: false,
+    strictHeader: true,
+    isHttpOnly: true
+  },
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   isDev: Joi.boolean().default(false),
   notify: {
