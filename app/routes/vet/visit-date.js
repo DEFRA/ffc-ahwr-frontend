@@ -1,10 +1,10 @@
 const Joi = require('joi')
+const { labels } = require('../../config/visit-date')
 const session = require('../../session')
 const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
 const createItems = require('../../lib/visit-date/date-input-items')
 const { isDateInFutureOrBeforeStartDate } = require('../../lib/visit-date/validation')
-const { labels } = require('../../config/visit-date')
 
 const templatePath = 'vet/visit-date'
 const path = `/${templatePath}`
@@ -42,12 +42,8 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { payload } = request
-      const day = payload[labels.day]
-      const month = payload[labels.month]
-      const year = payload[labels.year]
-      const inputDate = new Date(year, month - 1, day)
 
-      const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(inputDate)
+      const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(payload)
       if (!isDateValid) {
         const dateInputErrors = {
           errorMessage,

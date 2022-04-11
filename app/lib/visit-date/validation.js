@@ -1,4 +1,4 @@
-const { startDateString } = require('../../config/visit-date')
+const { labels, startDateString } = require('../../config/visit-date')
 const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
 
 function isDateInFuture (inputDate) {
@@ -10,7 +10,12 @@ function isDateBeforeStartDate (inputDate) {
   return inputDate < startDate
 }
 
-function isDateInFutureOrBeforeStartDate (inputDate) {
+function isDateInFutureOrBeforeStartDate (payload) {
+  const day = payload[labels.day]
+  const month = payload[labels.month]
+  const year = payload[labels.year]
+  const inputDate = new Date(year, month - 1, day)
+
   const futureDate = isDateInFuture(inputDate)
   if (futureDate || isDateBeforeStartDate(inputDate)) {
     return {

@@ -1,6 +1,6 @@
-const { inputErrorClass, labels } = require('../../config/visit-date')
 const createItems = require('./date-input-items')
 const { isDateInFutureOrBeforeStartDate } = require('./validation')
+const { inputErrorClass } = require('../../config/visit-date')
 const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
 
 function getEmptyValuesMessage (emptyValues) {
@@ -30,12 +30,7 @@ module.exports = (errorDetails, payload) => {
 
   let text = getEmptyValuesMessage(emptyValues)
   if (!text) {
-    const day = payload[labels.day]
-    const month = payload[labels.month]
-    const year = payload[labels.year]
-    const inputDate = new Date(year, month - 1, day)
-
-    const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(inputDate)
+    const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(payload)
     if (isDateValid) {
       text = errorMessages.realDate
     } else {
