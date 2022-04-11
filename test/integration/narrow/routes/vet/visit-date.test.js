@@ -13,9 +13,6 @@ function expectPageContentOk ($) {
   expect($('.govuk-back-link').length).toEqual(0)
 }
 
-const session = require('../../../../../app/session')
-jest.mock('../../../../../app/session')
-
 describe('Vet, enter date of visit', () => {
   const auth = { credentials: {}, strategy: 'cookie' }
   const url = '/vet/visit-date'
