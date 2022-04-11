@@ -9,9 +9,9 @@ function getEmptyValuesMessage (emptyValues) {
     text = errorMessages.enterDate
   } else if (emptyValues.length === 2) {
     emptyValues.sort()
-    text = errorMessages.doubleEmptyValue(emptyValues[0], emptyValues[1])
+    text = errorMessages.emptyValues(emptyValues[0], emptyValues[1])
   } else if (emptyValues.length === 1) {
-    text = errorMessages.singleEmptyValue(emptyValues[0])
+    text = errorMessages.emptyValues(emptyValues[0])
   }
   return text
 }
