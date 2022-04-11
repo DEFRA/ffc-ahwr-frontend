@@ -134,7 +134,4 @@ describe('date input error message', () => {
       }
     })
   })
-
-  test('returns date in past message when date is in past', () => {
-  })
 })
