@@ -1,16 +1,17 @@
 const { inputErrorClass, labels } = require('../../config/visit-date')
 const createItems = require('./date-input-items')
 const { isDateInFutureOrBeforeStartDate } = require('./validation')
+const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
 
 function getEmptyValuesMessage (emptyValues) {
   let text
   if (emptyValues.length === 3) {
-    text = 'Enter the date of the visit'
+    text = errorMessages.enterDate
   } else if (emptyValues.length === 2) {
     emptyValues.sort()
-    text = `Visit date must include a ${emptyValues[0]} and a ${emptyValues[1]}`
+    text = errorMessages.doubleEmptyValue(emptyValues[0], emptyValues[1])
   } else if (emptyValues.length === 1) {
-    text = `Visit date must include a ${emptyValues[0]}`
+    text = errorMessages.singleEmptyValue(emptyValues[0])
   }
   return text
 }
@@ -36,7 +37,7 @@ module.exports = (errorDetails, payload) => {
 
     const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(inputDate)
     if (isDateValid) {
-      text = 'Visit date must be a real date'
+      text = errorMessages.realDate
     } else {
       text = errorMessage.text
       items.forEach(item => {
