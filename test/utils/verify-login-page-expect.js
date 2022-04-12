@@ -2,7 +2,7 @@ const { cache, cookie: cookieConfig } = require('../../app/config')
 
 function hasCorrectContent ($) {
   expect($('h1').text()).toEqual('Login failed')
-  const newLinkButton = $('.govuk-button')
+  const newLinkButton = $('.govuk-main-wrapper .govuk-button')
   expect(newLinkButton.text()).toMatch('Request new link to login')
   expect(newLinkButton.attr('href')).toEqual('login')
 }
