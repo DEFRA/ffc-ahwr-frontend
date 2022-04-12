@@ -4,7 +4,7 @@ const { getCurrentPolicy } = require('../cookies')
 module.exports = {
   plugin: {
     name: 'cookies',
-    register: (server, options) => {
+    register: (server, _) => {
       server.state('cookies_policy', config)
 
       server.ext('onPreResponse', (request, h) => {
