@@ -1,5 +1,8 @@
+const cheerio = require('cheerio')
+const { serviceName } = require('../../../../app/config')
+const expectPhaseBanner = require('../../../utils/phase-banner-expect')
+
 describe('cookies route', () => {
-  jest.mock('ffc-messaging')
 
   test('GET /cookies returns 200', async () => {
     const options = {
@@ -75,5 +78,19 @@ describe('cookies route', () => {
     const result = await global.__SERVER__.inject(options)
     expect(result.statusCode).toBe(302)
     expect(result.headers.location).toBe('/cookies?updated=true')
+  })
+
+  test('Cookie banner appears when no cookie option selected', async () => {
+    const options = {
+      method: 'GET',
+      url: '/cookies'
+    }
+    const response = await global.__SERVER__.inject(options)
+    expect(response.statusCode).toBe(200)
+    const $ = cheerio.load(response.payload)
+    expect($('.govuk-cookie-banner h2').text()).toEqual(serviceName)
+    expect($('.js-cookies-button-accept').text()).toContain('Accept analytics cookies')
+    expect($('.js-cookies-button-reject').text()).toContain('Reject analytics cookies')
+    expectPhaseBanner.ok($)
   })
 })
