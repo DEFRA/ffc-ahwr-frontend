@@ -3,7 +3,6 @@ const { serviceName } = require('../../../../app/config')
 const expectPhaseBanner = require('../../../utils/phase-banner-expect')
 
 describe('cookies route', () => {
-
   test('GET /cookies returns 200', async () => {
     const options = {
       method: 'GET',
