@@ -1,10 +1,10 @@
 {% from "govuk/components/cookie-banner/macro.njk" import govukCookieBanner %}
 <noscript>
   {{ govukCookieBanner({
-  ariaLabel: "Cookies on Farming Transformation Fund",
+  ariaLabel: serviceName,
   messages: [
     {
-      headingText: "Cookies on Farming Transformation Fund",
+      headingText: serviceName,
       text: "We use cookies to make this service work and collect analytics information. To accept or reject cookies, turn on JavaScript in your browser settings or reload this page."
     }
   ]
@@ -27,11 +27,11 @@
     at any time.</p>
   {% endset %}
   {{ govukCookieBanner({
-    ariaLabel: "Cookies on Farming Transformation Fund",
+    ariaLabel: serviceName,
     classes: "js-cookies-banner",
     messages: [
       {
-        headingText: "Cookies on Farming Transformation Fund",
+        headingText: serviceName,
         html: html,
         classes: "js-question-banner",
         actions: [
