@@ -35,30 +35,48 @@ describe('Cattle Type test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('returns 302', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
+    let crumb
+    const method = 'POST'
+
+    beforeEach(async () => {
+      crumb = await getCrumbs(global.__SERVER__)
+    })
+
+    test.each([
+      { cattleType: 'beef' },
+      { cattleType: 'both' },
+      { cattleType: 'dairy' }
+    ])('returns 302 to sheep when answer is acceptable', async ({ cattleType }) => {
       const options = {
-        method: 'POST',
+        method,
         url,
-        payload: { crumb, 'cattle-type': 'beef' },
+        payload: { crumb, 'cattle-type': cattleType },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
+
       const res = await global.__SERVER__.inject(options)
+
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/farmer-apply/sheep')
     })
 
-    test('returns Error', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
+    test.each([
+      { cattleType: null },
+      { cattleType: undefined },
+      { cattleType: 'wrong' },
+      { cattleType: '' }
+    ])('returns error when unacceptable answer is given', async ({ cattleType }) => {
       const options = {
-        method: 'POST',
+        method,
         url,
-        payload: { crumb, 'cattle-type': 'xyz' },
+        payload: { crumb, 'cattle-type': cattleType },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
+
       const res = await global.__SERVER__.inject(options)
+
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch('Select the type of cattle that you keep')
       expect(res.statusCode).toBe(200)
@@ -66,9 +84,8 @@ describe('Cattle Type test', () => {
     })
 
     test('when not logged in redirects to /farmer-apply/login', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
-        method: 'POST',
+        method,
         url,
         payload: { crumb, 'cattle-type': 'xyz' },
         headers: { cookie: `crumb=${crumb}` }

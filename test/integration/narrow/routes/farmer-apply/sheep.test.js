@@ -64,10 +64,16 @@ describe('Sheep test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('returns 302 to pigs route', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
+    let crumb
+    const method = 'POST'
+
+    beforeEach(async () => {
+      crumb = await getCrumbs(global.__SERVER__)
+    })
+
+    test('returns 302 to pigs route when acceptable answer given', async () => {
       const options = {
-        method: 'POST',
+        method,
         url,
         payload: { crumb, sheep: 'yes' },
         auth,
@@ -80,12 +86,16 @@ describe('Sheep test', () => {
       expect(res.headers.location).toEqual('/farmer-apply/pigs')
     })
 
-    test('returns Error when payload is invalid', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
+    test.each([
+      { sheep: null },
+      { sheep: undefined },
+      { sheep: 'wrong' },
+      { sheep: '' }
+    ])('returns error when payload is invalid', async ({ sheep }) => {
       const options = {
-        method: 'POST',
+        method,
         url,
-        payload: { crumb, sheep: null },
+        payload: { crumb, sheep },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -98,9 +108,8 @@ describe('Sheep test', () => {
     })
 
     test('when not logged in redirects to /farmer-apply/login', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
       const options = {
-        method: 'POST',
+        method,
         url,
         payload: { crumb, sheep: 'no' },
         headers: { cookie: `crumb=${crumb}` }
