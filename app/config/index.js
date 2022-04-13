@@ -22,6 +22,7 @@ const schema = Joi.object({
     }
   },
   cookie: {
+    cookieNameCookiePolicy: Joi.string().default('ffc_ahwr_cookie_policy'),
     cookieNameAuth: Joi.string().default('ffc_ahwr_auth'),
     cookieNameSession: Joi.string().default('ffc_ahwr_session'),
     isSameSite: Joi.string().default('Lax'),
@@ -88,6 +89,7 @@ const config = {
     }
   },
   cookie: {
+    cookieNameCookiePolicy: 'ffc_ahwr_cookie_policy',
     cookieNameAuth: 'ffc_ahwr_auth',
     cookieNameSession: 'ffc_ahwr_session',
     isSameSite: 'Lax',

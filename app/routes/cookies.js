@@ -1,6 +1,7 @@
 const Joi = require('joi')
 const ViewModel = require('./models/cookies-policy')
 const { updatePolicy } = require('../cookies')
+const { cookie: { cookieNameCookiePolicy } } = require('../config')
 
 module.exports = [{
   method: 'GET',
@@ -8,7 +9,7 @@ module.exports = [{
   options: {
     auth: false,
     handler: async (request, h) => {
-      return h.view('cookies/cookie-policy', new ViewModel(request.state.cookies_policy, request.query.updated))
+      return h.view('cookies/cookie-policy', new ViewModel(request.state[cookieNameCookiePolicy], request.query.updated))
     }
   }
 }, {
