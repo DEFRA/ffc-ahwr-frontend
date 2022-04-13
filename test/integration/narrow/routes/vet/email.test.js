@@ -4,8 +4,6 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
 const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
-const { notify: { templateIdVetLogin } } = require('../../../../../app/config')
-const { vet } = require('../../../../../app/config/user-types')
 
 function expectPageContentOk ($) {
   expect($('h1').text()).toMatch('Enter your email address')
