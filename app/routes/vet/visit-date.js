@@ -4,7 +4,7 @@ const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
 const createItems = require('../../lib/visit-date/date-input-items')
 const { isDateInFutureOrBeforeFirstValidDate } = require('../../lib/visit-date/validation')
 const session = require('../../session')
-const { vetVisitData: { farmerApplication } } = require('../../session/keys')
+const { vetVisitData: { farmerApplication, visitDate } } = require('../../session/keys')
 
 const templatePath = 'vet/visit-date'
 const path = `/${templatePath}`
@@ -14,8 +14,8 @@ module.exports = [{
   path,
   options: {
     handler: async (request, h) => {
-      // TODO: pull the date from the session
-      return h.view(templatePath)
+      const items = session.getVetVisitData(request, visitDate)
+      return h.view(templatePath, { items })
     }
   }
 }, {
@@ -52,6 +52,8 @@ module.exports = [{
         }
         return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }
+      const items = createItems(request.payload, false)
+      session.setVetVisitData(request, visitDate, items)
       return h.redirect('/vet/species')
     }
   }

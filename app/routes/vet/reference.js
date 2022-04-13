@@ -35,7 +35,6 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { applicationReference } = request.payload
-      // TODO: Send request to application to check it is valid
       const application = await getApplication(applicationReference, request.yar.id)
 
       if (!application) {
