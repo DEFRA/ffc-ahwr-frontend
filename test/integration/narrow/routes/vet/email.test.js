@@ -100,7 +100,7 @@ describe('Vet, enter email name test', () => {
         payload: { crumb, email },
         url
       }
-      sendMagicLinkEmail.mockResolvedValue(true)
+      sendMagicLinkEmail.sendVetMagicLinkEmail.mockResolvedValue(true)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -108,8 +108,8 @@ describe('Vet, enter email name test', () => {
       expect(res.headers.location).toEqual('/vet/check-email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
-      expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin, 'vet/visit-date', vet, signupData)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), signupData)
     })
 
     test('returns 500 when problem sending email', async () => {
@@ -122,14 +122,14 @@ describe('Vet, enter email name test', () => {
         payload: { crumb, email: validEmail },
         url
       }
-      sendMagicLinkEmail.mockResolvedValue(false)
+      sendMagicLinkEmail.sendVetMagicLinkEmail.mockResolvedValue(false)
 
       const res = await global.__SERVER__.inject(options)
 
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
-      expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin, 'vet/visit-date', vet, signupData)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, signupData)
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Sorry, there is a problem with the service')

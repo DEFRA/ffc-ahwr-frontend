@@ -1,6 +1,8 @@
 const { v4: uuid } = require('uuid')
 const sendEmail = require('./send-email')
 const { serviceUri } = require('../../config')
+const { notify: { templateIdFarmerLogin, templateIdVetLogin } } = require('../../config')
+const { farmer, vet } = require('../../config/user-types')
 
 async function createAndCacheToken (request, email, redirectTo, userType, data) {
   const { magiclinkCache } = request.server.app
@@ -31,11 +33,24 @@ async function createAndCacheToken (request, email, redirectTo, userType, data) 
  * @return {boolean} value indicating whether the email send was successful or
  * not.
  */
-module.exports = async (request, email, templateId, redirectTo, userType, data) => {
+async function sendMagicLinkEmail (request, email, templateId, redirectTo, userType, data) {
   const token = await createAndCacheToken(request, email, redirectTo, userType, data)
 
   return sendEmail(templateId, email, {
     personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },
     reference: token
   })
+}
+
+async function sendFarmerLoginMagicLinkEmail (request, email) {
+  return sendMagicLinkEmail(request, email, templateIdFarmerLogin, 'farmer-apply/org-review', farmer)
+}
+
+async function sendVetMagicLinkEmail (request, email, data) {
+  return sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet, data)
+}
+
+module.exports = {
+  sendFarmerLoginMagicLinkEmail,
+  sendVetMagicLinkEmail
 }

@@ -1,8 +1,6 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
-const { notify: { templateIdVetLogin } } = require('../../config')
-const { vet } = require('../../config/user-types')
-const sendMagicLinkEmail = require('../../lib/email/send-magic-link-email')
+const { sendVetMagicLinkEmail } = require('../../lib/email/send-magic-link-email')
 const session = require('../../session')
 const { vetSignup: { email: emailKey } } = require('../../session/keys')
 const { email: emailValidation } = require('../../../app/lib/validation/email')
@@ -35,8 +33,7 @@ module.exports = [{
       session.setVetSignup(request, emailKey, email)
 
       const data = session.getVetSignup(request)
-      // TODO: potentially refactor to a single function for vet magiclink and another one for farmer
-      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet, data)
+      const result = await sendVetMagicLinkEmail(request, email, data)
 
       if (!result) {
         return boom.internal()
