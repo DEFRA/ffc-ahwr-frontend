@@ -2,13 +2,7 @@ const Joi = require('joi')
 const session = require('../../session')
 const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const { reference: referenceErrorMessages } = require('../../../app/lib/error-messages')
-const { applicationRequestQueue, fetchApplicationRequestMsgType, applicationResponseQueue } = require('../../config')
-const { sendMessage, receiveMessage } = require('../../messaging')
-
-function getApplication (applicationReference, sessionId) {
-  sendMessage({ applicationReference, sessionId }, fetchApplicationRequestMsgType, applicationRequestQueue, { sessionId })
-  return receiveMessage(sessionId, applicationResponseQueue)
-}
+const { getApplication } = require('../../messaging/application')
 
 module.exports = [{
   method: 'GET',

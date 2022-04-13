@@ -11,5 +11,9 @@ module.exports = {
     practice: 'practice',
     rcvs: 'rcvs',
     reference: 'reference'
+  },
+  vetVisitData: {
+    farmerApplication: 'farmerApplication',
+    signup: 'signup'
   }
 }

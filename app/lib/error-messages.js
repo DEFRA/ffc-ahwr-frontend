@@ -1,5 +1,3 @@
-const { startDateString } = require('../config/visit-date')
-
 module.exports = {
   email: {
     enterEmail: 'Enter an email address',
@@ -25,7 +23,7 @@ module.exports = {
     emptyValues: (val1, val2) => `Visit date must include a ${val1}${val2 ? ' and a ' + val2 : ''}`,
     enterDate: 'Enter the date of the visit',
     realDate: 'Visit date must be a real date',
-    startDateOrAfter: () => `Visit date must be the same as or after ${new Date(startDateString).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    startDateOrAfter: (createdAt) => `Visit date must be the same as or after ${new Date(createdAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created`,
     todayOrPast: 'Visit date must be today or in the past'
   }
 }

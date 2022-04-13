@@ -1,5 +1,5 @@
 const createItems = require('./date-input-items')
-const { isDateInFutureOrBeforeStartDate } = require('./validation')
+const { isDateInFutureOrBeforeFirstValidDate } = require('./validation')
 const { inputErrorClass } = require('../../config/visit-date')
 const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
 
@@ -16,7 +16,18 @@ function getEmptyValuesMessage (emptyValues) {
   return text
 }
 
-module.exports = (errorDetails, payload) => {
+/**
+ * Generates the text input items for a govukDateInput along with an error
+ * message, based on the reason why the validation failed.
+ * Returns an object containing two properties, `errorMessage` (an object
+ * containing a `text` property) and `items` (an array of input items).
+ *
+ * @param {object} errorDetails Joi result object containing details of the
+ * error the payload failed for.
+ * @param {object} payload from the request that failed the validation.
+ * @param {string} firstValidDate Date string representing first valid date.
+ */
+module.exports = (errorDetails, payload, firstValidDate) => {
   const items = createItems(payload, false)
 
   const emptyValues = []
@@ -30,7 +41,7 @@ module.exports = (errorDetails, payload) => {
 
   let text = getEmptyValuesMessage(emptyValues)
   if (!text) {
-    const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(payload)
+    const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(payload, firstValidDate)
     if (isDateValid) {
       text = errorMessages.realDate
     } else {

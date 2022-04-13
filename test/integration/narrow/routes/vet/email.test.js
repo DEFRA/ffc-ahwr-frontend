@@ -91,6 +91,8 @@ describe('Vet, enter email name test', () => {
       { email: validEmail },
       { email: `  ${validEmail}  ` }
     ])('returns 302 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
+      const signupData = {}
+      session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -107,10 +109,12 @@ describe('Vet, enter email name test', () => {
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
       expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin, 'vet/visit-date', vet)
+      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin, 'vet/visit-date', vet, signupData)
     })
 
     test('returns 500 when problem sending email', async () => {
+      const signupData = {}
+      session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -125,7 +129,7 @@ describe('Vet, enter email name test', () => {
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
       expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin, 'vet/visit-date', vet)
+      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin, 'vet/visit-date', vet, signupData)
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Sorry, there is a problem with the service')

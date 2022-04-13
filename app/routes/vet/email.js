@@ -34,7 +34,9 @@ module.exports = [{
       const { email } = request.payload
       session.setVetSignup(request, emailKey, email)
 
-      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet)
+      const data = session.getVetSignup(request)
+      // TODO: potentially refactor to a single function for vet magiclink and another one for farmer
+      const result = await sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet, data)
 
       if (!result) {
         return boom.internal()

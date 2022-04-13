@@ -7,6 +7,5 @@ module.exports = {
     day: `${labelPrefix}day`,
     month: `${labelPrefix}month`,
     year: `${labelPrefix}year`
-  },
-  startDateString: '2022-04-01'
+  }
 }
