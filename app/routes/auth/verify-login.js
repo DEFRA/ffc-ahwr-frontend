@@ -1,15 +1,28 @@
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { setOrganisation } = require('../../session')
+const { farmer, vet } = require('../../config/user-types')
+const { getApplication } = require('../../messaging/application')
+const { setOrganisation, setVetVisitData } = require('../../session')
+const { vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
-async function cacheUserData (request, email) {
-  const organisation = await getByEmail(email)
-  Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
+function isRequestValid (cachedEmail, email) {
+  return !cachedEmail || email !== cachedEmail
 }
 
 function setAuthCookie (request, email, userType) {
   request.cookieAuth.set({ email, userType })
   console.log(`Logged in user of type '${userType}' with email '${email}'.`)
+}
+
+async function cacheFarmerData (request, email) {
+  const organisation = await getByEmail(email)
+  Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
+}
+
+async function cacheVetData (request, vetSignupData) {
+  setVetVisitData(request, signup, vetSignupData)
+  const application = await getApplication(vetSignupData.reference, request.yar.id)
+  setVetVisitData(request, farmerApplication, application)
 }
 
 /**
@@ -18,7 +31,7 @@ function setAuthCookie (request, email, userType) {
  * @param {object} request object containing the `magiclinkCache`.
  * @param {string} email address to clear tokens from.
  */
-async function clearCache (request, email) {
+async function clearMagicLinkCache (request, email) {
   const { magiclinkCache } = request.server.app
   const emailTokens = await magiclinkCache.get(email)
   Promise.all(emailTokens.map(async (token) => await magiclinkCache.drop(token)))
@@ -55,16 +68,25 @@ module.exports = [{
     handler: async (request, h) => {
       const { email, token } = request.query
 
-      const { email: cachedEmail, redirectTo, userType } = await lookupToken(request, token)
-      if (!cachedEmail || email !== cachedEmail) {
+      const { email: cachedEmail, redirectTo, userType, data } = await lookupToken(request, token)
+      if (isRequestValid(cachedEmail, email)) {
         return h.view('auth/verify-login-failed').code(400)
       }
 
       setAuthCookie(request, email, userType)
 
-      await cacheUserData(request, email)
+      switch (userType) {
+        case vet:
+          await cacheVetData(request, data)
+          break
+        case farmer:
+          await cacheFarmerData(request, email)
+          break
+        default:
+          throw new Error(`Unknow userType ${userType}`)
+      }
 
-      await clearCache(request, email)
+      await clearMagicLinkCache(request, email)
 
       return h.redirect(redirectTo)
     }

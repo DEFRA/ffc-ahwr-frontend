@@ -1,15 +1,18 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
+const { farmer, vet } = require('../../../../../app/config/user-types')
+const { vetVisitData: { farmerApplication, signup } } = require('../../../../../app/session/keys')
+
+const application = require('../../../../../app/messaging/application')
+jest.mock('../../../../../app/messaging/application')
+const session = require('../../../../../app/session')
+jest.mock('../../../../../app/session')
+const users = require('../../../../../app/api-requests/users')
+jest.mock('../../../../../app/api-requests/users')
 
 describe('Verify login page test', () => {
-  let getByEmail
-
   beforeAll(async () => {
     jest.resetAllMocks()
-
-    const orgs = require('../../../../../app/api-requests/users')
-    getByEmail = orgs.getByEmail
-    jest.mock('../../../../../app/api-requests/users')
   })
 
   const expectVerifyLoginPage = require('../../../../utils/verify-login-page-expect')
@@ -68,16 +71,21 @@ describe('Verify login page test', () => {
       expectVerifyLoginPage.hasCorrectContent($)
     })
 
-    test('route with valid email and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async () => {
+    test.each([
+      { userType: farmer, data: {} },
+      { userType: vet, data: { reference: 'application-reference' } }
+    ])('route with valid email for $userType and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async ({ userType, data }) => {
       const org = { name: 'my-org' }
-      getByEmail.mockResolvedValue(org)
+      users.getByEmail.mockResolvedValueOnce(org)
+      const appRes = { createdAt: new Date('2022-04-01') }
+      application.getApplication.mockResolvedValueOnce(appRes)
       const options = {
         method: 'GET',
         url: `${url}?email=${validEmail}&token=${validToken}`
       }
 
       await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken])
-      await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo })
+      await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo, userType, data })
 
       const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
       const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
@@ -94,15 +102,31 @@ describe('Verify login page test', () => {
       expect(res.headers.location).toEqual(redirectTo)
       expectVerifyLoginPage.hasCookiesSet(res)
       expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
-      expect(res.request.yar.get('organisation')).toMatchObject(org)
+
+      switch (userType) {
+        case farmer:
+          expect(session.setOrganisation).toHaveBeenCalledTimes(1)
+          expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
+          break
+        case vet:
+          expect(application.getApplication).toHaveBeenCalledTimes(1)
+          expect(application.getApplication).toHaveBeenCalledWith(data.reference, res.request.yar.id)
+          expect(session.setVetVisitData).toHaveBeenCalledTimes(2)
+          expect(session.setVetVisitData).toHaveBeenNthCalledWith(1, res.request, signup, data)
+          expect(session.setVetVisitData).toHaveBeenNthCalledWith(2, res.request, farmerApplication, appRes)
+          break
+      }
 
       cacheGetSpy.mockRestore()
       cacheDropSpy.mockRestore()
     })
 
-    test('route for valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async () => {
-      const org = { name: 'my-org' }
-      getByEmail.mockResolvedValue(org)
+    test.each([
+      { userType: farmer, data: {} },
+      { userType: vet, data: { reference: 'application-reference' } }
+    ])('route for valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async ({ userType, data }) => {
+      users.getByEmail.mockResolvedValueOnce({})
+      application.getApplication.mockResolvedValueOnce({})
       const options = {
         method: 'GET',
         url: `${url}?email=${validEmail}&token=${validToken}`
@@ -110,9 +134,9 @@ describe('Verify login page test', () => {
 
       const oldTokens = [uuid(), uuid(), uuid()]
       await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken, ...oldTokens])
-      await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo })
-      await global.__SERVER__.app.magiclinkCache.set(oldTokens[0], { email: validEmail, redirectTo })
-      await global.__SERVER__.app.magiclinkCache.set(oldTokens[1], { email: validEmail, redirectTo })
+      await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo, userType, data })
+      await global.__SERVER__.app.magiclinkCache.set(oldTokens[0], { email: validEmail, redirectTo, userType, data })
+      await global.__SERVER__.app.magiclinkCache.set(oldTokens[1], { email: validEmail, redirectTo, userType, data })
 
       const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
       const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
@@ -132,7 +156,6 @@ describe('Verify login page test', () => {
       expect(res.headers.location).toEqual(redirectTo)
       expectVerifyLoginPage.hasCookiesSet(res)
       expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
-      expect(res.request.yar.get('organisation')).toMatchObject(org)
 
       cacheGetSpy.mockRestore()
       cacheDropSpy.mockRestore()

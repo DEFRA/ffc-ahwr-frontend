@@ -1,10 +1,10 @@
 const Joi = require('joi')
 const { labels } = require('../../config/visit-date')
-const session = require('../../session')
-const { vetSignup: { reference: referenceKey } } = require('../../session/keys')
 const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
 const createItems = require('../../lib/visit-date/date-input-items')
-const { isDateInFutureOrBeforeStartDate } = require('../../lib/visit-date/validation')
+const { isDateInFutureOrBeforeFirstValidDate } = require('../../lib/visit-date/validation')
+const session = require('../../session')
+const { vetVisitData: { farmerApplication, visitDate } } = require('../../session/keys')
 
 const templatePath = 'vet/visit-date'
 const path = `/${templatePath}`
@@ -14,8 +14,8 @@ module.exports = [{
   path,
   options: {
     handler: async (request, h) => {
-      const reference = session.getVetSignup(request, referenceKey)
-      return h.view(templatePath, { reference })
+      const items = session.getVetVisitData(request, visitDate)
+      return h.view(templatePath, { items })
     }
   }
 }, {
@@ -36,21 +36,24 @@ module.exports = [{
         [labels.year]: Joi.number().min(2022).max(2022).required()
       }),
       failAction: async (request, h, error) => {
-        const dateInputErrors = getDateInputErrors(error.details, request.payload)
+        const { createdAt } = session.getVetVisitData(request, farmerApplication)
+        const dateInputErrors = getDateInputErrors(error.details, request.payload, createdAt)
         return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      const { payload } = request
+      const { createdAt } = session.getVetVisitData(request, farmerApplication)
 
-      const { isDateValid, errorMessage } = isDateInFutureOrBeforeStartDate(payload)
+      const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(request.payload, createdAt)
       if (!isDateValid) {
         const dateInputErrors = {
           errorMessage,
-          items: createItems(payload, true)
+          items: createItems(request.payload, true)
         }
         return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }
+      const items = createItems(request.payload, false)
+      session.setVetVisitData(request, visitDate, items)
       return h.redirect('/vet/species')
     }
   }

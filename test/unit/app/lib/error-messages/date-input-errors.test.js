@@ -98,10 +98,11 @@ describe('date input error message', () => {
     expect(errorItems).toHaveLength(3)
   })
 
+  const firstValidDate = new Date(2022, 6, 13)
   test.each([
     { label: `${labelPrefix}day`, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
     { label: `${labelPrefix}month`, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
-    { label: `${labelPrefix}year`, value: 999, expectedErrorMessage: 'Visit date must be the same as or after 1 April 2022' }
+    { label: `${labelPrefix}year`, value: 999, expectedErrorMessage: `Visit date must be the same as or after ${firstValidDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created` }
   ])('returns all items highlighted with values set - %p', ({ label, value, expectedErrorMessage }) => {
     const errorDetails = [{
       context: { label, value, key: label }
@@ -109,7 +110,7 @@ describe('date input error message', () => {
     const payload = { ...fullPayload }
     payload[label] = value
 
-    const { errorMessage, items } = getDateInputErrors(errorDetails, payload)
+    const { errorMessage, items } = getDateInputErrors(errorDetails, payload, firstValidDate)
 
     expect(errorMessage.text).toEqual(expectedErrorMessage)
     expect(items).toHaveLength(3)

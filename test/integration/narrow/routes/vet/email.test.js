@@ -4,8 +4,6 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
 const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
-const { notify: { templateIdVetLogin } } = require('../../../../../app/config')
-const { vet } = require('../../../../../app/config/user-types')
 
 function expectPageContentOk ($) {
   expect($('h1').text()).toMatch('Enter your email address')
@@ -91,6 +89,8 @@ describe('Vet, enter email name test', () => {
       { email: validEmail },
       { email: `  ${validEmail}  ` }
     ])('returns 302 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
+      const signupData = {}
+      session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -98,7 +98,7 @@ describe('Vet, enter email name test', () => {
         payload: { crumb, email },
         url
       }
-      sendMagicLinkEmail.mockResolvedValue(true)
+      sendMagicLinkEmail.sendVetMagicLinkEmail.mockResolvedValue(true)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -106,11 +106,13 @@ describe('Vet, enter email name test', () => {
       expect(res.headers.location).toEqual('/vet/check-email')
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
-      expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), templateIdVetLogin, 'vet/visit-date', vet)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), signupData)
     })
 
     test('returns 500 when problem sending email', async () => {
+      const signupData = {}
+      session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         headers: { cookie: `crumb=${crumb}` },
@@ -118,14 +120,14 @@ describe('Vet, enter email name test', () => {
         payload: { crumb, email: validEmail },
         url
       }
-      sendMagicLinkEmail.mockResolvedValue(false)
+      sendMagicLinkEmail.sendVetMagicLinkEmail.mockResolvedValue(false)
 
       const res = await global.__SERVER__.inject(options)
 
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, validEmail)
-      expect(sendMagicLinkEmail).toHaveBeenCalledTimes(1)
-      expect(sendMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, templateIdVetLogin, 'vet/visit-date', vet)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, validEmail, signupData)
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Sorry, there is a problem with the service')
