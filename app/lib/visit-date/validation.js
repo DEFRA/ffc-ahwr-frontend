@@ -13,6 +13,20 @@ function isDateInFuture (date) {
 }
 
 /**
+ * Checks if `dateToCompare` is not more than 365 days older than `date`.
+ *
+ * @param {Date} date.
+ * @param {Date} dateToCompare against.
+ *
+ * @return {boolean} result of comparison.
+ */
+function isDateWithinYear (date, dateToCompare) {
+  const yearAgo = new Date(date)
+  yearAgo.setDate(yearAgo.getDate() - 365)
+  return dateToCompare < yearAgo
+}
+
+/**
  * Compares one date to another to check if it is before.
  *
  * @param {Date} date.
@@ -40,7 +54,7 @@ function isDateInFutureOrBeforeFirstValidDate (payload, dateToCompare) {
   const date = getDateFromPayload(payload)
 
   const futureDate = isDateInFuture(date)
-  if (futureDate || isDateBefore(date, dateToCompare)) {
+  if (futureDate || isDateBefore(date, dateToCompare) || isDateWithinYear(date, dateToCompare)) {
     return {
       errorMessage: {
         text: futureDate ? errorMessages.todayOrPast : errorMessages.startDateOrAfter(dateToCompare)
