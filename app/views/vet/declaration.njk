@@ -1,0 +1,32 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}Declaration{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: backLink,
+	  attributes: {id: "back"}
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Submit your record</h1>
+
+    <p>By submitting the record you confirm that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the information you have given is correct</li>
+      <li>you have given the farmer a summary report including recommended actions and information and where to find further support</li>
+    </ul>
+
+    <form method="POST" action="confirmation">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukButton({
+        text: "Submit record"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
