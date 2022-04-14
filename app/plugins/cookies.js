@@ -1,11 +1,11 @@
-const config = require('../config').cookiePolicy
+const { cookie: { cookieNameCookiePolicy }, cookiePolicy } = require('../config')
 const { getCurrentPolicy } = require('../cookies')
 
 module.exports = {
   plugin: {
     name: 'cookies',
     register: (server, _) => {
-      server.state('cookies_policy', config)
+      server.state(cookieNameCookiePolicy, cookiePolicy)
 
       server.ext('onPreResponse', (request, h) => {
         const statusCode = request.response.statusCode

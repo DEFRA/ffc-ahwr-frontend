@@ -22,6 +22,7 @@ const schema = Joi.object({
     }
   },
   cookie: {
+    cookieNameCookiePolicy: Joi.string().default('ffc_ahwr_cookie_policy'),
     cookieNameAuth: Joi.string().default('ffc_ahwr_auth'),
     cookieNameSession: Joi.string().default('ffc_ahwr_session'),
     isSameSite: Joi.string().default('Lax'),
@@ -29,14 +30,12 @@ const schema = Joi.object({
     password: Joi.string().min(32).required()
   },
   cookiePolicy: {
-    password: Joi.string().min(32).required(),
-    ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365), // 1 year
-    isSameSite: Joi.string().valid('Lax').default('Lax'),
-    encoding: Joi.string().valid('base64json').default('base64json'),
-    isSecure: Joi.bool().default(true),
-    isHttpOnly: Joi.bool().default(true),
     clearInvalid: Joi.bool().default(false),
-    strictHeader: Joi.bool().default(true)
+    encoding: Joi.string().valid('base64json').default('base64json'),
+    isSameSite: Joi.string().default('Lax'),
+    isSecure: Joi.bool().default(true),
+    password: Joi.string().min(32).required(),
+    ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   isDev: Joi.boolean().default(false),
@@ -88,6 +87,7 @@ const config = {
     }
   },
   cookie: {
+    cookieNameCookiePolicy: 'ffc_ahwr_cookie_policy',
     cookieNameAuth: 'ffc_ahwr_auth',
     cookieNameSession: 'ffc_ahwr_session',
     isSameSite: 'Lax',
@@ -95,12 +95,9 @@ const config = {
     password: process.env.COOKIE_PASSWORD
   },
   cookiePolicy: {
-    encoding: 'base64json',
-    ttl: process.env.COOKIE_TTL_IN_MILLIS,
-    isSameSite: 'Lax',
     clearInvalid: false,
-    strictHeader: true,
-    isHttpOnly: true,
+    encoding: 'base64json',
+    isSameSite: 'Lax',
     isSecure: process.env.NODE_ENV === 'production',
     password: process.env.COOKIE_PASSWORD
   },
