@@ -78,8 +78,9 @@ describe('Vet, enter date of visit', () => {
     let crumb
     const method = 'POST'
     const today = new Date()
-    const yearPastMinusOne = new Date(today)
-    yearPastMinusOne.setDate(yearPastMinusOne.getDate() - 366)
+    const yearPastMinusOneApplicationDate = new Date(today)
+    yearPastMinusOneApplicationDate.setFullYear(yearPastMinusOneApplicationDate.getFullYear() - 1)
+    yearPastMinusOneApplicationDate.setDate(yearPastMinusOneApplicationDate.getDate() - 1)
     const yearPast = new Date(today)
     yearPast.setDate(yearPast.getDate() - 365)
     const yesterday = new Date(today)
@@ -108,7 +109,7 @@ describe('Vet, enter date of visit', () => {
     const allErrorHighlights = [labels.day, labels.month, labels.year]
 
     test.each([
-      { description: 'visit 366 days after application created', day: today.getDate(), month: today.getMonth() + 1, year: today.getFullYear(), errorMessage: `Visit date must be the same as or after ${yearPastMinusOne.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: allErrorHighlights, applicationCreationDate: yearPastMinusOne },
+      { description: 'visit 366 days after application created', day: today.getDate(), month: today.getMonth() + 1, year: today.getFullYear(), errorMessage: `Visit date must be the same as or after ${yearPastMinusOneApplicationDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: allErrorHighlights, applicationCreationDate: yearPastMinusOneApplicationDate },
       { description: 'visit in future - application created yesterday, visit date tomorrow', day: tomorrow.getDate(), month: tomorrow.getMonth() + 1, year: tomorrow.getFullYear(), errorMessage: 'Visit date must be today or in the past', errorHighlights: allErrorHighlights, applicationCreationDate: yesterday },
       { description: 'visit before application - application created today, visit date yesterday', day: yesterday.getDate(), month: yesterday.getMonth() + 1, year: yesterday.getFullYear(), errorMessage: `Visit date must be the same as or after ${today.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: allErrorHighlights, applicationCreationDate: today },
       { description: 'missing day and month and year', day: '', month: '', year: '', errorMessage: 'Enter the date of the visit', errorHighlights: allErrorHighlights, applicationCreationDate: today },
