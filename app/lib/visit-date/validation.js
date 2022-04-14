@@ -22,7 +22,7 @@ function isDateInFuture (date) {
  */
 function isDateWithinYear (date, dateToCompare) {
   const yearAgo = new Date(date)
-  yearAgo.setDate(yearAgo.getDate() - 365)
+  yearAgo.setFullYear(yearAgo.getFullYear() - 1)
   return dateToCompare < yearAgo
 }
 
