@@ -3,9 +3,9 @@ const { vetVisitData } = require('../../session/keys')
 
 const backLink = '/vet/visit-date'
 
-function getVisitDate(application) {
-  const visitDate = application[vetVisitData.visitDate];
-  return visitDate.map(item => item.value).join(' ');
+function getVisitDate (application) {
+  const visitDate = application[vetVisitData.visitDate]
+  return visitDate.map(item => item.value).join(' ')
 }
 
 module.exports = {
