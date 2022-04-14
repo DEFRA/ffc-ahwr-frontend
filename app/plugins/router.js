@@ -18,6 +18,7 @@ const routes = [].concat(
   require('../routes/farmer-apply/sheep'),
   require('../routes/privacy-policy'),
   require('../routes/vet'),
+  require('../routes/vet/check-answers'),
   require('../routes/vet/check-email'),
   require('../routes/vet/email'),
   require('../routes/vet/name'),

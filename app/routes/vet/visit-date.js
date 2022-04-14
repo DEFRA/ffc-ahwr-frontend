@@ -54,7 +54,7 @@ module.exports = [{
       }
       const items = createItems(request.payload, false)
       session.setVetVisitData(request, visitDate, items)
-      return h.redirect('/vet/species')
+      return h.redirect('/vet/check-answers')
     }
   }
 }]

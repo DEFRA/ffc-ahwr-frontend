@@ -158,7 +158,7 @@ describe('Vet, enter date of visit', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/species')
+      expect(res.headers.location).toEqual('/vet/check-answers')
       expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
       expect(session.getVetVisitData).toHaveBeenCalledWith(res.request, farmerApplication)
     })
