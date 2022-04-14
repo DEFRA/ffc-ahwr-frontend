@@ -33,7 +33,7 @@ module.exports = [{
           })
           .required(),
         [labels.month]: Joi.number().min(1).max(12).required(),
-        [labels.year]: Joi.number().min(2022).max(2022).required()
+        [labels.year]: Joi.number().min(2022).max(2024).required()
       }),
       failAction: async (request, h, error) => {
         const { createdAt } = session.getVetVisitData(request, farmerApplication)

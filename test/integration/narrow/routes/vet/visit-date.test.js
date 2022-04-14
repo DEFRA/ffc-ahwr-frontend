@@ -78,18 +78,14 @@ describe('Vet, enter date of visit', () => {
     let crumb
     const method = 'POST'
     const today = new Date()
-    const yearFuture = new Date()
-    yearFuture.setFullYear(yearFuture.getFullYear() + 1)
-    const yearPast = new Date()
-    yearPast.setFullYear(yearPast.getFullYear() - 1)
-    const yesterday = new Date()
+    const yearPastMinusOne = new Date(today)
+    yearPastMinusOne.setDate(yearPastMinusOne.getDate() - 366)
+    const yearPast = new Date(today)
+    yearPast.setDate(yearPast.getDate() - 365)
+    const yesterday = new Date(today)
     yesterday.setDate(yesterday.getDate() - 1)
-    const tomorrow = new Date()
+    const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const createdAt = Date.now()
-    const startDate = new Date(createdAt)
-    const dayBeforeStartDate = new Date(startDate)
-    dayBeforeStartDate.setDate(dayBeforeStartDate.getDate() - 1)
 
     beforeEach(async () => {
       crumb = await getCrumbs(global.__SERVER__)
@@ -109,20 +105,21 @@ describe('Vet, enter date of visit', () => {
       expect(res.headers.location).toEqual('/vet')
     })
 
+    const allErrorHighlights = [labels.day, labels.month, labels.year]
+
     test.each([
-      { day: '', month: '', year: '', date: '', errorMessage: 'Enter the date of the visit', errorHighlights: [labels.day, labels.month, labels.year] },
-      { day: tomorrow.getDate(), month: tomorrow.getMonth() + 1, year: tomorrow.getFullYear(), date: tomorrow, errorMessage: 'Visit date must be today or in the past', errorHighlights: [labels.day, labels.month, labels.year] },
-      { day: yearFuture.getDate(), month: yearFuture.getMonth() + 1, year: yearFuture.getFullYear(), date: yearFuture, errorMessage: 'Visit date must be today or in the past', errorHighlights: [labels.day, labels.month, labels.year] },
-      { day: yearPast.getDate(), month: yearPast.getMonth() + 1, year: yearPast.getFullYear(), date: yearPast, errorMessage: `Visit date must be the same as or after ${startDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: [labels.day, labels.month, labels.year] },
-      { day: dayBeforeStartDate.getDate(), month: dayBeforeStartDate.getMonth() + 1, year: dayBeforeStartDate.getFullYear(), date: tomorrow, errorMessage: `Visit date must be the same as or after ${startDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: [labels.day, labels.month, labels.year] },
-      { day: '', month: startDate.getMonth(), year: startDate.getFullYear(), errorMessage: 'Visit date must include a day', errorHighlights: [labels.day] },
-      { day: startDate.getDate(), month: '', year: startDate.getFullYear(), errorMessage: 'Visit date must include a month', errorHighlights: [labels.month] },
-      { day: startDate.getDate(), month: startDate.getMonth(), year: '', errorMessage: 'Visit date must include a year', errorHighlights: [labels.year] },
-      { day: '', month: '', year: startDate.getFullYear(), errorMessage: 'Visit date must include a day and a month', errorHighlights: [labels.day, labels.month] },
-      { day: '', month: startDate.getMonth(), year: '', errorMessage: 'Visit date must include a day and a year', errorHighlights: [labels.day, labels.year] },
-      { day: startDate.getDate(), month: '', year: '', errorMessage: 'Visit date must include a month and a year', errorHighlights: [labels.month, labels.year] }
-    ])('returns error ($errorMessage) when partial input is given - $description', async ({ day, month, year, errorMessage, errorHighlights }) => {
-      session.getVetVisitData.mockReturnValueOnce({ createdAt: startDate })
+      { description: 'visit 366 days after application created', day: today.getDate(), month: today.getMonth() + 1, year: today.getFullYear(), errorMessage: `Visit date must be the same as or after ${yearPastMinusOne.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: allErrorHighlights, applicationCreationDate: yearPastMinusOne },
+      { description: 'visit in future - application created yesterday, visit date tomorrow', day: tomorrow.getDate(), month: tomorrow.getMonth() + 1, year: tomorrow.getFullYear(), errorMessage: 'Visit date must be today or in the past', errorHighlights: allErrorHighlights, applicationCreationDate: yesterday },
+      { description: 'visit before application - application created today, visit date yesterday', day: yesterday.getDate(), month: yesterday.getMonth() + 1, year: yesterday.getFullYear(), errorMessage: `Visit date must be the same as or after ${today.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, errorHighlights: allErrorHighlights, applicationCreationDate: today },
+      { description: 'missing day and month and year', day: '', month: '', year: '', errorMessage: 'Enter the date of the visit', errorHighlights: allErrorHighlights, applicationCreationDate: today },
+      { description: 'missing day', day: '', month: today.getMonth(), year: today.getFullYear(), errorMessage: 'Visit date must include a day', errorHighlights: [labels.day], applicationCreationDate: today },
+      { description: 'missing month', day: today.getDate(), month: '', year: today.getFullYear(), errorMessage: 'Visit date must include a month', errorHighlights: [labels.month], applicationCreationDate: today },
+      { description: 'missing year', day: today.getDate(), month: today.getMonth(), year: '', errorMessage: 'Visit date must include a year', errorHighlights: [labels.year], applicationCreationDate: today },
+      { description: 'missing day and month', day: '', month: '', year: today.getFullYear(), errorMessage: 'Visit date must include a day and a month', errorHighlights: [labels.day, labels.month], applicationCreationDate: today },
+      { description: 'missing day and year', day: '', month: today.getMonth(), year: '', errorMessage: 'Visit date must include a day and a year', errorHighlights: [labels.day, labels.year], applicationCreationDate: today },
+      { description: 'missing month and year', day: today.getDate(), month: '', year: '', errorMessage: 'Visit date must include a month and a year', errorHighlights: [labels.month, labels.year], applicationCreationDate: today }
+    ])('returns error ($errorMessage) when partial or invalid input is given - $description', async ({ day, month, year, errorMessage, errorHighlights, applicationCreationDate }) => {
+      session.getVetVisitData.mockReturnValueOnce({ createdAt: applicationCreationDate })
       const options = {
         method,
         url,
@@ -144,14 +141,15 @@ describe('Vet, enter date of visit', () => {
     })
 
     test.each([
-      { day: today.getDate(), month: today.getMonth() + 1, year: today.getFullYear(), description: 'today', date: today },
-      { day: startDate.getDate(), month: startDate.getMonth() + 1, year: startDate.getFullYear(), description: 'first possible date', date: startDate }
-    ])('returns 302 to next page when acceptable answer given - $description ($date)', async ({ day, month, year }) => {
-      session.getVetVisitData.mockReturnValueOnce({ createdAt: yesterday })
+      { description: 'application created today, visit date today', applicationCreationDate: today },
+      { description: 'application created 365 days ago, visit date today', applicationCreationDate: yearPast },
+      { description: 'application created yesterday, visit date today', applicationCreationDate: yesterday }
+    ])('returns 302 to next page when acceptable answer given - $description', async ({ applicationCreationDate }) => {
+      session.getVetVisitData.mockReturnValueOnce({ createdAt: applicationCreationDate })
       const options = {
         method,
         url,
-        payload: { crumb, [labels.day]: day, [labels.month]: month, [labels.year]: year },
+        payload: { crumb, [labels.day]: today.getDate(), [labels.month]: today.getMonth() + 1, [labels.year]: today.getFullYear() },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
