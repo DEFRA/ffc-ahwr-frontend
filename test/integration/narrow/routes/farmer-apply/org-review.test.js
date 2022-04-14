@@ -33,7 +33,7 @@ describe('Org review page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('.govuk-heading-l').text()).toEqual('Health and welfare review funding for this organisation')
-      expect($('.govuk-heading-m').text()).toEqual(org.name)
+      expect($('.govuk-main-wrapper .govuk-heading-m').text()).toEqual(org.name)
       const keys = $('.govuk-summary-list__key')
       const values = $('.govuk-summary-list__value')
       expect(keys.eq(0).text()).toMatch('SBI number')
