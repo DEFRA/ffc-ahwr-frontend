@@ -37,7 +37,8 @@ the web app running locally. In this case simply run
 `docker-compose up --build` in this directory (i.e. ./test/acceptance).
 
 Running the tests like this will require the env var
-`TEST_ENVIRONMENT_ROOT_URL` to be set (see below for more details).
+`TEST_ENVIRONMENT_ROOT_URL` to be set (see below for more details). Note that
+the URL should NOT include a trailing `/`.
 
 ## Environment variables
 
