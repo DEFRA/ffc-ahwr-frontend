@@ -1,11 +1,16 @@
-node_modules
-npm-debug.log
-test-output
-docker-compose*
-README.md
-LICENCE
-Dockerfile
+# dotfiles
+.dockerignore
+.pre-commit-config.yaml
 .secrets.baseline
 .snyk
-.pre-commit-config.yaml
-.dockerignore
+
+# files
+npm-debug.log
+docker-compose*
+Dockerfile
+LICENCE
+README.md
+
+# directories
+node_modules
+test-output
