@@ -1,4 +1,4 @@
-const { ReportAggregator, HtmlReporter } = require('@rpii/wdio-html-reporter')
+const { ReportAggregator, HtmlReporter } = require('wdio-html-nice-reporter')
 const log4js = require('@log4js-node/log4js-api')
 const path = require('path')
 const logger = log4js.getLogger('default')

@@ -106,4 +106,4 @@ A number of elements are required for this to work:
 
 Test reports will be output to `./html-reports`. Note that WSL users need to
 run `mkdir -m 777 html-reports`. Read more about report configuration in the
-[rpii/wdio-hmtl-reporter docs](https://github.com/rpii/wdio-html-reporter).
+[wdio-html-nice-reporter docs](https://github.com/rpii/wdio-html-reporter).
