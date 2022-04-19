@@ -52,13 +52,10 @@
   },
   "standard": {
     "globals": [
-      "browser",
-      "it",
-      "expect",
-      "describe",
-      "beforeEach",
+      "$",
       "assert",
-      "$"
+      "browser",
+      "expect"
     ]
   }
 }

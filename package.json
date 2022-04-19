@@ -65,18 +65,18 @@
     "webpack-cli": "^4.9.2"
   },
   "standard": {
+    "env": {
+      "jest": true
+    },
     "globals": [
-      "describe",
-      "beforeEach",
-      "expect",
-      "test",
-      "afterEach",
-      "jest",
-      "beforeAll",
-      "afterAll"
+      "$",
+      "browser"
     ],
     "ignore": [
-      "app/frontend/dist/**/*.js"
+      "app/frontend/dist/**/*.js",
+      "test/acceptance/**/*.js",
+      "test/acceptance/**/*.mjs",
+      "test/acceptance/**/*.cjs"
     ]
   },
   "nodemonConfig": {
