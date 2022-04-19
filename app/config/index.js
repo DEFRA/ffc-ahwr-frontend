@@ -53,12 +53,12 @@ const schema = Joi.object({
     ...sharedConfigSchema
   },
   applicationRequestMsgType: Joi.string(),
+  applicationResponseMsgType: Joi.string(),
   applicationResponseQueue: {
     address: Joi.string().default('applicationResponseQueue'),
     type: Joi.string(),
     ...sharedConfigSchema
   },
-  applicationResponseMsgType: Joi.string(),
   fetchApplicationRequestMsgType: Joi.string(),
   fetchApplicationResponseMsgType: Joi.string(),
   serviceUri: Joi.string().uri(),
@@ -116,12 +116,12 @@ const config = {
     ...sharedConfig
   },
   applicationRequestMsgType: `${msgTypePrefix}.app.request`,
+  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
   applicationResponseQueue: {
     address: process.env.APPLICATIONRESPONSE_QUEUE_ADDRESS,
     type: 'queue',
     ...sharedConfig
   },
-  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
   fetchApplicationRequestMsgType: `${msgTypePrefix}.fetch.app.request`,
   fetchApplicationResponseMsgType: `${msgTypePrefix}.fetch.app.response`,
   serviceUri: process.env.SERVICE_URI,
