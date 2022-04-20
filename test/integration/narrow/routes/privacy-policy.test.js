@@ -11,7 +11,7 @@ describe('Privacy Policy', () => {
     const response = await global.__SERVER__.inject(options)
     expect(response.statusCode).toBe(200)
     const $ = cheerio.load(response.payload)
-    expect($('h1.govuk-heading-l').text()).toEqual(`Privacy Policy statement for ${serviceName} service`)
+    expect($('h1.govuk-heading-l').text()).toEqual(`Privacy policy statement for ${serviceName} service`)
     expectPhaseBanner.ok($)
   })
 })
