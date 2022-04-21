@@ -1,16 +1,17 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
+const boom = require('@hapi/boom')
+
+boom.internal = jest.fn()
 
 const mockMessage = {
   sendMessage: () => {
     return 'nothing'
   },
-  receiveMessage: () => {
-    return {
-      vetReference: 'VV-5874-0BFA'
-    }
-  }
+  receiveMessage: jest.fn().mockReturnValueOnce({
+    vetReference: 'VV-5874-0BFA'
+  }).mockImplementationOnce(null)
 }
 
 const mockSession = {
@@ -34,7 +35,7 @@ describe('Confirmation test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('returns 200', async () => {
+    test('returns 500', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -48,6 +49,23 @@ describe('Confirmation test', () => {
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Record submitted')
       expect($('title').text()).toEqual('Confirmation')
+      expectPhaseBanner.ok($)
+    })
+
+    test('returns 500', async () => {
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
+      const res = await global.__SERVER__.inject(options)
+      expect(res.statusCode).toBe(500)
+      expect(boom.internal).toHaveBeenCalledTimes(1)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toMatch('Sorry, there is a problem with the service')
       expectPhaseBanner.ok($)
     })
 
