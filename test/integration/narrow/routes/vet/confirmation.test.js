@@ -35,7 +35,7 @@ describe('Confirmation test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('returns 500', async () => {
+    test('returns 200', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
