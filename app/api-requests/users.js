@@ -7,7 +7,7 @@ async function getUsers () {
 }
 
 async function getByEmail (email) {
-  return (await getUsers()).find(x => x.email === email)
+  return (await getUsers()).find(x => x.email.toLowerCase() === email.toLowerCase())
 }
 
 module.exports = {
