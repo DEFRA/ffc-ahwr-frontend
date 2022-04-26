@@ -1,16 +1,13 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
-const boom = require('@hapi/boom')
-
-boom.internal = jest.fn()
 
 const mockMessage = {
   sendMessage: () => {
     return 'nothing'
   },
   receiveMessage: jest.fn().mockReturnValueOnce({
-    vetReference: 'VV-5874-0BFA'
+    signup: { reference: 'VV-5874-0BFA' }
   }).mockImplementationOnce(null)
 }
 
@@ -52,7 +49,7 @@ describe('Confirmation test', () => {
       expectPhaseBanner.ok($)
     })
 
-    test('returns 500', async () => {
+    test('returns error message', async () => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -62,10 +59,9 @@ describe('Confirmation test', () => {
         headers: { cookie: `crumb=${crumb}` }
       }
       const res = await global.__SERVER__.inject(options)
-      expect(res.statusCode).toBe(500)
-      expect(boom.internal).toHaveBeenCalledTimes(1)
+      expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Sorry, there is a problem with the service')
+      expect($('h1').text()).toMatch('No application found, application reference number is no longer valid.')
       expectPhaseBanner.ok($)
     })
 
