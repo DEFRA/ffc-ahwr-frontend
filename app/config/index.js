@@ -42,7 +42,8 @@ const schema = Joi.object({
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
     templateIdApplicationComplete: Joi.string().uuid(),
-    templateIdFarmerLogin: Joi.string().uuid(),
+    templateIdFarmerApplyLogin: Joi.string().uuid(),
+    templateIdFarmerClaimLogin: Joi.string().uuid(),
     templateIdVetLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
@@ -108,7 +109,8 @@ const config = {
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
     templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE,
-    templateIdFarmerLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_LOGIN,
+    templateIdFarmerApplyLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
+    templateIdFarmerClaimLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
     templateIdVetLogin: process.env.NOTIFY_TEMPLATE_ID_VET_LOGIN
   },
   port: process.env.PORT,

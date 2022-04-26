@@ -1,13 +1,13 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { sendFarmerApplyLoginMagicLink } = require('../../lib/email/send-magic-link-email')
+const { sendFarmerClaimLoginMagicLink } = require('../../lib/email/send-magic-link-email')
 const { email: emailValidation } = require('../../../app/lib/validation/email')
 
-// TODO: refactor this to share with farmer-claim/login
+// TODO: refactor this to share with farmer-apply/login
 module.exports = [{
   method: 'GET',
-  path: '/farmer-apply/login',
+  path: '/farmer-claim/login',
   options: {
     auth: {
       mode: 'try'
@@ -19,14 +19,14 @@ module.exports = [{
     },
     handler: async (request, h) => {
       if (request.auth.isAuthenticated) {
-        return h.redirect(request.query?.next || '/farmer-apply/org-review')
+        return h.redirect(request.query?.next || '/farmer-claim/visit-review')
       }
       return h.view('auth/magic-login')
     }
   }
 }, {
   method: 'POST',
-  path: '/farmer-apply/login',
+  path: '/farmer-claim/login',
   options: {
     auth: {
       mode: 'try'
@@ -41,13 +41,13 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { email } = request.payload
-      const user = await getByEmail(email)
+      const users = await getByEmail(email)
 
-      if (!user) {
+      if (!users) {
         return h.view('auth/magic-login', { ...request.payload, errorMessage: { text: `No user found with email address "${email}"` } }).code(400).takeover()
       }
 
-      const result = await sendFarmerApplyLoginMagicLink(request, email)
+      const result = await sendFarmerClaimLoginMagicLink(request, email)
 
       if (!result) {
         return boom.internal()

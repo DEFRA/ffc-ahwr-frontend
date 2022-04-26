@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const { farmer, vet } = require('../../../../../app/config/user-types')
+const { farmerApply, farmerClaim, vet } = require('../../../../../app/config/user-types')
 const { vetVisitData: { farmerApplication, signup } } = require('../../../../../app/session/keys')
 
 const application = require('../../../../../app/messaging/application')
@@ -72,7 +72,8 @@ describe('Verify login page test', () => {
     })
 
     test.each([
-      { userType: farmer, data: {} },
+      { userType: farmerApply, data: {} },
+      { userType: farmerClaim, data: {} },
       { userType: vet, data: { reference: 'application-reference' } }
     ])('route with valid email for $userType and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async ({ userType, data }) => {
       const org = { name: 'my-org' }
@@ -104,9 +105,14 @@ describe('Verify login page test', () => {
       expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
 
       switch (userType) {
-        case farmer:
+        case farmerApply:
           expect(session.setOrganisation).toHaveBeenCalledTimes(1)
           expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
+          break
+        case farmerClaim:
+          // TODO: add expectations for getting vet_visit record
+          // expect(session.setOrganisation).toHaveBeenCalledTimes(1)
+          // expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
           break
         case vet:
           expect(application.getApplication).toHaveBeenCalledTimes(1)
@@ -122,7 +128,8 @@ describe('Verify login page test', () => {
     })
 
     test.each([
-      { userType: farmer, data: {} },
+      { userType: farmerApply, data: {} },
+      { userType: farmerClaim, data: {} },
       { userType: vet, data: { reference: 'application-reference' } }
     ])('route for valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async ({ userType, data }) => {
       users.getByEmail.mockResolvedValueOnce({})

@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid')
-const { farmer } = require('../../../../app/config/user-types')
+const { farmerApply } = require('../../../../app/config/user-types')
 
 describe('Auth plugin test', () => {
   let getByEmail
@@ -30,7 +30,7 @@ describe('Auth plugin test', () => {
       }
 
       await global.__SERVER__.app.magiclinkCache.set(email, [token])
-      await global.__SERVER__.app.magiclinkCache.set(token, { email, redirectTo, userType: farmer })
+      await global.__SERVER__.app.magiclinkCache.set(token, { email, redirectTo, userType: farmerApply })
 
       return global.__SERVER__.inject(options)
     }

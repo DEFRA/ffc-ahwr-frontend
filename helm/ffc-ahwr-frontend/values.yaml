@@ -37,7 +37,8 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   notifyApiKey:
   notifyTemplateIdApplicationComplete:
-  notifyTemplateIdFarmerLogin:
+  notifyTemplateIdFarmerApplyLogin:
+  notifyTemplateIdFarmerClaimLogin:
   notifyTemplateIdVetLogin:
   port: 3000
   requestCpu: 100m
