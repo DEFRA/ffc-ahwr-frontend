@@ -36,7 +36,6 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      console.log(request.params.journey)
       const { journey } = request.params
       if (request.auth.isAuthenticated) {
         const loggedInPath = getLoggedInPath(journey)
