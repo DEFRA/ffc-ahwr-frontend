@@ -18,7 +18,8 @@ describe('Vet visit review page test', () => {
       // TODO: Update this to whatever the data is going to be
       const data = {
         businessName: 'org-name',
-        dateOfReview: date,
+        // the date is a string when retrieved from the message
+        dateOfReview: JSON.stringify(date),
         paymentAmount: 522
       }
       session.getFarmerClaimData.mockReturnValue(data)
@@ -38,7 +39,7 @@ describe('Vet visit review page test', () => {
       expect(keys.eq(0).text()).toMatch('Business name')
       expect(values.eq(0).text()).toMatch(data.businessName)
       expect(keys.eq(1).text()).toMatch('Date of review')
-      expect(values.eq(1).text()).toMatch(data.dateOfReview.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
+      expect(values.eq(1).text()).toMatch(new Date(data.dateOfReview).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect(keys.eq(2).text()).toMatch('Payment amount')
       expect(values.eq(2).text()).toMatch(`£${data.paymentAmount}`)
       expect($('title').text()).toEqual('Confirm the details of your livestock health and welfare review')

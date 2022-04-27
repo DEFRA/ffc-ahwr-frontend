@@ -22,9 +22,9 @@ async function cacheFarmerApplyData (request, email) {
 async function cacheFarmerClaimData (request, email) {
   // TODO: get the vet_visit record and any additional data for the claim
   const data = {
-    dataOfReview: '123456789',
+    businessName: 'org-name',
+    dateOfReview: new Date(),
     email,
-    name: 'org-name',
     paymentAmount: 522
   }
   Object.entries(data).forEach(([k, v]) => setFarmerClaimData(request, k, v))
