@@ -12,8 +12,8 @@ module.exports = {
       }
 
       const rows = [
-        { key: { text: 'Business name:' }, value: { text: claimData.name } },
-        { key: { text: 'Date of review:' }, value: { text: claimData.dataOfReview } },
+        { key: { text: 'Business name:' }, value: { text: claimData.businessName } },
+        { key: { text: 'Date of review:' }, value: { text: claimData.dateOfReview?.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) } },
         { key: { text: 'Payment amount:' }, value: { text: `£${claimData.paymentAmount}` } }
       ]
       return h.view('farmer-claim/visit-review', { listData: { rows } })

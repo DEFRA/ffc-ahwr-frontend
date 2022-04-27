@@ -43,7 +43,7 @@ module.exports = {
               result.valid = !!org
             }
           } else if (path.startsWith('/farmer-claim') && userType === farmerClaim) {
-            // TODO: Review this, possible refactor to combine with /farmer-apply
+            // TODO: Update this to check for the claim data
             if (isOrgInSession(request)) {
               result.valid = true
             } else {

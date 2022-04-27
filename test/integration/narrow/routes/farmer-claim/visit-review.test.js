@@ -4,6 +4,7 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 describe('Vet visit review page test', () => {
   let session
   const url = '/farmer-claim/visit-review'
+  const date = new Date()
 
   describe(`GET ${url} route when logged in`, () => {
     beforeAll(async () => {
@@ -16,8 +17,8 @@ describe('Vet visit review page test', () => {
     test('returns 200', async () => {
       // TODO: Update this to whatever the data is going to be
       const data = {
-        dataOfReview: '123456789',
-        name: 'org-name',
+        businessName: 'org-name',
+        dateOfReview: date,
         paymentAmount: 522
       }
       session.getFarmerClaimData.mockReturnValue(data)
@@ -35,9 +36,9 @@ describe('Vet visit review page test', () => {
       const keys = $('.govuk-summary-list__key')
       const values = $('.govuk-summary-list__value')
       expect(keys.eq(0).text()).toMatch('Business name')
-      expect(values.eq(0).text()).toMatch(data.name)
+      expect(values.eq(0).text()).toMatch(data.businessName)
       expect(keys.eq(1).text()).toMatch('Date of review')
-      expect(values.eq(1).text()).toMatch(data.dataOfReview)
+      expect(values.eq(1).text()).toMatch(data.dateOfReview.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect(keys.eq(2).text()).toMatch('Payment amount')
       expect(values.eq(2).text()).toMatch(`£${data.paymentAmount}`)
       expect($('title').text()).toEqual('Confirm the details of your livestock health and welfare review')
