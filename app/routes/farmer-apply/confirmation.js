@@ -1,8 +1,8 @@
 const boom = require('@hapi/boom')
+const util = require('util')
 const { applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const session = require('../../session')
 const { sendMessage, receiveMessage } = require('../../messaging')
-const util = require('util')
 
 module.exports = {
   method: 'POST',
