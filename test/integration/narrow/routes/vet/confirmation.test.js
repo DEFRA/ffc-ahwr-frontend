@@ -2,21 +2,29 @@ const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
 
+const reference = 'VV-5874-0BFA'
+
 const mockMessage = {
   sendMessage: () => {
     return 'nothing'
   },
   receiveMessage: jest.fn().mockReturnValueOnce({
-    signup: { reference: 'VV-5874-0BFA' }
+    signup: { reference }
   }).mockImplementationOnce(null)
 }
 
 const mockSession = {
   getVetVisitData: () => {
-    return { signup: { reference: 'VV-0E69-B1CC' } }
+    return { signup: { reference } }
   },
   setVetVisitData: () => {
-    return { signup: { reference: 'VV-0E69-B1CC' } }
+    return { signup: { reference } }
+  },
+  setVetSignup: () => {
+    return { signup: { reference } }
+  },
+  getVetSignup: () => {
+    return reference
   }
 }
 
@@ -78,6 +86,35 @@ describe('Confirmation test', () => {
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/vet')
+    })
+  })
+
+  describe(`GET ${url} route`, () => {
+    test('returns 200 when not logged in', async () => {
+      const options = {
+        method: 'GET',
+        url
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+    })
+
+    test('loads reference if in session', async () => {
+      const options = {
+        method: 'GET',
+        url
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expectPhaseBanner.ok($)
+      expect($('.govuk-panel__body strong').text()).toEqual(reference)
     })
   })
 })
