@@ -4,11 +4,11 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectLoginPage = require('../../../../utils/login-page-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
-const { notify: { templateIdFarmerApplyLogin }, serviceUri } = require('../../../../../app/config')
-const { farmerApply } = require('../../../../../app/config/user-types')
+const { notify: { templateIdFarmerClaimLogin }, serviceUri } = require('../../../../../app/config')
+const { farmerClaim } = require('../../../../../app/config/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
-describe('FarmerApply application login page test', () => {
+describe('Farmer claim login page test', () => {
   let sendEmail
   let getByEmail
   const org = { name: 'my-org' }
@@ -23,7 +23,7 @@ describe('FarmerApply application login page test', () => {
     jest.mock('../../../../../app/api-requests/users')
   })
 
-  const url = '/farmer-apply/login'
+  const url = '/farmer-claim/login'
   const validEmail = 'dairy@ltd.com'
 
   describe(`GET requests to '${url}'`, () => {
@@ -41,7 +41,7 @@ describe('FarmerApply application login page test', () => {
       expectLoginPage.hasCorrectContent($)
     })
 
-    test('route when already logged in redirects to org-review', async () => {
+    test('route when already logged in redirects to visit-review', async () => {
       const options = {
         auth: { credentials: { email: validEmail }, strategy: 'cookie', isAuthenticated: true },
         method: 'GET',
@@ -51,7 +51,7 @@ describe('FarmerApply application login page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/farmer-apply/org-review')
+      expect(res.headers.location).toEqual('/farmer-claim/visit-review')
     })
   })
 
@@ -119,7 +119,7 @@ describe('FarmerApply application login page test', () => {
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-apply/org-review', userType: farmerApply })
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
@@ -151,7 +151,7 @@ describe('FarmerApply application login page test', () => {
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-apply/org-review', userType: farmerApply })
+      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
@@ -179,7 +179,7 @@ describe('FarmerApply application login page test', () => {
 
       expect(res.statusCode).toBe(200)
       expect(sendEmail).toHaveBeenCalledWith(
-        templateIdFarmerApplyLogin,
+        templateIdFarmerClaimLogin,
         validEmail,
         expect.objectContaining(
           { personalisation: { magiclink: expect.stringMatching(new RegExp(`${serviceUri}/verify-login\\?token=${uuidRegex}&email=${validEmail}`)) }, reference: expect.stringMatching(new RegExp(uuidRegex)) })

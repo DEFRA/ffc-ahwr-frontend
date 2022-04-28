@@ -1,4 +1,5 @@
 module.exports = {
-  farmer: 'farmer',
+  farmerApply: 'farmerApply',
+  farmerClaim: 'farmerClaim',
   vet: 'vet'
 }

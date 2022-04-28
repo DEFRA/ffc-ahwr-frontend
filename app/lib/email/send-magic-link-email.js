@@ -1,8 +1,8 @@
 const { v4: uuid } = require('uuid')
 const sendEmail = require('./send-email')
 const { serviceUri } = require('../../config')
-const { notify: { templateIdFarmerLogin, templateIdVetLogin } } = require('../../config')
-const { farmer, vet } = require('../../config/user-types')
+const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templateIdVetLogin } } = require('../../config')
+const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
 
 async function createAndCacheToken (request, email, redirectTo, userType, data) {
   const { magiclinkCache } = request.server.app
@@ -19,7 +19,7 @@ async function createAndCacheToken (request, email, redirectTo, userType, data) 
  * Send an email via GOV.UK Notify.
  * The templateId provided must have a `magiclink` variable for
  * personalisation. The magic link will be cached in the `magiclinkCache` cache
- * of the server (accessed via `request.server.app`). Once logged in the page
+ * of the server (accessed via `request.server.app`). Once logged in, the page
  * specified in `redirectTo` will be redirected to. There is no validation that
  * the route exists prior to sending the email.
  *
@@ -42,8 +42,12 @@ async function sendMagicLinkEmail (request, email, templateId, redirectTo, userT
   })
 }
 
-async function sendFarmerLoginMagicLinkEmail (request, email) {
-  return sendMagicLinkEmail(request, email, templateIdFarmerLogin, 'farmer-apply/org-review', farmer)
+async function sendFarmerApplyLoginMagicLink (request, email) {
+  return sendMagicLinkEmail(request, email, templateIdFarmerApplyLogin, 'farmer-apply/org-review', farmerApply)
+}
+
+async function sendFarmerClaimLoginMagicLink (request, email) {
+  return sendMagicLinkEmail(request, email, templateIdFarmerClaimLogin, 'farmer-claim/visit-review', farmerClaim)
 }
 
 async function sendVetMagicLinkEmail (request, email, data) {
@@ -51,6 +55,7 @@ async function sendVetMagicLinkEmail (request, email, data) {
 }
 
 module.exports = {
-  sendFarmerLoginMagicLinkEmail,
+  sendFarmerApplyLoginMagicLink,
+  sendFarmerClaimLoginMagicLink,
   sendVetMagicLinkEmail
 }
