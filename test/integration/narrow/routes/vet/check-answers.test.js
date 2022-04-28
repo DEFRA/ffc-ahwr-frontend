@@ -3,7 +3,7 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const session = require('../../../../../app/session')
 
 session.getVetVisitData = jest.fn().mockReturnValue({
-  visitDate: [
+  visitDateItems: [
     { name: 'day', classes: 'govuk-input--width-2', value: 12 },
     { name: 'month', classes: 'govuk-input--width-2', value: 4 },
     { name: 'year', classes: 'govuk-input--width-4', value: 2022 }

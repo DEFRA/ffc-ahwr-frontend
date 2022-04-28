@@ -1,12 +1,4 @@
-const { labels } = require('../../config/visit-date')
 const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
-
-function getDateFromPayload (payload) {
-  const day = payload[labels.day]
-  const month = payload[labels.month]
-  const year = payload[labels.year]
-  return new Date(year, month - 1, day)
-}
 
 function isDateInFuture (date) {
   return date > new Date()
@@ -41,18 +33,16 @@ function isDateBefore (date, dateToCompare) {
 }
 
 /**
- * Checks if the date in `payload` is in the future or before `dateToCompare`.
+ * Checks if the date is in the future or before `dateToCompare`.
  *
- * @param {object} payload containing `day`, `month` & `year`.
+ * @param {Date} date representing the date of the review.
  * @param {Date} dateToCompare the date to compare against.
  *
  * @return {object} containing boolean `isDateValid` property and an optional
  * `errorMessage` property object containing `text` - a string representing the
   * error message.
  */
-function isDateInFutureOrBeforeFirstValidDate (payload, dateToCompare) {
-  const date = getDateFromPayload(payload)
-
+function isDateInFutureOrBeforeFirstValidDate (date, dateToCompare) {
   const futureDate = isDateInFuture(date)
   if (futureDate || isDateBefore(date, dateToCompare) || isDateWithinYear(date, dateToCompare)) {
     return {

@@ -1,8 +1,8 @@
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
 const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
-const { getApplication } = require('../../messaging/application')
-const { setFarmerClaimData, setOrganisation, setVetVisitData } = require('../../session')
+const { getApplication, getClaim } = require('../../messaging/application')
+const { setClaim, setOrganisation, setVetVisitData } = require('../../session')
 const { vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
 function isRequestValid (cachedEmail, email) {
@@ -19,15 +19,9 @@ async function cacheFarmerApplyData (request, email) {
   Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
 }
 
-async function cacheFarmerClaimData (request, email) {
-  // TODO: get the vet_visit record and any additional data for the claim
-  const data = {
-    businessName: 'org-name',
-    dateOfReview: new Date(),
-    email,
-    paymentAmount: 522
-  }
-  Object.entries(data).forEach(([k, v]) => setFarmerClaimData(request, k, v))
+async function cacheClaimData (request, email) {
+  const claim = await getClaim(email, request.yar.id)
+  Object.entries(claim).forEach(([k, v]) => setClaim(request, k, v))
 }
 
 async function cacheVetData (request, vetSignupData) {
@@ -91,7 +85,7 @@ module.exports = [{
           await cacheFarmerApplyData(request, email)
           break
         case farmerClaim:
-          await cacheFarmerClaimData(request, email)
+          await cacheClaimData(request, email)
           break
         case vet:
           await cacheVetData(request, data)
