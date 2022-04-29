@@ -37,7 +37,7 @@ module.exports = [{
       const { applicationReference } = request.payload
       const application = await getApplication(applicationReference, request.yar.id)
 
-      if (!application) {
+      if (application?.applicationState !== 'not_submitted') {
         const error = { details: [{ message: `No application found for reference "${applicationReference}"` }] }
         return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(404).takeover()
       }

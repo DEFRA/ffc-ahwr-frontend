@@ -9,8 +9,10 @@ const mockMessage = {
     return 'nothing'
   },
   receiveMessage: jest.fn().mockReturnValueOnce({
-    signup: { reference }
-  }).mockImplementationOnce(null)
+    applicationState: 'submitted'
+  }).mockImplementationOnce({
+    applicationState: 'already_submitted'
+  })
 }
 
 const mockSession = {
@@ -24,7 +26,7 @@ const mockSession = {
     return { signup: { reference } }
   },
   getVetSignup: () => {
-    return reference
+    return { reference, applicationState: 'submitted' }
   }
 }
 

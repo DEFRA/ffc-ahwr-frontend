@@ -10,7 +10,8 @@ module.exports = {
     name: 'name',
     practice: 'practice',
     rcvs: 'rcvs',
-    reference: 'reference'
+    reference: 'reference',
+    applicationState: 'applicationState'
   },
   vetVisitData: {
     farmerApplication: 'farmerApplication',
