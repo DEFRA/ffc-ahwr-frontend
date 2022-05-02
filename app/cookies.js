@@ -2,6 +2,7 @@ const { cookie: { cookieNameCookiePolicy }, cookiePolicy } = require('./config')
 
 function getCurrentPolicy (request, h) {
   let cookiesPolicy = request.state[cookieNameCookiePolicy]
+  cookiesPolicy = Array.isArray(cookiesPolicy) ? cookiesPolicy[cookiesPolicy.length - 1] : cookiesPolicy
   if (!cookiesPolicy) {
     cookiesPolicy = createDefaultPolicy(h)
   }
@@ -15,11 +16,7 @@ function createDefaultPolicy (h) {
 }
 
 function updatePolicy (request, h, analytics) {
-  let cookiesPolicy = request.state[cookieNameCookiePolicy]
-  if (!cookiesPolicy) {
-    cookiesPolicy = createDefaultPolicy(h)
-  }
-
+  const cookiesPolicy = getCurrentPolicy(request, h)
   cookiesPolicy.analytics = analytics
   cookiesPolicy.confirmed = true
 
