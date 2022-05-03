@@ -75,11 +75,13 @@ describe('Verify login page test', () => {
       { userType: farmerApply, data: {} },
       { userType: farmerClaim, data: {} },
       { userType: vet, data: { reference: 'application-reference' } }
-    ])('route with valid email for $userType and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async ({ userType, data }) => {
-      const org = { name: 'my-org' }
-      users.getByEmail.mockResolvedValueOnce(org)
+    ])('route for $userType with valid email and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async ({ userType, data }) => {
       const appRes = { createdAt: new Date('2022-04-01') }
       application.getApplication.mockResolvedValueOnce(appRes)
+      const claim = { name: 'fake' }
+      application.getClaim.mockResolvedValueOnce(claim)
+      const org = { name: 'my-org' }
+      users.getByEmail.mockResolvedValueOnce(org)
       const options = {
         method: 'GET',
         url: `${url}?email=${validEmail}&token=${validToken}`
@@ -93,13 +95,13 @@ describe('Verify login page test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
+      expect(res.statusCode).toBe(302)
       expect(cacheGetSpy).toHaveBeenCalledTimes(2)
       expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
       expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
       expect(cacheDropSpy).toHaveBeenCalledTimes(2)
       expect(cacheDropSpy).toHaveBeenNthCalledWith(1, validToken)
       expect(cacheDropSpy).toHaveBeenNthCalledWith(2, validEmail)
-      expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual(redirectTo)
       expectVerifyLoginPage.hasCookiesSet(res)
       expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
@@ -110,9 +112,8 @@ describe('Verify login page test', () => {
           expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
           break
         case farmerClaim:
-          // TODO: add expectations for getting vet_visit record
-          // expect(session.setOrganisation).toHaveBeenCalledTimes(1)
-          // expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
+          expect(session.setClaim).toHaveBeenCalledTimes(1)
+          expect(session.setClaim).toHaveBeenCalledWith(res.request, Object.keys(claim)[0], claim.name)
           break
         case vet:
           expect(application.getApplication).toHaveBeenCalledTimes(1)
@@ -131,9 +132,10 @@ describe('Verify login page test', () => {
       { userType: farmerApply, data: {} },
       { userType: farmerClaim, data: {} },
       { userType: vet, data: { reference: 'application-reference' } }
-    ])('route for valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async ({ userType, data }) => {
-      users.getByEmail.mockResolvedValueOnce({})
+    ])('route for $userType with valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async ({ userType, data }) => {
       application.getApplication.mockResolvedValueOnce({})
+      application.getClaim.mockResolvedValueOnce({})
+      users.getByEmail.mockResolvedValueOnce({})
       const options = {
         method: 'GET',
         url: `${url}?email=${validEmail}&token=${validToken}`
@@ -150,6 +152,7 @@ describe('Verify login page test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
+      expect(res.statusCode).toBe(302)
       expect(cacheGetSpy).toHaveBeenCalledTimes(2)
       expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
       expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
@@ -159,7 +162,6 @@ describe('Verify login page test', () => {
       expect(cacheDropSpy).toHaveBeenNthCalledWith(3, oldTokens[1])
       expect(cacheDropSpy).toHaveBeenNthCalledWith(4, oldTokens[2])
       expect(cacheDropSpy).toHaveBeenLastCalledWith(validEmail)
-      expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual(redirectTo)
       expectVerifyLoginPage.hasCookiesSet(res)
       expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()

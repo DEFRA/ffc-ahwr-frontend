@@ -1,4 +1,4 @@
-const createItems = require('./date-input-items')
+const { createItemsFromPayload } = require('./date-input-items')
 const { isDateInFutureOrBeforeFirstValidDate } = require('./validation')
 const { inputErrorClass, labels } = require('../../config/visit-date')
 const { visitDate: errorMessages } = require('../../../app/lib/error-messages')
@@ -32,11 +32,11 @@ function getDateFromPayload (payload) {
  * @param {object} errorDetails Joi result object containing details of the
  * error the payload failed for.
  * @param {object} payload from the request that failed the validation.
- * @param {string} firstValidDate Date string representing first valid date.
+ * @param {Date} firstValidDate representing first valid date.
  */
 module.exports = (errorDetails, payload, firstValidDate) => {
   const date = getDateFromPayload(payload)
-  const items = createItems(date, false)
+  const items = createItemsFromPayload(payload, false)
 
   const emptyValues = []
   errorDetails.forEach(err => {
@@ -49,7 +49,7 @@ module.exports = (errorDetails, payload, firstValidDate) => {
 
   let text = getEmptyValuesMessage(emptyValues)
   if (!text) {
-    const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(payload, firstValidDate)
+    const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(date, firstValidDate)
     if (isDateValid) {
       text = errorMessages.realDate
     } else {

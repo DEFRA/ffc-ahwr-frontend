@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const { labels } = require('../../config/visit-date')
 const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
-const createItems = require('../../lib/visit-date/date-input-items')
+const { createItemsFromDate, createItemsFromPayload } = require('../../lib/visit-date/date-input-items')
 const { isDateInFutureOrBeforeFirstValidDate } = require('../../lib/visit-date/validation')
 const session = require('../../session')
 const { vetVisitData: { farmerApplication, visitDate } } = require('../../session/keys')
@@ -22,7 +22,7 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const date = session.getVetVisitData(request, visitDate)
-      const items = createItems(new Date(date), false)
+      const items = createItemsFromDate(new Date(date), false)
       return h.view(templatePath, { items })
     }
   }
@@ -57,7 +57,7 @@ module.exports = [{
       if (!isDateValid) {
         const dateInputErrors = {
           errorMessage,
-          items: createItems(date, true)
+          items: createItemsFromPayload(request.payload, true)
         }
         return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }

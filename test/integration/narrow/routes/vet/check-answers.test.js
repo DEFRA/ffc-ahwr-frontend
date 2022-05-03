@@ -2,12 +2,9 @@ const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const session = require('../../../../../app/session')
 
+const visitDate = new Date(2022, 4, 12)
 session.getVetVisitData = jest.fn().mockReturnValue({
-  visitDateItems: [
-    { name: 'day', classes: 'govuk-input--width-2', value: 12 },
-    { name: 'month', classes: 'govuk-input--width-2', value: 4 },
-    { name: 'year', classes: 'govuk-input--width-4', value: 2022 }
-  ]
+  visitDate
 })
 
 describe('Vet check answers test', () => {
@@ -58,7 +55,7 @@ describe('Vet check answers test', () => {
       const $ = cheerio.load(res.payload)
       expect($('.govuk-summary-list__row').length).toEqual(1)
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Farm visit date')
-      expect($('.govuk-summary-list__value').eq(0).text()).toMatch('12 4 2022')
+      expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
     })
   })

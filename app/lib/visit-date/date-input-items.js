@@ -1,4 +1,4 @@
-const { inputErrorClass } = require('../../config/visit-date')
+const { inputErrorClass, labelPrefix } = require('../../config/visit-date')
 
 function getValue (date, period) {
   switch (period) {
@@ -11,7 +11,7 @@ function getValue (date, period) {
   }
 }
 
-module.exports = (date, includeErrorClass) => {
+function createItemsFromDate (date, includeErrorClass) {
   const items = [{
     name: 'day',
     classes: 'govuk-input--width-2'
@@ -28,4 +28,28 @@ module.exports = (date, includeErrorClass) => {
     item.classes += includeErrorClass ? ` ${inputErrorClass}` : ''
   })
   return items
+}
+
+function createItemsFromPayload (payload, includeErrorClass) {
+  const items = [{
+    name: 'day',
+    classes: 'govuk-input--width-2'
+  }, {
+    name: 'month',
+    classes: 'govuk-input--width-2'
+  }, {
+    name: 'year',
+    classes: 'govuk-input--width-4'
+  }]
+
+  items.forEach(item => {
+    item.value = payload?.[`${labelPrefix}${item.name}`]
+    item.classes += includeErrorClass ? ` ${inputErrorClass}` : ''
+  })
+  return items
+}
+
+module.exports = {
+  createItemsFromDate,
+  createItemsFromPayload
 }

@@ -54,13 +54,13 @@ describe('Vet, enter date of visit', () => {
     })
 
     test('loads input dates, if in session', async () => {
-      const items = [{ name: 'day', value: 31 }, { name: 'month', value: 12 }, { name: 'year', value: 2022 }]
+      const date = new Date()
       const options = {
         method: 'GET',
         url,
         auth
       }
-      session.getVetVisitData.mockReturnValue(items)
+      session.getVetVisitData.mockReturnValue(date)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -68,9 +68,9 @@ describe('Vet, enter date of visit', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      expect($(`#${labels.day}`).val()).toEqual(items[0].value.toString())
-      expect($(`#${labels.month}`).val()).toEqual(items[1].value.toString())
-      expect($(`#${labels.year}`).val()).toEqual(items[2].value.toString())
+      expect($(`#${labels.day}`).val()).toEqual(date.getDate().toString())
+      expect($(`#${labels.month}`).val()).toEqual((date.getMonth() + 1).toString())
+      expect($(`#${labels.year}`).val()).toEqual(date.getFullYear().toString())
     })
   })
 
