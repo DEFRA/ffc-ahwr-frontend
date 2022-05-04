@@ -27,7 +27,7 @@ describe('cookies', () => {
 
   test('getCurrentPolicy sets default cookie if does not exist', () => {
     cookies.getCurrentPolicy(request, h)
-    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, defaultCookie, expect.anything())
+    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, defaultCookie)
   })
 
   test('getCurrentPolicy returns cookie if exists', () => {
@@ -49,18 +49,18 @@ describe('cookies', () => {
 
   test('updatePolicy sets confirmed cookie second if does not exist', () => {
     cookies.updatePolicy(request, h, true)
-    expect(h.state).toHaveBeenNthCalledWith(2, cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: true }, expect.anything())
+    expect(h.state).toHaveBeenNthCalledWith(2, cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: true })
   })
 
   test('updatePolicy sets cookie to accepted', () => {
     request.state[cookieNameCookiePolicy] = { confirmed: false, essential: true, analytics: false }
     cookies.updatePolicy(request, h, true)
-    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: true }, expect.anything())
+    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: true })
   })
 
   test('updatePolicy sets cookie to rejected', () => {
     request.state[cookieNameCookiePolicy] = { confirmed: false, essential: true, analytics: false }
     cookies.updatePolicy(request, h, false)
-    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: false }, expect.anything())
+    expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: false })
   })
 })

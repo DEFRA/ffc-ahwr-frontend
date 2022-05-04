@@ -35,6 +35,7 @@ const schema = Joi.object({
     isSameSite: Joi.string().default('Lax'),
     isSecure: Joi.bool().default(true),
     password: Joi.string().min(32).required(),
+    path: Joi.string().default('/'),
     ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
   env: Joi.string().valid('development', 'test', 'production').default('development'),

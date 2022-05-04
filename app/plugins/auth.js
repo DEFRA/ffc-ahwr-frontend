@@ -17,7 +17,7 @@ module.exports = {
           isSecure: cookieConfig.isSecure,
           name: cookieConfig.cookieNameAuth,
           password: cookieConfig.password,
-          path: '/'
+          path: cookieConfig.path
         },
         keepAlive: true,
         redirectTo: (request) => {
