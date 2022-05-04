@@ -5,7 +5,7 @@ const backLink = '/vet/visit-date'
 
 function getVisitDate (vetVisit) {
   const visitDate = vetVisit[vetVisitData.visitDate]
-  return visitDate.map(item => item.value).join(' ')
+  return new Date(visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
 module.exports = {
