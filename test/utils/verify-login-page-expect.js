@@ -1,10 +1,7 @@
 const { cache, cookie: cookieConfig } = require('../../app/config')
 
-function hasCorrectContent ($) {
+function errorPageHasCorrectContent ($) {
   expect($('h1').text()).toEqual('Login failed')
-  const newLinkButton = $('.govuk-main-wrapper .govuk-button')
-  expect(newLinkButton.text()).toMatch('Request new link to login')
-  expect(newLinkButton.attr('href')).toEqual('login')
 }
 
 function getCookiesMaxAge (cookieParts) {
@@ -34,6 +31,6 @@ function hasCookiesSet (res) {
 }
 
 module.exports = {
-  hasCookiesSet,
-  hasCorrectContent
+  errorPageHasCorrectContent,
+  hasCookiesSet
 }
