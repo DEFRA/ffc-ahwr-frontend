@@ -37,7 +37,7 @@ describe('Verify login page test', () => {
 
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
-      expectVerifyLoginPage.hasCorrectContent($)
+      expectVerifyLoginPage.errorPageHasCorrectContent($)
     })
 
     test.each([
@@ -55,7 +55,7 @@ describe('Verify login page test', () => {
 
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
-      expectVerifyLoginPage.hasCorrectContent($)
+      expectVerifyLoginPage.errorPageHasCorrectContent($)
     })
 
     test('route with empty query returns 400', async () => {
@@ -68,7 +68,7 @@ describe('Verify login page test', () => {
 
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
-      expectVerifyLoginPage.hasCorrectContent($)
+      expectVerifyLoginPage.errorPageHasCorrectContent($)
     })
 
     test.each([
