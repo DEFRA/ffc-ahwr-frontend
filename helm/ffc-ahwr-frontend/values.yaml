@@ -36,7 +36,6 @@ container:
   limitMemory: 200Mi
   messageQueueHost: namespace.servicebus.windows.net
   notifyApiKey:
-  notifyTemplateIdApplicationComplete:
   notifyTemplateIdFarmerApplyLogin:
   notifyTemplateIdFarmerClaimLogin:
   notifyTemplateIdVetLogin:
