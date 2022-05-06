@@ -19,9 +19,7 @@
       rows: listData.rows
     }) }}
 
-    <p>Are these details correct?</p>
-
-    <p>TO DO: Add 'yes' & 'no' radios</p>
+    {{ govukRadios(radios) }}
 
     {{ govukButton({
       text: "Continue",
