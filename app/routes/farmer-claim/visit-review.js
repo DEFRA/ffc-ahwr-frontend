@@ -1,25 +1,6 @@
 const boom = require('@hapi/boom')
 const { getClaim } = require('../../session')
-const amounts = require('../../constants/amounts')
-
-// TODO: This will need refactoring when the changes to the farmer apply
-// preventing multi species applications happen. Currently hardcoded to sheep.
-function getAmount (claimData) {
-  const { cattle, cattleType, pigs, sheep } = claimData
-  if (cattle === 'yes') {
-    if (cattleType === 'both' || cattleType === 'beef') {
-      return amounts.beef
-    } else if (cattleType === 'dairy') {
-      return amounts.dairy
-    }
-  } else if (pigs === 'yes') {
-    return amounts.pigs
-  } else if (sheep === 'yes') {
-    return amounts.sheep
-  } else {
-    throw new Error('Unexpected species combination detected')
-  }
-}
+const { getClaimAmount } = require('../../lib/get-claim-amount')
 
 module.exports = {
   method: 'GET',
@@ -34,7 +15,7 @@ module.exports = {
       const claimData = claim.data
       const vetVisit = claim.vetVisit.data
 
-      const paymentAmount = getAmount(claimData)
+      const paymentAmount = getClaimAmount(claimData)
       const rows = [
         { key: { text: 'Business name:' }, value: { text: claimData.organisation.name } },
         { key: { text: 'Date of review:' }, value: { text: new Date(vetVisit.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) } },
