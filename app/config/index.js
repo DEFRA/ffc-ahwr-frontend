@@ -42,7 +42,6 @@ const schema = Joi.object({
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
-    templateIdApplicationComplete: Joi.string().uuid(),
     templateIdFarmerApplyLogin: Joi.string().uuid(),
     templateIdFarmerClaimLogin: Joi.string().uuid(),
     templateIdVetLogin: Joi.string().uuid()
@@ -111,7 +110,6 @@ const config = {
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
-    templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE,
     templateIdFarmerApplyLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
     templateIdFarmerClaimLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
     templateIdVetLogin: process.env.NOTIFY_TEMPLATE_ID_VET_LOGIN

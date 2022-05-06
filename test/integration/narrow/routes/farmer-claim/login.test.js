@@ -9,22 +9,26 @@ const { farmerClaim } = require('../../../../../app/config/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 
 describe('Farmer claim login page test', () => {
-  let sendEmail
-  let getByEmail
   const org = { name: 'my-org' }
-
-  beforeAll(async () => {
-    jest.resetAllMocks()
-
-    sendEmail = require('../../../../../app/lib/email/send-email')
-    jest.mock('../../../../../app/lib/email/send-email')
-    const orgs = require('../../../../../app/api-requests/users')
-    getByEmail = orgs.getByEmail
-    jest.mock('../../../../../app/api-requests/users')
-  })
-
+  const claimWithVisit = { vetVisit: {} }
   const url = '/farmer-claim/login'
   const validEmail = 'dairy@ltd.com'
+
+  const application = require('../../../../../app/messaging/application')
+  jest.mock('../../../../../app/messaging/application')
+  const session = require('../../../../../app/session')
+  jest.mock('../../../../../app/session')
+  const sendEmail = require('../../../../../app/lib/email/send-email')
+  jest.mock('../../../../../app/lib/email/send-email')
+  const orgs = require('../../../../../app/api-requests/users')
+  jest.mock('../../../../../app/api-requests/users')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    application.getClaim.mockResolvedValue(claimWithVisit)
+    orgs.getByEmail.mockResolvedValue(org)
+    sendEmail.mockResolvedValue(true)
+  })
 
   describe(`GET requests to '${url}'`, () => {
     test('returns 200', async () => {
@@ -63,6 +67,7 @@ describe('Farmer claim login page test', () => {
       { email: undefined, errorMessage: 'Enter an email address' },
       { email: 'missing@email.com', errorMessage: 'No user found with email address "missing@email.com"' }
     ])('returns 400 when request contains incorrect email - %p', async ({ email, errorMessage }) => {
+      orgs.getByEmail.mockResolvedValue(null)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -100,8 +105,6 @@ describe('Farmer claim login page test', () => {
     })
 
     test('with known email for the first time redirects to email sent page with form filled with email and adds token to cache with redirectTo for farmer', async () => {
-      getByEmail.mockResolvedValue(org)
-      sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -115,12 +118,16 @@ describe('Farmer claim login page test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
+      expect(res.statusCode).toBe(200)
       expect(cacheGetSpy).toHaveBeenCalledTimes(1)
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
       expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
-      expect(res.statusCode).toBe(200)
+      expect(application.getClaim).toHaveBeenCalledTimes(1)
+      expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
+      expect(session.setClaim).toHaveBeenCalledTimes(1)
+      expect(session.setClaim).toHaveBeenCalledWith(res.request, 'vetVisit', claimWithVisit.vetVisit)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
       expect($('form input[name=email]').val()).toEqual(validEmail)
@@ -130,8 +137,6 @@ describe('Farmer claim login page test', () => {
     })
 
     test('with known email with an existing token redirects to email sent page and adds token to cache with redirectTo for farmer', async () => {
-      getByEmail.mockResolvedValue(org)
-      sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -147,12 +152,16 @@ describe('Farmer claim login page test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
+      expect(res.statusCode).toBe(200)
       expect(cacheGetSpy).toHaveBeenCalledTimes(1)
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
       expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
-      expect(res.statusCode).toBe(200)
+      expect(application.getClaim).toHaveBeenCalledTimes(1)
+      expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
+      expect(session.setClaim).toHaveBeenCalledTimes(1)
+      expect(session.setClaim).toHaveBeenCalledWith(res.request, 'vetVisit', claimWithVisit.vetVisit)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Email has been sent')
       expect($('form input[name=email]').val()).toEqual(validEmail)
@@ -165,8 +174,6 @@ describe('Farmer claim login page test', () => {
       { email: validEmail },
       { email: `  ${validEmail}  ` }
     ])('with known email sends email (email = $email)', async ({ email }) => {
-      getByEmail.mockResolvedValue(org)
-      sendEmail.mockResolvedValue(true)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -187,7 +194,6 @@ describe('Farmer claim login page test', () => {
     })
 
     test('with known email returns error when problem sending email', async () => {
-      getByEmail.mockResolvedValue(org)
       sendEmail.mockResolvedValue(false)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
@@ -202,6 +208,48 @@ describe('Farmer claim login page test', () => {
       expect(res.statusCode).toBe(500)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toEqual('Sorry, there is a problem with the service')
+    })
+
+    test('returns 400 and error message when no claim exists', async () => {
+      application.getClaim.mockResolvedValue(null)
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(400)
+      const $ = cheerio.load(res.payload)
+      pageExpects.errors($, `No application found for ${validEmail}`)
+      expect(application.getClaim).toHaveBeenCalledTimes(1)
+      expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
+      expect(sendEmail).not.toHaveBeenCalled()
+      expect(session.setClaim).not.toHaveBeenCalled()
+    })
+
+    test('returns 400 and error message when claim exists with no vet visit', async () => {
+      application.getClaim.mockResolvedValue({})
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, email: validEmail },
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(400)
+      const $ = cheerio.load(res.payload)
+      pageExpects.errors($, 'No vet visit has been completed.')
+      expect(application.getClaim).toHaveBeenCalledTimes(1)
+      expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
+      expect(sendEmail).not.toHaveBeenCalled()
+      expect(session.setClaim).not.toHaveBeenCalled()
     })
   })
 })

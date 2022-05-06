@@ -111,10 +111,6 @@ describe('Verify login page test', () => {
           expect(session.setOrganisation).toHaveBeenCalledTimes(1)
           expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
           break
-        case farmerClaim:
-          expect(session.setClaim).toHaveBeenCalledTimes(1)
-          expect(session.setClaim).toHaveBeenCalledWith(res.request, Object.keys(claim)[0], claim.name)
-          break
         case vet:
           expect(application.getApplication).toHaveBeenCalledTimes(1)
           expect(application.getApplication).toHaveBeenCalledWith(data.reference, res.request.yar.id)
