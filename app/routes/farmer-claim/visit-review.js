@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const { getClaim } = require('../../session')
 const { getClaimAmount } = require('../../lib/get-claim-amount')
 
@@ -29,7 +29,7 @@ module.exports = [{
         { key: { text: 'Payment amount' }, value: { text: `£${paymentAmount}` } }
       ]
       return h.view('farmer-claim/visit-review', {
-        ...getYesNoRadios(legendText, radioId, claim.review),
+        ...getYesNoRadios(legendText, radioId, claim.review, undefined, { isPageHeading: false, legendClasses: 'govuk-fieldset__legend--m', inline: false }),
         listData: { rows },
         email: claimData.organisation.email
       })

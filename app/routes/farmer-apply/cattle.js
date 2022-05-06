@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { answers } = require('../../session/keys')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
 const legendText = 'Do you keep more than 10 cattle?'
