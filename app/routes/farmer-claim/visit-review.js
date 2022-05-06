@@ -5,8 +5,6 @@ const { getClaimAmount } = require('../../lib/get-claim-amount')
 
 const legendText = 'Are these details correct?'
 const radioId = 'details-correct'
-// const errorText = 'Select yes if these details are correct'
-// const backLink = '/farmer-claim'
 
 module.exports = [{
   method: 'GET',
@@ -23,9 +21,12 @@ module.exports = [{
 
       const paymentAmount = getClaimAmount(claimData)
       const rows = [
-        { key: { text: 'Business name:' }, value: { text: claimData.organisation.name } },
-        { key: { text: 'Date of review:' }, value: { text: new Date(vetVisit.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) } },
-        { key: { text: 'Payment amount:' }, value: { text: `£${paymentAmount}` } }
+        { key: { text: 'Business name' }, value: { text: claimData.organisation.name } },
+        { key: { text: 'Date of review' }, value: { text: new Date(vetVisit.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) } },
+        { key: { text: 'Vet name' }, value: { text: vetVisit.signup.name } },
+        // TODO: Refactor once single species per application changes are made
+        { key: { text: 'Type of review' }, value: { text: 'TBC...' } },
+        { key: { text: 'Payment amount' }, value: { text: `£${paymentAmount}` } }
       ]
       return h.view('farmer-claim/visit-review', {
         ...getYesNoRadios(legendText, radioId, claim.review),

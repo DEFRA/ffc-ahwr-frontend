@@ -15,6 +15,7 @@ describe('Vet visit review page test', () => {
     })
 
     test('returns 200', async () => {
+      const vetName = 'veterinary'
       const claimData = {
         data: {
           pigs: 'yes',
@@ -24,6 +25,9 @@ describe('Vet visit review page test', () => {
         },
         vetVisit: {
           data: {
+            signup: {
+              name: vetName
+            },
             visitDate: new Date()
           }
         }
@@ -39,16 +43,20 @@ describe('Vet visit review page test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('.govuk-heading-l').text()).toEqual('Confirm the details of your livestock health and welfare review')
+      expect($('.govuk-heading-l').text()).toEqual('Confirm the details of your annual health and welfare review')
       const keys = $('.govuk-summary-list__key')
       const values = $('.govuk-summary-list__value')
       expect(keys.eq(0).text()).toMatch('Business name')
       expect(values.eq(0).text()).toMatch(claimData.data.organisation.name)
       expect(keys.eq(1).text()).toMatch('Date of review')
       expect(values.eq(1).text()).toMatch(new Date(claimData.vetVisit.data.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
-      expect(keys.eq(2).text()).toMatch('Payment amount')
-      expect(values.eq(2).text()).toMatch(`£${amounts.pigs}`)
-      expect($('title').text()).toEqual('Confirm the details of your livestock health and welfare review')
+      expect(keys.eq(2).text()).toMatch('Vet name')
+      expect(values.eq(2).text()).toMatch(vetName)
+      expect(keys.eq(3).text()).toMatch('Type of review')
+      expect(values.eq(3).text()).toMatch('TBC...')
+      expect(keys.eq(4).text()).toMatch('Payment amount')
+      expect(values.eq(4).text()).toMatch(`£${amounts.pigs}`)
+      expect($('title').text()).toEqual('Confirm the details of your annual health and welfare review')
       expectPhaseBanner.ok($)
     })
 
