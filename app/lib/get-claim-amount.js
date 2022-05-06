@@ -5,7 +5,6 @@ const amounts = require('../constants/amounts')
 function getClaimAmount (claimData) {
   const { cattle, cattleType, pigs, sheep } = claimData
   if (cattle === 'yes') {
-    console.log(cattle, cattleType)
     if (cattleType === 'both' || cattleType === 'beef') {
       return amounts.beef
     } else if (cattleType === 'dairy') {

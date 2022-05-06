@@ -24,4 +24,8 @@ describe('getClaimAmount returns correct amount', () => {
 
     expect(res).toEqual(amount)
   })
+
+  test('error thrown when species are not matched', () => {
+    expect(() => getClaimAmount({})).toThrow(new Error('Unexpected species combination detected'))
+  })
 })
