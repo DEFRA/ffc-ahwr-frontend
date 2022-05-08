@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const amounts = require('../../../../../app/constants/amounts')
 
 describe('Vet visit review page test', () => {
   let session
@@ -16,10 +17,10 @@ describe('Vet visit review page test', () => {
     test('returns 200', async () => {
       const claimData = {
         data: {
+          pigs: 'yes',
           organisation: {
             name: 'org-name'
-          },
-          paymentAmount: 543
+          }
         },
         vetVisit: {
           data: {
@@ -46,7 +47,7 @@ describe('Vet visit review page test', () => {
       expect(keys.eq(1).text()).toMatch('Date of review')
       expect(values.eq(1).text()).toMatch(new Date(claimData.vetVisit.data.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect(keys.eq(2).text()).toMatch('Payment amount')
-      expect(values.eq(2).text()).toMatch(`£${claimData.data.paymentAmount}`)
+      expect(values.eq(2).text()).toMatch(`£${amounts.pigs}`)
       expect($('title').text()).toEqual('Confirm the details of your livestock health and welfare review')
       expectPhaseBanner.ok($)
     })
