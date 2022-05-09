@@ -82,5 +82,29 @@ describe('Vet check answers test', () => {
       expect(res.headers.location).toEqual('/vet/beef-eligibility')
       expect(session.getVetVisitData).toHaveBeenCalledTimes(3)
     })
+
+    test('redirect pig eligibility if pigs is selected', async () => {
+      crumb = await getCrumbs(global.__SERVER__)
+
+      session.getVetVisitData = jest.fn().mockReturnValue({
+        visitDate,
+        data: {
+          pigs: 'yes'
+        }
+      })
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual('/vet/pigs-eligibility')
+      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
+    })
   })
 })
