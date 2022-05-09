@@ -6,7 +6,7 @@ const session = require('../../session')
 const legendText = 'Were there more than 10 beef cattle on the farm at the time of the review?'
 const radioId = 'beef'
 const errorText = 'Select yes if you keep more than 10 beef cattle'
-const backLink = '/vet/which-review'
+const backLink = '/vet/check-answers'
 
 module.exports = [
   {

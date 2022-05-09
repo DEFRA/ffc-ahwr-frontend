@@ -36,7 +36,6 @@ module.exports = [{
     handler: async (request, h) => {
       // Check what selected in Former application and then redirect to respective page => beef/pigs/sheep/dairy
       const application = session.getVetVisitData(request, vetVisitData.farmerApplication)
-      console.log(application, 'appData')
       return h.redirect(`/vet/${getWhichReview(application)}-eligibility`)
     }
   }

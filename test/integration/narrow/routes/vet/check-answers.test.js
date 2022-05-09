@@ -1,15 +1,24 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const session = require('../../../../../app/session')
-
+const getCrumbs = require('../../../../utils/get-crumbs')
 const visitDate = new Date(2022, 4, 12)
+let crumb
 session.getVetVisitData = jest.fn().mockReturnValue({
-  visitDate
+  visitDate,
+  data: {
+    cattle: 'yes',
+    cattleType: 'beef'
+  }
 })
 
 describe('Vet check answers test', () => {
   afterAll(() => {
     jest.resetAllMocks()
+  })
+
+  beforeEach(async () => {
+    crumb = getCrumbs(global.__SERVER__)
   })
 
   const auth = { credentials: {}, strategy: 'cookie' }
@@ -57,6 +66,21 @@ describe('Vet check answers test', () => {
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Farm visit date')
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
+    })
+
+    test('redirect beef eligibility if beef is selected', async () => {
+      const options = {
+        method: 'POST',
+        url,
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual('/vet/beef-eligbility')
+      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
     })
   })
 })
