@@ -17,10 +17,6 @@ describe('Vet check answers test', () => {
     jest.resetAllMocks()
   })
 
-  beforeEach(async () => {
-    crumb = getCrumbs(global.__SERVER__)
-  })
-
   const auth = { credentials: {}, strategy: 'cookie' }
   const url = '/vet/check-answers'
 
@@ -67,11 +63,15 @@ describe('Vet check answers test', () => {
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
     })
+  })
 
+  describe(`POST ${url} route`, () => {
     test('redirect beef eligibility if beef is selected', async () => {
+      crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
+        payload: { crumb },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -79,8 +79,8 @@ describe('Vet check answers test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/beef-eligbility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
+      expect(res.headers.location).toEqual('/vet/beef-eligibility')
+      expect(session.getVetVisitData).toHaveBeenCalledTimes(3)
     })
   })
 })
