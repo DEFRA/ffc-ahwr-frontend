@@ -31,6 +31,7 @@ const routes = [].concat(
   require('../routes/vet/reference'),
   require('../routes/vet/beef-eligibility'),
   require('../routes/vet/sheep-eligibility'),
+  require('../routes/vet/sheep-epg'),
   require('../routes/vet/visit-date')
 )
 

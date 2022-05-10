@@ -25,5 +25,9 @@ module.exports = {
     realDate: 'Visit date must be a real date',
     startDateOrAfter: (createdAt) => `Visit date must be the same as or after ${new Date(createdAt).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created`,
     todayOrPast: 'Visit date must be today or in the past'
-  }
+  },
+  epgPercentage: {
+    enterEpg: 'Enter EPG percentage',
+    validEpg: 'Enter a valid EPG percentage'
+  },
 }
