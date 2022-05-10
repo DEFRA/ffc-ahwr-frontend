@@ -29,7 +29,7 @@ module.exports = [
         payload: Joi.object({
           pigs: Joi.string().valid('yes', 'no').required()
         }),
-        failAction: (request, h, err) => {
+        failAction: (request, h, _err) => {
           return h.view('farmer-apply/pigs', {
             ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.pigs), errorText),
             backLink

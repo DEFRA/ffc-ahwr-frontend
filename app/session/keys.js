@@ -17,6 +17,10 @@ module.exports = {
     farmerApplication: 'farmerApplication',
     signup: 'signup',
     visitDate: 'visitDate',
+    whichReview: 'whichReview',
+    beef: 'beef',
+    sheep: 'sheep',
+    pigs: 'pigs'
     vetBvdResult: 'vetBvdResult'
   }
 }

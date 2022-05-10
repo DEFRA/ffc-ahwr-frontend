@@ -63,7 +63,7 @@ module.exports = [
         payload: Joi.object({
           'cattle-type': Joi.string().valid('beef', 'dairy', 'both').required()
         }),
-        failAction: (request, h, err) => {
+        failAction: (request, h, _err) => {
           const errorText = 'Select the type of cattle that you keep'
           return h.view('farmer-apply/cattle', {
             ...getRadios(session.getApplication(request, answers.cattleType), errorText),
