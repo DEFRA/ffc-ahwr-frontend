@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const session = require('../../session')
 const { vetVisitData: { sheepEpg: sheepEpgKey } } = require('../../session/keys')
-const { email: emailValidation } = require('../../../app/lib/validation/email')
+const { epg: epgValidation } = require('../../../app/lib/validation/percentage')
 
 module.exports = [{
   method: 'GET',
@@ -20,7 +20,7 @@ module.exports = [{
     auth: false,
     validate: {
       payload: Joi.object({
-        epg: emailValidation
+        epg: epgValidation
       }),
       failAction: async (request, h, error) => {
         return h.view('vet/sheep-epg', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
