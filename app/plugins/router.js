@@ -29,7 +29,8 @@ const routes = [].concat(
   require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
   require('../routes/vet/reference'),
-  require('../routes/vet/visit-date')
+  require('../routes/vet/visit-date'),
+  require('../routes/vet/beef-eligibility')
 )
 
 module.exports = {
