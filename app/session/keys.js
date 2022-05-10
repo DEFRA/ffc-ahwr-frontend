@@ -16,6 +16,7 @@ module.exports = {
   vetVisitData: {
     farmerApplication: 'farmerApplication',
     signup: 'signup',
-    visitDate: 'visitDate'
+    visitDate: 'visitDate',
+    vetBvdResult: 'vetBvdResult'
   }
 }
