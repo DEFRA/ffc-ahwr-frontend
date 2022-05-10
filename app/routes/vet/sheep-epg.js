@@ -7,7 +7,6 @@ module.exports = [{
   method: 'GET',
   path: '/vet/sheep-epg',
   options: {
-    auth: false,
     handler: async (request, h) => {
       const epg = session.getVetSignup(request, sheepEpgKey)
       return h.view('vet/sheep-epg', { epg })
@@ -17,7 +16,6 @@ module.exports = [{
   method: 'POST',
   path: '/vet/sheep-epg',
   options: {
-    auth: false,
     validate: {
       payload: Joi.object({
         epg: epgValidation
@@ -30,7 +28,7 @@ module.exports = [{
       const { epg } = request.payload
       session.setVetSignup(request, sheepEpgKey, epg)
 
-      return h.redirect('/vet/check-answers')
+      return h.redirect('/vet/declaration')
     }
   }
 }]

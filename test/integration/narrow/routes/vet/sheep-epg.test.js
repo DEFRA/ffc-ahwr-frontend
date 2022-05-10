@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Sheep Eligibility test', () => {
+describe('Sheep EPG  test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/sheep-eligibility'
+  const url = '/vet/sheep-epg'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Sheep Eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Will you have at least 21 sheep on the date of the review?')
+      expect($('h1').text()).toMatch('Percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,13 @@ describe('Sheep Eligibility test', () => {
     })
 
     test.each([
-      { sheep: 'no' },
-      { sheep: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ sheep }) => {
+      { epg: 50 },
+      { epg: 2 }
+    ])('returns 302 to next page when acceptable answer given', async ({ epg }) => {
       const options = {
         method,
         url,
-        payload: { crumb, sheep },
+        payload: { crumb, epg },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -58,19 +58,17 @@ describe('Sheep Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/sheep-epg')
+      expect(res.headers.location).toEqual('/vet/declaration')
     })
 
     test.each([
-      { sheep: null },
-      { sheep: undefined },
-      { sheep: 'wrong' },
-      { sheep: '' }
-    ])('returns error when unacceptable answer is given', async ({ sheep }) => {
+      { epg: 200 },
+      { epg: -80 },
+    ])('returns error when unacceptable answer is given', async ({ epg }) => {
       const options = {
         method,
         url,
-        payload: { crumb, sheep },
+        payload: { crumb, epg },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -78,8 +76,8 @@ describe('Sheep Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 21 sheep on the date of the review')
-      expect(res.statusCode).toBe(200)
+      expect($('p.govuk-error-message').text()).toContain('Error:')
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /vet', async () => {

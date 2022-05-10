@@ -29,5 +29,5 @@ module.exports = {
   epgPercentage: {
     enterEpg: 'Enter EPG percentage',
     validEpg: 'Enter a valid EPG percentage'
-  },
+  }
 }
