@@ -63,7 +63,7 @@ describe('Sheep EPG  test', () => {
 
     test.each([
       { epg: 200 },
-      { epg: -80 },
+      { epg: -80 }
     ])('returns error when unacceptable answer is given', async ({ epg }) => {
       const options = {
         method,
