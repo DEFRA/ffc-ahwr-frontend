@@ -62,8 +62,8 @@ describe('Sheep EPG  test', () => {
     })
 
     test.each([
-      { epg: 200, message: 'Error: "epg" must be less than or equal to 100' },
-      { epg: -80, message: 'Error: "epg" must be greater than or equal to 0' }
+      { epg: 200, message: 'EPG percentage must be 100 or less' },
+      { epg: -80, message: 'EPG percentage must be 0 or more' }
     ])('returns error when unacceptable answer is given', async ({ epg, message }) => {
       const options = {
         method,
