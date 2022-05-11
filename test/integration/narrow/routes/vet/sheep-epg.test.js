@@ -62,9 +62,9 @@ describe('Sheep EPG  test', () => {
     })
 
     test.each([
-      { epg: 200 },
-      { epg: -80 }
-    ])('returns error when unacceptable answer is given', async ({ epg }) => {
+      { epg: 200, message: 'Error: "epg" must be less than or equal to 100' },
+      { epg: -80, message: 'Error: "epg" must be greater than or equal to 0' }
+    ])('returns error when unacceptable answer is given', async ({ epg, message }) => {
       const options = {
         method,
         url,
@@ -76,7 +76,7 @@ describe('Sheep EPG  test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toContain('Error:')
+      expect($('p.govuk-error-message').text()).toMatch(message)
       expect(res.statusCode).toBe(400)
     })
 
