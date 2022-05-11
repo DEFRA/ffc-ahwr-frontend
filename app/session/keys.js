@@ -27,6 +27,11 @@ module.exports = {
     signup: 'signup',
     vetBvdResult: 'vetBvdResult',
     visitDate: 'visitDate',
-    whichReview: 'whichReview'
+    whichReview: 'whichReview',
+    beef: 'beef',
+    sheep: 'sheep',
+    pigs: 'pigs',
+    sheepEpg: 'sheepEpg',
+    reviewReport: 'reviewReport'
   }
 }
