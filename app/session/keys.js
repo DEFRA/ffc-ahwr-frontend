@@ -20,7 +20,7 @@ module.exports = {
     whichReview: 'whichReview',
     beef: 'beef',
     sheep: 'sheep',
-    pigs: 'pigs'
+    pigs: 'pigs',
     vetBvdResult: 'vetBvdResult'
   }
 }
