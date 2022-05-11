@@ -5,7 +5,7 @@ const { inputErrorClass, labels } = require('../../../../../app/config/visit-dat
 const { vetVisitData: { farmerApplication } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('h1').text()).toMatch('When did the review take place with the farmer?')
+  expect($('h1').text()).toMatch('When was the review completed?')
   expect($(`label[for=${labels.day}]`).text()).toMatch('Day')
   expect($(`label[for=${labels.month}]`).text()).toMatch('Month')
   expect($(`label[for=${labels.year}]`).text()).toMatch('Year')

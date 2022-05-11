@@ -21,6 +21,7 @@ module.exports = {
     beef: 'beef',
     sheep: 'sheep',
     pigs: 'pigs',
-    vetBvdResult: 'vetBvdResult'
+    vetBvdResult: 'vetBvdResult',
+    sheepEpg: 'sheepEpg'
   }
 }
