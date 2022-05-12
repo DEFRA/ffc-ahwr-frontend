@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Cows BVD present breeder test', () => {
+describe('Milk test bvd test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/cows-bvd-present-breeder'
+  const url = '/vet/milk-test-bvd'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Cows BVD present breeder test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Did antibody test results show that BVD is in the herd?')
+      expect($('h1').text()).toMatch('Did bulk milk test results show that BVD is in the herd?')
       expectPhaseBanner.ok($)
     })
 
@@ -44,14 +44,14 @@ describe('Cows BVD present breeder test', () => {
     })
 
     test.each([
-      { bvdRresult: 'no' },
-      { bvdRresult: 'yes' },
-      { bvdRresult: 'further investigation required' }
-    ])('returns 302 to next page when acceptable answer given', async ({ bvdRresult }) => {
+      { milkTestBvdResult: 'no' },
+      { milkTestBvdResult: 'yes' },
+      { milkTestBvdResult: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ milkTestBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult },
+        payload: { crumb, milkTestBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -63,15 +63,15 @@ describe('Cows BVD present breeder test', () => {
     })
 
     test.each([
-      { bvdRresult: null },
-      { bvdRresult: undefined },
+      { milkTestBvdResult: null },
+      { milkTestBvdResult: undefined },
       { sheep: 'wrong' },
-      { bvdRresult: '' }
-    ])('returns error when unacceptable answer is given', async ({ bvdRresult }) => {
+      { milkTestBvdResult: '' }
+    ])('returns error when unacceptable answer is given', async ({ milkTestBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult },
+        payload: { crumb, milkTestBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -87,7 +87,7 @@ describe('Cows BVD present breeder test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult: 'no' },
+        payload: { crumb, milkTestBvdResult: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

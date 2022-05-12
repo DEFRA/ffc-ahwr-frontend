@@ -33,7 +33,9 @@ const routes = [].concat(
   require('../routes/vet/beef-eligibility'),
   require('../routes/vet/cows-bvd-present-breeder'),
   require('../routes/vet/sheep-eligibility'),
-  require('../routes/vet/sheep-epg')
+  require('../routes/vet/sheep-epg'),
+  require('../routes/vet/dairy-cattle-on-farm'),
+  require('../routes/vet/milk-test-bvd')
 )
 
 module.exports = {

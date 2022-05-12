@@ -1,10 +1,11 @@
 const Joi = require('joi')
-const { vetVisitData: { vetBvdResult } } = require('../../session/keys')
+const { vetVisitData: { milkTestBvdResult } } = require('../../session/keys')
 const session = require('../../session')
 
-const id = 'bvdRresult'
+const id = 'milkTestBvdResult'
 const errorText = 'Select one option'
 const backLink = '/vet/check-answers'
+
 function getRadios (previousAnswer, _errorText) {
   return {
     radios: {
@@ -12,7 +13,7 @@ function getRadios (previousAnswer, _errorText) {
       name: id,
       fieldset: {
         legend: {
-          text: 'Did antibody test results show that BVD is in the herd?',
+          text: 'Did bulk milk test results show that BVD is in the herd?',
           isPageHeading: true,
           classes: 'govuk-fieldset__legend--l'
         }
@@ -41,11 +42,11 @@ function getRadios (previousAnswer, _errorText) {
 module.exports = [
   {
     method: 'GET',
-    path: '/vet/cows-bvd-present-breeder',
+    path: '/vet/milk-test-bvd',
     options: {
       handler: async (request, h) => {
-        return h.view('vet/cows-bvd-present-breeder', {
-          ...getRadios(session.getVetVisitData(request, vetBvdResult)),
+        return h.view('vet/milk-test-bvd', {
+          ...getRadios(session.getVetVisitData(request, milkTestBvdResult)),
           backLink
         })
       }
@@ -53,21 +54,21 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/vet/cows-bvd-present-breeder',
+    path: '/vet/milk-test-bvd',
     options: {
       validate: {
         payload: Joi.object({
-          bvdRresult: Joi.string().valid('yes', 'no', 'further investigation required').required()
+          milkTestBvdResult: Joi.string().valid('yes', 'no', 'further investigation required').required()
         }),
         failAction: (request, h, _err) => {
-          return h.view('vet/cows-bvd-present-breeder', {
-            ...getRadios(session.getVetVisitData(request, vetBvdResult), errorText),
+          return h.view('vet/milk-test-bvd', {
+            ...getRadios(session.getVetVisitData(request, milkTestBvdResult), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setVetVisitData(request, vetBvdResult, request.payload.bvdRresult)
+        session.setVetVisitData(request, milkTestBvdResult, request.payload[id])
         return h.redirect('/vet/declaration')
       }
     }
