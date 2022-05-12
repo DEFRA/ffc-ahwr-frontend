@@ -1,13 +1,14 @@
 const { getClaimAmount } = require('../../../../app/lib/get-claim-amount')
 const amounts = require('../../../../app/constants/amounts')
+const species = require('../../../../app/constants/species')
 
 describe('getClaimAmount returns correct amount', () => {
   test.each([
-    { species: 'pigs', cattle: '', amount: amounts.pigs },
-    { species: 'sheep', cattle: '', amount: amounts.sheep },
-    { species: 'beef', cattle: 'yes', amount: amounts.beef },
+    { species: species.pigs, cattle: '', amount: amounts.pigs },
+    { species: species.sheep, cattle: '', amount: amounts.sheep },
+    { species: species.beef, cattle: 'yes', amount: amounts.beef },
     { species: 'both', cattle: 'yes', amount: amounts.beef },
-    { species: 'dairy', cattle: 'yes', amount: amounts.dairy }
+    { species: species.dairy, cattle: 'yes', amount: amounts.dairy }
   ])('for $species', ({ species, cattle, amount }) => {
     const claimData = {
       pigs: '',
