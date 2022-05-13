@@ -6,11 +6,7 @@ const { getClaimAmount } = require('../../lib/get-claim-amount')
 const { getClaimType } = require('../../lib/get-claim-type')
 const { claim: { detailsCorrect } } = require('../../session/keys')
 
-<<<<<<< HEAD
 const errorMessage = 'Select yes if the review details are correct'
-=======
-const errorText = 'Select yes if the review details are correct'
->>>>>>> 270444c (feat: implement full confirm claim page functionality)
 const legendText = 'Are these details correct?'
 
 const path = 'farmer-claim/visit-review'
