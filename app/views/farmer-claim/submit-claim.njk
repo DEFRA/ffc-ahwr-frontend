@@ -1,0 +1,24 @@
+{% extends './layouts/layout.njk' %}
+
+{% block pageTitle %}Submit your claim for funding{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Submit your claim for funding</h1>
+
+    <p>By submitting your claim, you confirm that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>the review has taken place</li>
+      <li>you agree to pay the vet who carried out the review</li>
+    </ul>
+    <p>Keep paperwork, such as invoices, from the review as the RPA may ask to see it as part of this agreement.</p>
+
+    {{ govukButton({
+      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-8",
+      href: "/farmer-claim/funding-complete",
+      text: "Submit claim"
+    }) }}
+  </div>
+</div>
+{% endblock %}

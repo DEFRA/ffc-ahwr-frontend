@@ -5,6 +5,9 @@ module.exports = {
     pigs: 'pigs',
     sheep: 'sheep'
   },
+  claim: {
+    detailsCorrect: 'detailsCorrect'
+  },
   vetSignup: {
     email: 'email',
     name: 'name',

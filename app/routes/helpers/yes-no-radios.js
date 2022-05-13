@@ -1,14 +1,26 @@
-function getYesNoRadios (legendText, id, previousAnswer, errorText) {
+/**
+ * Generate GOV.UK radios component.
+ *
+ * @param {string} legendText heading text for radios.
+ * @param {string} id of the radio component.
+ * @param {string} previousAnswer either `yes` or `no`, used to set the radio as checked.
+ * @param {string} [errorText] error message to display.
+ * @param {object} [options] an object containing `isPageHeading` (boolean, determines if the legendText is marked as a heading), `legendClasses` (string, contains classes to add to legendText) and `inline` (boolean determines if the class to make the radios display as inline is added).
+ *
+ * @return {object} object with `radios` property containing radios component.
+ */
+function getYesNoRadios (legendText, id, previousAnswer, errorText = undefined, options = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true }) {
+  const { inline, isPageHeading, legendClasses } = options
   return {
     radios: {
-      classes: 'govuk-radios--inline',
+      classes: inline ? 'govuk-radios--inline' : undefined,
       idPrefix: id,
       name: id,
       fieldset: {
         legend: {
           text: legendText,
-          isPageHeading: true,
-          classes: 'govuk-fieldset__legend--l'
+          isPageHeading,
+          classes: legendClasses
         }
       },
       items: [
@@ -28,4 +40,6 @@ function getYesNoRadios (legendText, id, previousAnswer, errorText) {
   }
 }
 
-module.exports = getYesNoRadios
+module.exports = {
+  getYesNoRadios
+}
