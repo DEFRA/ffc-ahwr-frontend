@@ -6,7 +6,7 @@ const { getClaimAmount } = require('../../lib/get-claim-amount')
 const { getClaimType } = require('../../lib/get-claim-type')
 const { claim: { detailsCorrect } } = require('../../session/keys')
 
-const errorText = 'Select yes if the review details are correct'
+const errorMessage = 'Select yes if the review details are correct'
 const legendText = 'Are these details correct?'
 
 const path = 'farmer-claim/visit-review'
@@ -84,7 +84,7 @@ module.exports = [{
       }),
       failAction: (request, h, _err) => {
         const claim = getClaim(request)
-        return h.view(path, getViewData(claim, errorText)).code(400).takeover()
+        return h.view(path, getViewData(claim, errorMessage)).code(400).takeover()
       }
     },
     handler: async (request, h) => {
