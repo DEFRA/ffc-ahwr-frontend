@@ -5,18 +5,13 @@ const species = require('../constants/species')
 function getClaimType (claimData) {
   const { cattle, cattleType, pigs, sheep } = claimData
   if (cattle === 'yes') {
-    if (cattleType === 'both' || cattleType === species.beef) {
-      return species.beef
-    } else if (cattleType === species.dairy) {
-      return species.dairy
-    }
+    return (cattleType === 'both' || cattleType === species.beef) ? species.beef : species.dairy
   } else if (pigs === 'yes') {
     return species.pigs
   } else if (sheep === 'yes') {
     return species.sheep
-  } else {
-    throw new Error('Unexpected species combination detected')
   }
+  throw new Error('Unexpected species combination detected')
 }
 
 module.exports = {
