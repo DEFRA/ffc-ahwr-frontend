@@ -1,42 +1,14 @@
 const Joi = require('joi')
 const { vetVisitData: { vetBvdResult } } = require('../../session/keys')
 const session = require('../../session')
+const getYesNoInvestigateRadios = require('../helpers/yes-no-investigate-radios')
 
 const id = 'bvdRresult'
 const errorText = 'Select one option'
 const backLink = '/vet/check-answers'
+const legendText = 'Did antibody test results show that BVD is in the herd?'
 function getRadios (previousAnswer, _errorText) {
-  return {
-    radios: {
-      idPrefix: id,
-      name: id,
-      fieldset: {
-        legend: {
-          text: 'Did antibody test results show that BVD is in the herd?',
-          isPageHeading: true,
-          classes: 'govuk-fieldset__legend--l'
-        }
-      },
-      items: [
-        {
-          value: 'yes',
-          text: 'Yes',
-          checked: previousAnswer === 'yes'
-        },
-        {
-          value: 'no',
-          text: 'No',
-          checked: previousAnswer === 'no'
-        },
-        {
-          value: 'further investigation required',
-          text: 'Further investigation required',
-          checked: previousAnswer === 'further investigation required'
-        }
-      ],
-      ...(errorText ? { errorMessage: { text: errorText } } : {})
-    }
-  }
+  return getYesNoInvestigateRadios(legendText, id, previousAnswer, _errorText)
 }
 module.exports = [
   {
