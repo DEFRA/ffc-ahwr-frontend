@@ -64,7 +64,7 @@ describe('Beef Eligibility test', () => {
     test.each([
       { beef: null },
       { beef: undefined },
-      { sheep: 'wrong' },
+      { beef: 'wrong' },
       { beef: '' }
     ])('returns error when unacceptable answer is given', async ({ beef }) => {
       const options = {

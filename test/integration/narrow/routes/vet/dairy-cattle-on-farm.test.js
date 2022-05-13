@@ -64,7 +64,7 @@ describe('Dairy Cattle on farm test', () => {
     test.each([
       { dairyCattleOnFarm: null },
       { dairyCattleOnFarm: undefined },
-      { sheep: 'wrong' },
+      { dairyCattleOnFarm: 'wrong' },
       { dairyCattleOnFarm: '' }
     ])('returns error when unacceptable answer is given', async ({ dairyCattleOnFarm }) => {
       const options = {
@@ -78,7 +78,7 @@ describe('Dairy Cattle on farm test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select one option')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were more than 10 cattle in the herd')
       expect(res.statusCode).toBe(200)
     })
 

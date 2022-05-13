@@ -4,8 +4,7 @@ const getYesNoRadios = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
 const legendText = 'Were there more than 10 dairy cattle on the farm at the time of the review?'
-const radioId = 'dairyCattleOnFarm'
-const errorText = 'Select one option'
+const errorText = 'Select yes if there were more than 10 cattle in the herd'
 const backLink = '/vet/check-answers'
 
 module.exports = [
@@ -15,7 +14,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('vet/dairy-cattle-on-farm', {
-          ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, dairyCattleOnFarm)),
+          ...getYesNoRadios(legendText, dairyCattleOnFarm, session.getVetVisitData(request, dairyCattleOnFarm)),
           backLink
         })
       }
@@ -31,13 +30,13 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/dairy-cattle-on-farm', {
-            ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, dairyCattleOnFarm), errorText),
+            ...getYesNoRadios(legendText, dairyCattleOnFarm, session.getVetVisitData(request, dairyCattleOnFarm), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setVetVisitData(request, dairyCattleOnFarm, request.payload[radioId])
+        session.setVetVisitData(request, dairyCattleOnFarm, request.payload[dairyCattleOnFarm])
         return h.redirect('/vet/declaration')
       }
     }

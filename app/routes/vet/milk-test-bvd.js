@@ -3,12 +3,11 @@ const { vetVisitData: { milkTestBvdResult } } = require('../../session/keys')
 const session = require('../../session')
 const getYesNoInvestigateRadios = require('../helpers/yes-no-investigate-radios')
 
-const id = 'milkTestBvdResult'
-const errorText = 'Select one option'
+const errorText = 'Select yes if BVD was found in the herd'
 const backLink = '/vet/check-answers'
 const legendText = 'Did bulk milk test results show that BVD is in the herd?'
 function getRadios (previousAnswer, _errorText) {
-  return getYesNoInvestigateRadios(legendText, id, previousAnswer, _errorText)
+  return getYesNoInvestigateRadios(legendText, milkTestBvdResult, previousAnswer, _errorText)
 }
 module.exports = [
   {
@@ -39,7 +38,7 @@ module.exports = [
         }
       },
       handler: async (request, h) => {
-        session.setVetVisitData(request, milkTestBvdResult, request.payload[id])
+        session.setVetVisitData(request, milkTestBvdResult, request.payload.milkTestBvdResult)
         return h.redirect('/vet/declaration')
       }
     }

@@ -65,7 +65,7 @@ describe('Milk test bvd test', () => {
     test.each([
       { milkTestBvdResult: null },
       { milkTestBvdResult: undefined },
-      { sheep: 'wrong' },
+      { milkTestBvdResult: 'wrong' },
       { milkTestBvdResult: '' }
     ])('returns error when unacceptable answer is given', async ({ milkTestBvdResult }) => {
       const options = {
@@ -79,7 +79,7 @@ describe('Milk test bvd test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select one option')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
       expect(res.statusCode).toBe(200)
     })
 

@@ -44,14 +44,14 @@ describe('Cows BVD present breeder test', () => {
     })
 
     test.each([
-      { bvdRresult: 'no' },
-      { bvdRresult: 'yes' },
-      { bvdRresult: 'further investigation required' }
-    ])('returns 302 to next page when acceptable answer given', async ({ bvdRresult }) => {
+      { vetBvdResult: 'no' },
+      { vetBvdResult: 'yes' },
+      { vetBvdResult: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ vetBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult },
+        payload: { crumb, vetBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -63,15 +63,15 @@ describe('Cows BVD present breeder test', () => {
     })
 
     test.each([
-      { bvdRresult: null },
-      { bvdRresult: undefined },
-      { sheep: 'wrong' },
-      { bvdRresult: '' }
-    ])('returns error when unacceptable answer is given', async ({ bvdRresult }) => {
+      { vetBvdResult: null },
+      { vetBvdResult: undefined },
+      { vetBvdResult: 'wrong' },
+      { vetBvdResult: '' }
+    ])('returns error when unacceptable answer is given', async ({ vetBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult },
+        payload: { crumb, vetBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -79,7 +79,7 @@ describe('Cows BVD present breeder test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select one option')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
       expect(res.statusCode).toBe(200)
     })
 
@@ -87,7 +87,7 @@ describe('Cows BVD present breeder test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, bvdRresult: 'no' },
+        payload: { crumb, vetBvdResult: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

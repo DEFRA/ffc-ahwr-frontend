@@ -14,16 +14,16 @@ module.exports = {
     applicationState: 'applicationState'
   },
   vetVisitData: {
-    farmerApplication: 'farmerApplication',
-    signup: 'signup',
-    visitDate: 'visitDate',
-    whichReview: 'whichReview',
     beef: 'beef',
-    sheep: 'sheep',
-    pigs: 'pigs',
-    vetBvdResult: 'vetBvdResult',
-    sheepEpg: 'sheepEpg',
+    dairyCattleOnFarm: 'dairyCattleOnFarm',
+    farmerApplication: 'farmerApplication',
     milkTestBvdResult: 'milkTestBvdResult',
-    dairyCattleOnFarm: 'dairyCattleOnFarm'
+    pigs: 'pigs',
+    sheep: 'sheep',
+    sheepEpg: 'sheepEpg',
+    signup: 'signup',
+    vetBvdResult: 'vetBvdResult',
+    visitDate: 'visitDate',
+    whichReview: 'whichReview'
   }
 }
