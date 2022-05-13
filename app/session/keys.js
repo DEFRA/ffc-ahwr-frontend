@@ -28,10 +28,6 @@ module.exports = {
     vetBvdResult: 'vetBvdResult',
     visitDate: 'visitDate',
     whichReview: 'whichReview',
-    beef: 'beef',
-    sheep: 'sheep',
-    pigs: 'pigs',
-    sheepEpg: 'sheepEpg',
     reviewReport: 'reviewReport'
   }
 }
