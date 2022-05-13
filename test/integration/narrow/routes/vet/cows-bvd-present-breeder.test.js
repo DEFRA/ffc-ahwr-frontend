@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Beef Eligibility test', () => {
+describe('Cows BVD present breeder test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/beef-eligibility'
+  const url = '/vet/cows-bvd-present-breeder'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Beef Eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Were there more than 10 beef cattle on the farm at the time of the review?')
+      expect($('h1').text()).toMatch('Did antibody test results show that BVD is in the herd?')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,14 @@ describe('Beef Eligibility test', () => {
     })
 
     test.each([
-      { beef: 'no' },
-      { beef: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ beef }) => {
+      { vetBvdResult: 'no' },
+      { vetBvdResult: 'yes' },
+      { vetBvdResult: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ vetBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, beef },
+        payload: { crumb, vetBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -62,15 +63,15 @@ describe('Beef Eligibility test', () => {
     })
 
     test.each([
-      { beef: null },
-      { beef: undefined },
-      { beef: 'wrong' },
-      { beef: '' }
-    ])('returns error when unacceptable answer is given', async ({ beef }) => {
+      { vetBvdResult: null },
+      { vetBvdResult: undefined },
+      { vetBvdResult: 'wrong' },
+      { vetBvdResult: '' }
+    ])('returns error when unacceptable answer is given', async ({ vetBvdResult }) => {
       const options = {
         method,
         url,
-        payload: { crumb, beef },
+        payload: { crumb, vetBvdResult },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -78,7 +79,7 @@ describe('Beef Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you keep more than 10 beef cattle')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
       expect(res.statusCode).toBe(200)
     })
 
@@ -86,7 +87,7 @@ describe('Beef Eligibility test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, beef: 'no' },
+        payload: { crumb, vetBvdResult: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
