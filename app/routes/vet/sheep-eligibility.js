@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { vetVisitData: { sheep } } = require('../../session/keys')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
 const legendText = 'Will you have at least 21 sheep on the date of the review?'
