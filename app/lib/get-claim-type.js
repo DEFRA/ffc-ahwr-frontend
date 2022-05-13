@@ -19,4 +19,6 @@ function getClaimType (claimData) {
   }
 }
 
-module.exports = getClaimType
+module.exports = {
+  getClaimType
+}

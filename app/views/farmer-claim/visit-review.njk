@@ -15,17 +15,20 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Confirm the details of your annual health and welfare review</h1>
 
-    {{ govukSummaryList({
-      classes: 'govuk-!-margin-bottom-9',
-      rows: listData.rows
-    }) }}
+    <form method="POST" autocomplete="off" novalidate="novalidate">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukSummaryList({
+        classes: 'govuk-!-margin-bottom-9',
+        rows: listData.rows
+      }) }}
 
-    {{ govukRadios(radios) }}
+      {{ govukRadios(radios) }}
 
-    {{ govukButton({
-      text: "Continue",
-      href: "#"
-    }) }}
+      {{ govukButton({
+        text: "Continue",
+        attributes: {id: "btnContinue"}
+      }) }}
+    </form>
   </div>
 </div>
 {% endblock %}
