@@ -14,11 +14,13 @@
     </ul>
     <p>Keep paperwork, such as invoices, from the review as the RPA may ask to see it as part of this agreement.</p>
 
-    {{ govukButton({
+    <form method="POST" action="/farmer-claim/submit-claim">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukButton({
       classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-8",
-      href: "/farmer-claim/funding-complete",
-      text: "Submit claim"
-    }) }}
+        text: "Submit claim"
+      }) }}
+    </form>
   </div>
 </div>
 {% endblock %}

@@ -97,3 +97,7 @@ $govuk-global-styles: true; // https://frontend.design-system.service.gov.uk/sas
     background-color: #143c7c;
   }
 }
+
+.govuk-panel--error {
+  background: govuk-colour("red")
+}
