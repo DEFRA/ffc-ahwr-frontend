@@ -28,7 +28,7 @@ module.exports = [{
       const { epg } = request.payload
       session.setVetSignup(request, sheepEpgKey, epg)
 
-      return h.redirect('/vet/declaration')
+      return h.redirect('/vet/review-report')
     }
   }
 }]

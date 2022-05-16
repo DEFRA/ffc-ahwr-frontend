@@ -1,11 +1,13 @@
 const Joi = require('joi')
 const { vetVisitData: { reviewReport } } = require('../../session/keys')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
 const legendText = 'Have you given the farmer a written report of the review?'
 const radioId = 'reviewReport'
 const errorText = 'Select yes if you have given the farmer a written report of the review'
+const hintText = `This includes follow-up actions and recommendations and will not be shared with Defra.
+The farmer must keep evidence that they have received the report.They will only need to supply this evidence if the RPA asks for it.`
 const backLink = '/vet/sheep-epg'
 
 module.exports = [
@@ -15,7 +17,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('vet/review-report', {
-          ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport)),
+          ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), undefined, undefined, hintText),
           backLink
         })
       }
@@ -31,7 +33,7 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/review-report', {
-            ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), errorText),
+            ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), errorText, undefined, hintText),
             backLink
           }).takeover()
         }

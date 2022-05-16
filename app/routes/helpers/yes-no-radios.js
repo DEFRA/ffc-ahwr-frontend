@@ -9,7 +9,7 @@
  *
  * @return {object} object with `radios` property containing radios component.
  */
-function getYesNoRadios (legendText, id, previousAnswer, errorText = undefined, options = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true }) {
+function getYesNoRadios (legendText, id, previousAnswer, errorText = undefined, options = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true }, hintText = '') {
   const { inline, isPageHeading, legendClasses } = options
   return {
     radios: {
@@ -22,6 +22,9 @@ function getYesNoRadios (legendText, id, previousAnswer, errorText = undefined, 
           isPageHeading,
           classes: legendClasses
         }
+      },
+      hint: {
+        text: hintText
       },
       items: [
         {

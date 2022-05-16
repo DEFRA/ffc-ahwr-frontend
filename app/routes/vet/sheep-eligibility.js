@@ -6,6 +6,7 @@ const session = require('../../session')
 const legendText = 'Will you have at least 21 sheep on the date of the review?'
 const errorText = 'Select yes if you have at least 21 sheep on the date of the review'
 const backLink = '/vet/which-review'
+const hintText = 'You are only eligible for funding if you are keeping more than 20 sheep at the registered site on the date the vet visits.'
 
 module.exports = [
   {
@@ -14,7 +15,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('vet/sheep-eligibility', {
-          ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep)),
+          ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), undefined, undefined, hintText),
           backLink
         })
       }
@@ -30,7 +31,7 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/sheep-eligibility', {
-            ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), errorText),
+            ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), errorText, undefined, hintText),
             backLink
           }).takeover()
         }
