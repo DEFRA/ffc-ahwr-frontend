@@ -19,7 +19,6 @@ module.exports = [{
   path: '/vet/confirmation',
   options: {
     handler: async (request, h) => {
-      session.setVetVisitData(request, 'sessionId', request.yar.id)
       const vetVisitData = session.getVetVisitData(request)
       sendMessage(vetVisitData, vetVisitRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)

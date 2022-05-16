@@ -54,18 +54,15 @@ const schema = Joi.object({
     ...sharedConfigSchema
   },
   applicationRequestMsgType: Joi.string(),
-  applicationResponseMsgType: Joi.string(),
   applicationResponseQueue: {
     address: Joi.string().default('applicationResponseQueue'),
     type: Joi.string(),
     ...sharedConfigSchema
   },
   fetchApplicationRequestMsgType: Joi.string(),
-  fetchApplicationResponseMsgType: Joi.string(),
   fetchClaimRequestMsgType: Joi.string(),
-  fetchClaimResponseMsgType: Joi.string(),
+  submitClaimRequestMsgType: Joi.string(),
   vetVisitRequestMsgType: Joi.string(),
-  vetVisitResponseMsgType: Joi.string(),
   serviceUri: Joi.string().uri(),
   storage: {
     connectionString: Joi.string().required(),
@@ -122,18 +119,15 @@ const config = {
     ...sharedConfig
   },
   applicationRequestMsgType: `${msgTypePrefix}.app.request`,
-  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
   applicationResponseQueue: {
     address: process.env.APPLICATIONRESPONSE_QUEUE_ADDRESS,
     type: 'queue',
     ...sharedConfig
   },
   fetchApplicationRequestMsgType: `${msgTypePrefix}.fetch.app.request`,
-  fetchApplicationResponseMsgType: `${msgTypePrefix}.fetch.app.response`,
   fetchClaimRequestMsgType: `${msgTypePrefix}.fetch.claim.request`,
-  fetchClaimResponseMsgType: `${msgTypePrefix}.fetch.claim.response`,
+  submitClaimRequestMsgType: `${msgTypePrefix}.submit.claim.request`,
   vetVisitRequestMsgType: `${msgTypePrefix}.vet.visit.request`,
-  vetVisitResponseMsgType: `${msgTypePrefix}.vet.visit.response`,
   serviceUri: process.env.SERVICE_URI,
   storage: {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
