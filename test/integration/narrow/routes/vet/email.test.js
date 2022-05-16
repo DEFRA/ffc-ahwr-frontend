@@ -20,6 +20,12 @@ jest.mock('../../../../../app/session')
 const sendMagicLinkEmail = require('../../../../../app/lib/email/send-magic-link-email')
 jest.mock('../../../../../app/lib/email/send-magic-link-email')
 
+const config = require('../../../../../app/config')
+jest.mock('../../../../../app/config')
+const users = require('../../../../../app/api-requests/users')
+jest.mock('../../../../../app/api-requests/users')
+jest.mock('../../../../../app/lib/email/send-email')
+
 describe('Vet, enter email name test', () => {
   const url = '/vet/email'
   const validEmail = 'email@test.com'
@@ -110,6 +116,32 @@ describe('Vet, enter email name test', () => {
       expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), signupData)
     })
 
+    test.each([
+      { email: validEmail },
+      { email: `  ${validEmail}  ` }
+    ])('returns 302 when payload is valid, sends email with test token and stores email in session (email = "$email")', async ({ email }) => {
+      config.testToken = '1234567890'
+      users.getByEmail.mockResolvedValue({ email: validEmail, testToken: config.testToken })
+
+      const signupData = {}
+      session.getVetSignup.mockReturnValueOnce(signupData)
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        headers: { cookie: `crumb=${crumb}` },
+        method: 'POST',
+        payload: { crumb, email },
+        url
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(302)
+      expect(res.headers.location).toEqual('/vet/check-email')
+      expect(session.setVetSignup).toHaveBeenCalledTimes(1)
+      expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
+      expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), signupData)
+    })
     test('returns 500 when problem sending email', async () => {
       const signupData = {}
       session.getVetSignup.mockReturnValueOnce(signupData)
