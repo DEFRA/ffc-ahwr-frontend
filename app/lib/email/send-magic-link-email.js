@@ -66,5 +66,6 @@ async function sendVetMagicLinkEmail (request, email, data) {
 module.exports = {
   sendFarmerApplyLoginMagicLink,
   sendFarmerClaimLoginMagicLink,
-  sendVetMagicLinkEmail
+  sendVetMagicLinkEmail,
+  getToken
 }
