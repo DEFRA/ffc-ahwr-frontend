@@ -58,7 +58,7 @@ describe('Vet check answers test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('.govuk-summary-list__row').length).toEqual(1)
+      expect($('.govuk-summary-list__row').length).toEqual(3)
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Farm visit date')
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
