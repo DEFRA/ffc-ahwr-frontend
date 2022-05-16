@@ -27,4 +27,4 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ""
       SERVICE_URI: http://localhost:3000
-      TEST_TOKEN: ${TEST_TOKEN:-0f9ecf32-da18-4e17-8a94-c37732d97489}
+      TEST_TOKEN: ${TEST_TOKEN:-notset}

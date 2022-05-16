@@ -5,10 +5,11 @@ const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templa
 const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
 const { getByEmail } = require('../../api-requests/users')
 async function getToken (email) {
-  const user = await getByEmail(email);
-  console.log('User', user)
-  if ( user.isTest === 'yes') {
-    return testToken
+  if (testToken) {
+    const user = await getByEmail(email)
+    if (user.isTest === 'yes') {
+      return testToken
+    }
   }
   return uuid()
 }
