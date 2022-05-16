@@ -27,7 +27,8 @@ const schema = Joi.object({
     cookieNameSession: Joi.string().default('ffc_ahwr_session'),
     isSameSite: Joi.string().default('Lax'),
     isSecure: Joi.boolean().default(true),
-    password: Joi.string().min(32).required()
+    password: Joi.string().min(32).required(),
+    ttl: Joi.number().default(1000 * 3600 * 24 * 3) // 3 days
   },
   cookiePolicy: {
     clearInvalid: Joi.bool().default(false),

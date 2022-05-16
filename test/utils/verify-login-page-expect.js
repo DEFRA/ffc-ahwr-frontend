@@ -19,7 +19,7 @@ function hasCookiesSet (res) {
   res.headers['set-cookie'].forEach(cookie => {
     const cookieParts = cookie.split('; ')
     if (getCookieName(cookieParts) === cookieConfig.cookieNameAuth) {
-      expect(getCookiesMaxAge(cookieParts)).toBeUndefined()
+      expect(getCookiesMaxAge(cookieParts).split('=')[1]).toEqual((cookieConfig.ttl / 1000).toString())
       authCookieExists = true
     } else if (getCookieName(cookieParts) === cookieConfig.cookieNameSession) {
       expect(getCookiesMaxAge(cookieParts).split('=')[1]).toEqual((cache.expiresIn / 1000).toString())

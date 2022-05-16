@@ -11,7 +11,6 @@
  */
 function getYesNoRadios (legendText, id, previousAnswer, errorText = undefined, options = {}) {
   const { isPageHeading = true, legendClasses = 'govuk-fieldset__legend--l', inline = true, hintText = '' } = options
-
   return {
     radios: {
       classes: inline ? 'govuk-radios--inline' : undefined,
