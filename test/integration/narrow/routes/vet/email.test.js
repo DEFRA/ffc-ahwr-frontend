@@ -121,7 +121,7 @@ describe('Vet, enter email name test', () => {
       { email: `  ${validEmail}  ` }
     ])('returns 302 when payload is valid, sends email with test token and stores email in session (email = "$email")', async ({ email }) => {
       config.testToken = '1234567890'
-      users.getByEmail.mockResolvedValue({ email: validEmail, testToken: config.testToken })
+      users.getByEmail.mockResolvedValue({ email: validEmail, isTest: 'yes' })
 
       const signupData = {}
       session.getVetSignup.mockReturnValueOnce(signupData)
