@@ -22,6 +22,9 @@ describe('getYesNoRadios', () => {
             classes: 'govuk-fieldset__legend--l'
           }
         },
+        hint: {
+          text: ''
+        },
         items: [{
           value: 'yes',
           text: 'Yes',
