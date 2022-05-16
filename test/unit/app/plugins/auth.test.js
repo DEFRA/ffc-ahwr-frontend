@@ -1,5 +1,6 @@
 const { v4: uuid } = require('uuid')
 const { farmerApply } = require('../../../../app/config/user-types')
+const { cookie: { ttl } } = require('../../../../app/config')
 
 describe('Auth plugin test', () => {
   let getByEmail
@@ -48,11 +49,18 @@ describe('Auth plugin test', () => {
       getByEmail.mockResolvedValue(org)
 
       const res = await global.__SERVER__.inject(options)
+      const cookieHeader = res.headers['set-cookie']
+      console.log(cookieHeader)
+      console.log(cookieHeader[0])
+      console.log(cookieHeader[0].split('; '))
+
+      const maxAgeOfCookieInSeconds = cookieHeader[0].split('; ').filter(x => x.split('=')[0] === 'Max-Age')[0].split('=')[1]
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual(redirectTo)
       expect(session.setOrganisation).toHaveBeenCalledTimes(1)
       expect(session.setOrganisation).toHaveBeenCalledWith(res.request, 'name', org.name)
+      expect(parseInt(maxAgeOfCookieInSeconds, 10) * 1000).toEqual(ttl)
 
       const resTwo = await global.__SERVER__.inject(options)
 
