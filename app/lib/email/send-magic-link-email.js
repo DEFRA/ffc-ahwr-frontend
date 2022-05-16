@@ -1,13 +1,21 @@
 const { v4: uuid } = require('uuid')
 const sendEmail = require('./send-email')
-const { serviceUri } = require('../../config')
+const { serviceUri, testToken } = require('../../config')
 const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templateIdVetLogin } } = require('../../config')
 const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
-
+const { getByEmail } = require('../../api-requests/users')
+async function getToken (email) {
+  const user = await getByEmail(email);
+  console.log('User', user)
+  if ( user.isTest === 'yes') {
+    return testToken
+  }
+  return uuid()
+}
 async function createAndCacheToken (request, email, redirectTo, userType, data) {
   const { magiclinkCache } = request.server.app
 
-  const token = uuid()
+  const token = await getToken(email)
   const tokens = await magiclinkCache.get(email) ?? []
   tokens.push(token)
   await magiclinkCache.set(email, tokens)

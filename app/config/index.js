@@ -72,7 +72,8 @@ const schema = Joi.object({
     usersContainer: Joi.string().default('users'),
     usersFile: Joi.string().default('users.json')
   },
-  useRedis: Joi.boolean().default(false)
+  useRedis: Joi.boolean().default(false),
+  testToken: Joi.string().required()
 })
 
 const sharedConfig = {
@@ -137,7 +138,8 @@ const config = {
   storage: {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
   },
-  useRedis: process.env.NODE_ENV !== 'test'
+  useRedis: process.env.NODE_ENV !== 'test',
+  testToken: process.env.TEST_TOKEN
 }
 
 const { error, value } = schema.validate(config, { abortEarly: false })
