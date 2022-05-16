@@ -26,6 +26,8 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const { epg } = request.payload
+
+      console.log(epg)
       session.setVetSignup(request, sheepEpgKey, epg)
 
       return h.redirect('/vet/review-report')

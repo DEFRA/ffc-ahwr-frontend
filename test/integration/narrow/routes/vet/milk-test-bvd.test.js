@@ -59,7 +59,7 @@ describe('Milk test bvd test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/declaration')
+      expect(res.headers.location).toEqual('/vet/review-report')
     })
 
     test.each([

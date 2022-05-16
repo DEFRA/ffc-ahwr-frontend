@@ -39,7 +39,7 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setVetVisitData(request, milkTestBvdResult, request.payload.milkTestBvdResult)
-        return h.redirect('/vet/declaration')
+        return h.redirect('/vet/review-report')
       }
     }
   }

@@ -37,7 +37,7 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setVetVisitData(request, beef, request.payload[beef])
-        return h.redirect('/vet/declaration')
+        return h.redirect('/vet/cows-bvd-present-breeder')
       }
     }
   }
