@@ -27,6 +27,7 @@ module.exports = {
     signup: 'signup',
     vetBvdResult: 'vetBvdResult',
     visitDate: 'visitDate',
-    whichReview: 'whichReview'
+    whichReview: 'whichReview',
+    reviewReport: 'reviewReport'
   }
 }

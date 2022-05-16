@@ -22,6 +22,9 @@ describe('getYesNoRadios', () => {
             classes: 'govuk-fieldset__legend--l'
           }
         },
+        hint: {
+          text: ''
+        },
         items: [{
           value: 'yes',
           text: 'Yes',
@@ -48,11 +51,13 @@ describe('getYesNoRadios', () => {
     const isPageHeading = false
     const legendClasses = 'not-a-real-class'
     const inline = false
+    const hintText = 'hint: vet visit'
 
-    const res = getYesNoRadios(legendText, id, 'yes', undefined, { isPageHeading, legendClasses, inline })
+    const res = getYesNoRadios(legendText, id, 'yes', undefined, { isPageHeading, legendClasses, inline, hintText })
 
     expect(res.radios.classes).toBeUndefined()
     expect(res.radios.fieldset.legend.classes).toEqual(legendClasses)
     expect(res.radios.fieldset.legend.isPageHeading).toEqual(isPageHeading)
+    expect(res.radios.hint.text).toEqual(hintText)
   })
 })
