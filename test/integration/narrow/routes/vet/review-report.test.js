@@ -19,10 +19,7 @@ describe('Farmert review report test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Have you given the farmer a written report of the review?')
-      const hintText = `
-    This includes follow-up actions and recommendations and will not be shared with Defra.
-  The farmer must keep evidence that they have received the report.They will only need to supply this evidence if the RPA asks for it.`
-      expect($('.govuk-hint').text()).toMatch(hintText)
+      expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra.')
       expectPhaseBanner.ok($)
     })
 

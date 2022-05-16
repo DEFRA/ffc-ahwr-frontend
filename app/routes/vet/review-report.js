@@ -6,8 +6,7 @@ const session = require('../../session')
 const legendText = 'Have you given the farmer a written report of the review?'
 const radioId = 'reviewReport'
 const errorText = 'Select yes if you have given the farmer a written report of the review'
-const hintText = `This includes follow-up actions and recommendations and will not be shared with Defra.
-The farmer must keep evidence that they have received the report.They will only need to supply this evidence if the RPA asks for it.`
+const hintText = 'The report must include follow-up actions and recommendations. It will not be shared with Defra.'
 const backLink = '/vet/sheep-epg'
 const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText }
 
