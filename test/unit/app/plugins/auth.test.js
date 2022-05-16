@@ -54,7 +54,7 @@ describe('Auth plugin test', () => {
       console.log(cookieHeader[0])
       console.log(cookieHeader[0].split('; '))
 
-      const maxAgeOfCookieInSeconds = cookieHeader[0].split('; ').filter(x => x.split('=')[0] === 'Max-Age')[0].split('=')[1]
+      const maxAgeOfCookieInSeconds = cookieHeader[0].split('; ').filter(x => x.split('=')[0].toLowerCase() === 'max-age')[0].split('=')[1]
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual(redirectTo)
