@@ -9,6 +9,7 @@ const errorText = 'Select yes if you have given the farmer a written report of t
 const hintText = `This includes follow-up actions and recommendations and will not be shared with Defra.
 The farmer must keep evidence that they have received the report.They will only need to supply this evidence if the RPA asks for it.`
 const backLink = '/vet/sheep-epg'
+const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText }
 
 module.exports = [
   {
@@ -17,7 +18,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('vet/review-report', {
-          ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), undefined, undefined, hintText),
+          ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), undefined, radioOptions),
           backLink
         })
       }
@@ -33,7 +34,7 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/review-report', {
-            ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), errorText, undefined, hintText),
+            ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), errorText, radioOptions),
             backLink
           }).takeover()
         }

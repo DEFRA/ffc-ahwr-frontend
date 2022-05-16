@@ -7,6 +7,7 @@ const legendText = 'Will you have at least 21 sheep on the date of the review?'
 const errorText = 'Select yes if you have at least 21 sheep on the date of the review'
 const backLink = '/vet/which-review'
 const hintText = 'You are only eligible for funding if you are keeping more than 20 sheep at the registered site on the date the vet visits.'
+const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText }
 
 module.exports = [
   {
@@ -15,7 +16,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('vet/sheep-eligibility', {
-          ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), undefined, undefined, hintText),
+          ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), undefined, radioOptions),
           backLink
         })
       }
@@ -31,7 +32,7 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/sheep-eligibility', {
-            ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), errorText, undefined, hintText),
+            ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), errorText, radioOptions),
             backLink
           }).takeover()
         }

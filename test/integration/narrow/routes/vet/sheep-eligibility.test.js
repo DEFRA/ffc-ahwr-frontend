@@ -19,6 +19,7 @@ describe('Sheep Eligibility test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Will you have at least 21 sheep on the date of the review?')
+      expect($('.govuk-hint').text()).toMatch('You are only eligible for funding if you are keeping more than 20 sheep at the registered site on the date the vet visits.')
       expectPhaseBanner.ok($)
     })
 
