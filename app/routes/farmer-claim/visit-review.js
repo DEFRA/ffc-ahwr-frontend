@@ -1,9 +1,9 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
-const { getClaim, setClaim } = require('../../session')
 const { getClaimAmount } = require('../../lib/get-claim-amount')
 const { getClaimType } = require('../../lib/get-claim-type')
+const { getClaim, setClaim } = require('../../session')
 const { claim: { detailsCorrect } } = require('../../session/keys')
 
 const errorMessage = 'Select yes if the review details are correct'

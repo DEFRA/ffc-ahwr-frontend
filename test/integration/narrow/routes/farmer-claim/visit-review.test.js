@@ -170,7 +170,7 @@ describe('Vet visit review page test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs: 'no' },
+        payload: { crumb },
         headers: { cookie: `crumb=${crumb}` }
       }
 
