@@ -19,4 +19,9 @@ describe('Get Token test', () => {
     const response = await sendMagicLinkEmail.getToken(email)
     expect(response).not.toEqual(config.testToken)
   })
+  test('Returns invalid test token when no test token', async () => {
+    config.testToken = null
+    const response = await sendMagicLinkEmail.getToken(email)
+    expect(response).not.toEqual(config.testToken)
+  })
 })
