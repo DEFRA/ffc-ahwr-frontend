@@ -9,6 +9,21 @@ function getVisitDate (vetVisit) {
   return new Date(visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
+function hasEligibleNumberOfAnimals (vetVisit) {
+  const claimType = getClaimType(vetVisit.farmerApplication.data)
+
+  switch (claimType) {
+    case 'sheep':
+      return vetVisit[vetVisitData.sheep] || 'no'
+    case 'pigs':
+      return vetVisit[vetVisitData.pigs] || 'no'
+    case 'beef':
+      return vetVisit[vetVisitData.beef] || 'no'
+    case 'dairy':
+      return vetVisit[vetVisitData.dairy] || 'no'
+  }
+}
+
 const path = 'vet/check-answers'
 module.exports = [{
   method: 'GET',
@@ -16,7 +31,6 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const vetVisit = session.getVetVisitData(request)
-      const eligible = vetVisit[vetVisitData.sheep] || vetVisit[vetVisitData.beef] || vetVisit[vetVisitData.dairy]
       const claimType = getClaimType(vetVisit.farmerApplication.data)
       const eligibilityPath = `/vet/${claimType}-eligibility`
       const rows = [{
@@ -25,10 +39,9 @@ module.exports = [{
         actions: { items: [{ href: '/vet/visit-date', text: 'Change', visuallyHiddenText: 'change visit date' }] }
       }, {
         key: { text: 'Eligible number of animals' },
-        value: { text: eligible },
+        value: { text: hasEligibleNumberOfAnimals(vetVisit) },
         actions: { items: [{ href: eligibilityPath, text: 'Change', visuallyHiddenText: 'change eligible number of animals' }] }
       }]
-      console.log(vetVisitData, vetVisit)
 
       let text
       let value
@@ -51,7 +64,7 @@ module.exports = [{
           break
         case 'pigs':
           text = 'PRRS in herd'
-          value = 'TBD'
+          value = vetVisit[vetVisitData.pigsTest]
           href = '/vet/pigs-test'
           break
         default:

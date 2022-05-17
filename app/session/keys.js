@@ -23,6 +23,7 @@ module.exports = {
     dairyTest: 'dairyTest',
     farmerApplication: 'farmerApplication',
     pigs: 'pigs',
+    pigsTest: 'pigsTest',
     reviewReport: 'reviewReport',
     sheep: 'sheep',
     sheepTest: 'sheepTest',
