@@ -29,21 +29,25 @@ describe('Vet check answers test', () => {
     })
 
     test.each([
+      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
+      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 100 }, speciesTestResultValue: 100, reviewReport: 'no' },
+      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
+      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
       { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
-      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 0 }, speciesTestResultValue: 0, reviewReport: 'yes' },
       { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
       { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' }
-    ])('returns 200 with answers for specific claim type - $species', async ({ speciesTest, data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
+    ])('returns 200 with answers for specific claim type - $species', async ({ data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
       const visitDate = new Date(2022, 4, 12)
       session.getVetVisitData.mockReturnValueOnce({
         farmerApplication: {
           data
         },
         visitDate,
-        sheep: speciesTest === species.sheep ? 'yes' : 'no',
-        pigs: speciesTest === species.pigs ? 'yes' : 'no',
-        beef: speciesTest === species.beef ? 'yes' : 'no',
-        dairy: speciesTest === species.dairy ? 'yes' : 'no',
+        sheep: elgibleNumberOfAnimals,
+        pigs: elgibleNumberOfAnimals,
+        beef: elgibleNumberOfAnimals,
+        dairy: elgibleNumberOfAnimals,
         ...speciesTestValue,
         reviewReport
       })
@@ -69,7 +73,7 @@ describe('Vet check answers test', () => {
       expect($('.govuk-summary-list__value').eq(1).text()).toMatch(elgibleNumberOfAnimals)
       expect($('.govuk-summary-list__actions .govuk-link').eq(1).text()).toMatch('Change')
       expect($('.govuk-summary-list__key').eq(2).text()).toMatch(speciesTestText)
-      expect($('.govuk-summary-list__value').eq(2).text()).toMatch(speciesTestResultValue)
+      expect($('.govuk-summary-list__value').eq(2).text()).toMatch(speciesTestResultValue.toString())
       expect($('.govuk-summary-list__actions .govuk-link').eq(2).text()).toMatch('Change')
       expect($('.govuk-summary-list__key').eq(3).text()).toMatch('Written report given to farmer')
       expect($('.govuk-summary-list__value').eq(3).text()).toMatch(reviewReport)

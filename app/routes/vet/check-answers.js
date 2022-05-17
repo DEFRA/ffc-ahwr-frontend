@@ -68,7 +68,6 @@ module.exports = [{
           value = vetVisit[vetVisitData.pigsTest]
           href = '/vet/pigs-test'
           break
-        default:
       }
 
       rows.push({
