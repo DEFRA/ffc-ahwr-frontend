@@ -1,38 +1,19 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
-const session = require('../../../../../app/session')
 const getCrumbs = require('../../../../utils/get-crumbs')
-const visitDate = new Date(2022, 4, 12)
-let crumb
-session.getVetVisitData = jest.fn().mockReturnValue({
-  visitDate,
-  data: {
-    cattle: 'yes',
-    cattleType: 'beef'
-  }
-})
+const species = require('../../../../../app/constants/species')
+
+jest.mock('../../../../../app/session')
+const session = require('../../../../../app/session')
 
 describe('Vet check answers test', () => {
-  afterAll(() => {
-    jest.resetAllMocks()
-  })
-
+  let crumb
   const auth = { credentials: {}, strategy: 'cookie' }
   const url = '/vet/check-answers'
 
   describe(`GET ${url} route`, () => {
-    test('returns 200', async () => {
-      const options = {
-        method: 'GET',
-        url,
-        auth
-      }
-      const res = await global.__SERVER__.inject(options)
-      expect(res.statusCode).toBe(200)
-      const $ = cheerio.load(res.payload)
-      expect($('h1.govuk-heading-l').text()).toEqual('Check your answers')
-      expect($('title').text()).toEqual('Check your answers')
-      expectPhaseBanner.ok($)
+    afterAll(() => {
+      jest.resetAllMocks()
     })
 
     test('when not logged in redirects to /vet', async () => {
@@ -47,7 +28,29 @@ describe('Vet check answers test', () => {
       expect(res.headers.location).toEqual('/vet')
     })
 
-    test('does not show beef and dairy option when cattle is not selected is both', async () => {
+    test.each([
+      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
+      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 100 }, speciesTestResultValue: 100, reviewReport: 'no' },
+      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
+      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'no' }, speciesTestResultValue: 'no', reviewReport: 'no' },
+      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 0 }, speciesTestResultValue: 0, reviewReport: 'yes' },
+      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' }
+    ])('returns 200 with answers for specific claim type - $species', async ({ data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
+      const visitDate = new Date(2022, 4, 12)
+      session.getVetVisitData.mockReturnValueOnce({
+        farmerApplication: {
+          data
+        },
+        visitDate,
+        sheep: elgibleNumberOfAnimals,
+        pigs: elgibleNumberOfAnimals,
+        beef: elgibleNumberOfAnimals,
+        dairy: elgibleNumberOfAnimals,
+        ...speciesTestValue,
+        reviewReport
+      })
       const options = {
         method: 'GET',
         url,
@@ -58,18 +61,33 @@ describe('Vet check answers test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('.govuk-summary-list__row').length).toEqual(1)
+      expect($('h1.govuk-heading-l').text()).toEqual('Check your answers')
+      expect($('title').text()).toEqual('Check your answers')
+      expect($('#back').attr('href')).toEqual('/vet/review-report')
+      expectPhaseBanner.ok($)
+      expect($('.govuk-summary-list__row').length).toEqual(4)
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Farm visit date')
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
+      expect($('.govuk-summary-list__key').eq(1).text()).toMatch('Eligible number of animals')
+      expect($('.govuk-summary-list__value').eq(1).text()).toMatch(elgibleNumberOfAnimals)
+      expect($('.govuk-summary-list__actions .govuk-link').eq(1).text()).toMatch('Change')
+      expect($('.govuk-summary-list__key').eq(2).text()).toMatch(speciesTestText)
+      expect($('.govuk-summary-list__value').eq(2).text()).toMatch(speciesTestResultValue.toString())
+      expect($('.govuk-summary-list__actions .govuk-link').eq(2).text()).toMatch('Change')
+      expect($('.govuk-summary-list__key').eq(3).text()).toMatch('Written report given to farmer')
+      expect($('.govuk-summary-list__value').eq(3).text()).toMatch(reviewReport)
+      expect($('.govuk-summary-list__actions .govuk-link').eq(3).text()).toMatch('Change')
     })
   })
 
   describe(`POST ${url} route`, () => {
-    test('redirect beef eligibility if beef is selected', async () => {
+    const method = 'POST'
+
+    test('redirects to declaration', async () => {
       crumb = await getCrumbs(global.__SERVER__)
       const options = {
-        method: 'POST',
+        method,
         url,
         payload: { crumb },
         auth,
@@ -79,56 +97,21 @@ describe('Vet check answers test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/beef-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(3)
+      expect(res.headers.location).toEqual('/vet/declaration')
     })
 
-    test('redirect pig eligibility if pigs is selected', async () => {
-      crumb = await getCrumbs(global.__SERVER__)
-
-      session.getVetVisitData = jest.fn().mockReturnValue({
-        visitDate,
-        data: {
-          pigs: 'yes'
-        }
-      })
+    test('when not logged in redirects to /vet', async () => {
       const options = {
-        method: 'POST',
+        method,
         url,
-        payload: { crumb },
-        auth,
+        payload: { crumb, beefTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/pigs-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
-    })
-
-    test('redirect sheep eligibility if sheep is selected', async () => {
-      crumb = await getCrumbs(global.__SERVER__)
-
-      session.getVetVisitData = jest.fn().mockReturnValue({
-        visitDate,
-        data: {
-          sheeps: 'yes'
-        }
-      })
-      const options = {
-        method: 'POST',
-        url,
-        payload: { crumb },
-        auth,
-        headers: { cookie: `crumb=${crumb}` }
-      }
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/sheep-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
+      expect(res.headers.location).toEqual('/vet')
     })
   })
 })

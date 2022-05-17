@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Sheep EPG  test', () => {
+describe('Beef BVD present test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/sheep-epg'
+  const url = '/vet/beef-test'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Sheep EPG  test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment')
+      expect($('h1').text()).toMatch('Did antibody test results show that BVD is in the herd?')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,14 @@ describe('Sheep EPG  test', () => {
     })
 
     test.each([
-      { epg: 50 },
-      { epg: 2 }
-    ])('returns 302 to next page when acceptable answer given', async ({ epg }) => {
+      { beefTest: 'no' },
+      { beefTest: 'yes' },
+      { beefTest: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ beefTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, epg },
+        payload: { crumb, beefTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -62,14 +63,15 @@ describe('Sheep EPG  test', () => {
     })
 
     test.each([
-      { epg: 200, message: 'EPG percentage must be 100 or less' },
-      { epg: -80, message: 'EPG percentage must be 0 or more' },
-      { epg: null, message: 'Enter a valid EPG percentage' }
-    ])('returns error when unacceptable answer is given', async ({ epg, message }) => {
+      { beefTest: null },
+      { beefTest: undefined },
+      { beefTest: 'wrong' },
+      { beefTest: '' }
+    ])('returns error when unacceptable answer is given', async ({ beefTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, epg },
+        payload: { crumb, beefTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -77,15 +79,15 @@ describe('Sheep EPG  test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch(message)
-      expect(res.statusCode).toBe(400)
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
+      expect(res.statusCode).toBe(200)
     })
 
     test('when not logged in redirects to /vet', async () => {
       const options = {
         method,
         url,
-        payload: { crumb, sheep: 'no' },
+        payload: { crumb, beefTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
