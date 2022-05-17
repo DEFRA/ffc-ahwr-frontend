@@ -55,8 +55,7 @@ describe('Get users', () => {
   test.each([
     { fileContent: ` [{ "email": "${email}" }] ` },
     { fileContent: ` [{ "email": "${email}" , "isTest": "yes"}] ` }
-  ])
-  test('return user data when test email is matched but has different casing', async (fileContent) => {
+  ])('return user data when test email is matched but has different casing', async ({ fileContent }) => {
     downloadBlobMock.mockResolvedValue(fileContent)
 
     const res = await getByEmail(email.toUpperCase())
