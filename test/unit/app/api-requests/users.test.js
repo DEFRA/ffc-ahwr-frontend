@@ -3,6 +3,7 @@ const { storage: { connectionString, usersContainer, usersFile } } = require('..
 describe('Get users', () => {
   let downloadBlobMock
   let getByEmail
+  const email = 'hit@email.com'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -43,7 +44,6 @@ describe('Get users', () => {
   })
 
   test('return user data when email is matched', async () => {
-    const email = 'hit@email.com'
     const fileContent = `[{ "email": "${email}" }]`
     downloadBlobMock.mockResolvedValue(fileContent)
 
@@ -52,24 +52,16 @@ describe('Get users', () => {
     expect(res).toEqual(JSON.parse(fileContent)[0])
   })
 
-  test('return user data when email is matched but has different casing', async () => {
-    const email = 'hit@email.com'
-    const fileContent = `[{ "email": "${email}" }]`
+  test.each([
+    { fileContent: ` [{ "email": "${email}" }] ` },
+    { fileContent: ` [{ "email": "${email}" , "isTest": "yes"}] ` }
+  ])
+  test('return user data when test email is matched but has different casing', async (fileContent) => {
     downloadBlobMock.mockResolvedValue(fileContent)
 
     const res = await getByEmail(email.toUpperCase())
 
     expect(res).toEqual(JSON.parse(fileContent)[0])
-  })
-
-  test('return user data when test email is matched but has different casing', async () => {
-    const email = 'hit@email.com'
-    const fileContent = `[{ "email": "${email}", "isTest": "yes" }]`
-    downloadBlobMock.mockResolvedValue(fileContent)
-
-    const res = await getByEmail(email.toUpperCase())
-
-    expect(res).toEqual(JSON.parse(fileContent)[0])
-    expect(res.isTest).toEqual('yes')
+    expect(res.isTest).toEqual(JSON.parse(fileContent)[0].isTest)
   })
 })
