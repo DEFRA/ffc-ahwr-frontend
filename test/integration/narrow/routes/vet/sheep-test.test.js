@@ -44,13 +44,13 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { epg: 50 },
-      { epg: 2 }
-    ])('returns 302 to next page when acceptable answer given', async ({ epg }) => {
+      { sheepTest: 50 },
+      { sheepTest: 2 }
+    ])('returns 302 to next page when acceptable answer given', async ({ sheepTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, epg },
+        payload: { crumb, sheepTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -62,14 +62,14 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { epg: 200, message: 'EPG percentage must be 100 or less' },
-      { epg: -80, message: 'EPG percentage must be 0 or more' },
-      { epg: null, message: 'Enter a valid EPG percentage' }
-    ])('returns error when unacceptable answer is given', async ({ epg, message }) => {
+      { sheepTest: 200, message: 'EPG percentage must be 100 or less' },
+      { sheepTest: -80, message: 'EPG percentage must be 0 or more' },
+      { sheepTest: null, message: 'Enter a valid EPG percentage' }
+    ])('returns error when unacceptable answer is given', async ({ sheepTest, message }) => {
       const options = {
         method,
         url,
-        payload: { crumb, epg },
+        payload: { crumb, sheepTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }

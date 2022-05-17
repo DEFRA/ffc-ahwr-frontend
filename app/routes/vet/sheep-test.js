@@ -9,8 +9,8 @@ module.exports = [{
   path: `/${path}`,
   options: {
     handler: async (request, h) => {
-      const epg = session.getVetSignup(request, sheepTest)
-      return h.view(path, { epg })
+      const testValue = session.getVetVisitData(request, sheepTest)
+      return h.view(path, { sheepTest: testValue })
     }
   }
 }, {
@@ -19,17 +19,14 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        epg: epgValidation
+        [sheepTest]: epgValidation
       }),
       failAction: async (request, h, error) => {
         return h.view(path, { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      const { epg } = request.payload
-
-      session.setVetSignup(request, sheepTest, epg)
-
+      session.setVetVisitData(request, sheepTest, request.payload[sheepTest])
       return h.redirect('/vet/review-report')
     }
   }
