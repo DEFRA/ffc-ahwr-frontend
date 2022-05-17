@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Dairy Cattle on farm test', () => {
+describe('Dairy test bvd test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/dairy-cattle-on-farm'
+  const url = '/vet/dairy-test'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Dairy Cattle on farm test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Were there more than 10 dairy cattle on the farm at the time of the review?')
+      expect($('h1').text()).toMatch('Did bulk milk test results show that BVD is in the herd?')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,14 @@ describe('Dairy Cattle on farm test', () => {
     })
 
     test.each([
-      { dairyCattleOnFarm: 'no' },
-      { dairyCattleOnFarm: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ dairyCattleOnFarm }) => {
+      { dairyTest: 'no' },
+      { dairyTest: 'yes' },
+      { dairyTest: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ dairyTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm },
+        payload: { crumb, dairyTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -58,19 +59,19 @@ describe('Dairy Cattle on farm test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/declaration')
+      expect(res.headers.location).toEqual('/vet/review-report')
     })
 
     test.each([
-      { dairyCattleOnFarm: null },
-      { dairyCattleOnFarm: undefined },
-      { dairyCattleOnFarm: 'wrong' },
-      { dairyCattleOnFarm: '' }
-    ])('returns error when unacceptable answer is given', async ({ dairyCattleOnFarm }) => {
+      { dairyTest: null },
+      { dairyTest: undefined },
+      { dairyTest: 'wrong' },
+      { dairyTest: '' }
+    ])('returns error when unacceptable answer is given', async ({ dairyTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm },
+        payload: { crumb, dairyTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -78,7 +79,7 @@ describe('Dairy Cattle on farm test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were more than 10 cattle in the herd')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
       expect(res.statusCode).toBe(200)
     })
 
@@ -86,7 +87,7 @@ describe('Dairy Cattle on farm test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm: 'no' },
+        payload: { crumb, dairyTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

@@ -146,19 +146,19 @@ describe('Vet, enter date of visit', () => {
       { description: 'application created 365 days ago, visit date today', applicationCreationDate: yearPast },
       { description: 'application created yesterday, visit date today', applicationCreationDate: yesterday }
     ])('returns 302 to next page when acceptable answer given - $description', async ({ applicationCreationDate }) => {
-      session.getVetVisitData.mockReturnValueOnce({ createdAt: applicationCreationDate })
+      session.getVetVisitData.mockReturnValueOnce({ data: { cattle: 'no', cattleType: '', sheep: '', pigs: 'yes' }, createdAt: applicationCreationDate })
       const options = {
+        auth,
         method,
         url,
         payload: { crumb, [labels.day]: today.getDate(), [labels.month]: today.getMonth() + 1, [labels.year]: today.getFullYear() },
-        auth,
         headers: { cookie: `crumb=${crumb}` }
       }
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/check-answers')
+      expect(res.headers.location).toEqual('/vet/pigs-eligibility')
       expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
       expect(session.getVetVisitData).toHaveBeenCalledWith(res.request, farmerApplication)
     })

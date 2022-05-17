@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const { labels } = require('../../config/visit-date')
+const { getClaimType } = require('../../lib/get-claim-type')
 const getDateInputErrors = require('../../lib/visit-date/date-input-errors')
 const { createItemsFromDate, createItemsFromPayload } = require('../../lib/visit-date/date-input-items')
 const { isDateInFutureOrBeforeFirstValidDate } = require('../../lib/visit-date/validation')
@@ -50,10 +51,10 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      const { createdAt } = session.getVetVisitData(request, farmerApplication)
+      const application = session.getVetVisitData(request, farmerApplication)
 
       const date = getDateFromPayload(request.payload)
-      const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(date, createdAt)
+      const { isDateValid, errorMessage } = isDateInFutureOrBeforeFirstValidDate(date, application.createdAt)
       if (!isDateValid) {
         const dateInputErrors = {
           errorMessage,
@@ -62,7 +63,9 @@ module.exports = [{
         return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
       }
       session.setVetVisitData(request, visitDate, date)
-      return h.redirect('/vet/check-answers')
+      const claimType = getClaimType(application.data)
+      const eligibilityPath = `/vet/${claimType}-eligibility`
+      return h.redirect(eligibilityPath)
     }
   }
 }]
