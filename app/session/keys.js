@@ -18,16 +18,16 @@ module.exports = {
   },
   vetVisitData: {
     beef: 'beef',
-    dairyCattleOnFarm: 'dairyCattleOnFarm',
+    beefTest: 'beefTest',
+    dairy: 'dairy',
+    dairyTest: 'dairyTest',
     farmerApplication: 'farmerApplication',
-    milkTestBvdResult: 'milkTestBvdResult',
     pigs: 'pigs',
+    reviewReport: 'reviewReport',
     sheep: 'sheep',
-    sheepEpg: 'sheepEpg',
+    sheepTest: 'sheepTest',
     signup: 'signup',
-    vetBvdResult: 'vetBvdResult',
     visitDate: 'visitDate',
-    whichReview: 'whichReview',
-    reviewReport: 'reviewReport'
+    whichReview: 'whichReview'
   }
 }

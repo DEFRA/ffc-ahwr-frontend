@@ -1,19 +1,20 @@
 const Joi = require('joi')
-const { vetVisitData: { beef } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
+const { vetVisitData: { beef } } = require('../../session/keys')
 
 const legendText = 'Were there more than 10 beef cattle on the farm at the time of the review?'
 const errorText = 'Select yes if you keep more than 10 beef cattle'
 const backLink = '/vet/check-answers'
 
+const path = 'vet/beef-eligibility'
 module.exports = [
   {
     method: 'GET',
-    path: '/vet/beef-eligibility',
+    path: `/${path}`,
     options: {
       handler: async (request, h) => {
-        return h.view('vet/beef-eligibility', {
+        return h.view(path, {
           ...getYesNoRadios(legendText, beef, session.getVetVisitData(request, beef)),
           backLink
         })
@@ -22,14 +23,14 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/vet/beef-eligibility',
+    path: `/${path}`,
     options: {
       validate: {
         payload: Joi.object({
           [beef]: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, _err) => {
-          return h.view('vet/beef-eligibility', {
+          return h.view(path, {
             ...getYesNoRadios(legendText, beef, session.getVetVisitData(request, beef), errorText),
             backLink
           }).takeover()
@@ -37,7 +38,7 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setVetVisitData(request, beef, request.payload[beef])
-        return h.redirect('/vet/cows-bvd-present-breeder')
+        return h.redirect('/vet/beef-test')
       }
     }
   }

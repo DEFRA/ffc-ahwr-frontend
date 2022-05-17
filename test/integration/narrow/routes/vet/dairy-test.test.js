@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Milk test bvd test', () => {
+describe('Dairy test bvd test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/milk-test-bvd'
+  const url = '/vet/dairy-test'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -44,14 +44,14 @@ describe('Milk test bvd test', () => {
     })
 
     test.each([
-      { milkTestBvdResult: 'no' },
-      { milkTestBvdResult: 'yes' },
-      { milkTestBvdResult: 'further investigation required' }
-    ])('returns 302 to next page when acceptable answer given', async ({ milkTestBvdResult }) => {
+      { dairyTest: 'no' },
+      { dairyTest: 'yes' },
+      { dairyTest: 'further investigation required' }
+    ])('returns 302 to next page when acceptable answer given', async ({ dairyTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, milkTestBvdResult },
+        payload: { crumb, dairyTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -63,15 +63,15 @@ describe('Milk test bvd test', () => {
     })
 
     test.each([
-      { milkTestBvdResult: null },
-      { milkTestBvdResult: undefined },
-      { milkTestBvdResult: 'wrong' },
-      { milkTestBvdResult: '' }
-    ])('returns error when unacceptable answer is given', async ({ milkTestBvdResult }) => {
+      { dairyTest: null },
+      { dairyTest: undefined },
+      { dairyTest: 'wrong' },
+      { dairyTest: '' }
+    ])('returns error when unacceptable answer is given', async ({ dairyTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, milkTestBvdResult },
+        payload: { crumb, dairyTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -87,7 +87,7 @@ describe('Milk test bvd test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, milkTestBvdResult: 'no' },
+        payload: { crumb, dairyTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

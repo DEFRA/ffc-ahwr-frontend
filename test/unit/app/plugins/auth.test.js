@@ -50,9 +50,6 @@ describe('Auth plugin test', () => {
 
       const res = await global.__SERVER__.inject(options)
       const cookieHeader = res.headers['set-cookie']
-      console.log(cookieHeader)
-      console.log(cookieHeader[0])
-      console.log(cookieHeader[0].split('; '))
 
       const maxAgeOfCookieInSeconds = cookieHeader[0].split('; ').filter(x => x.split('=')[0].toLowerCase() === 'max-age')[0].split('=')[1]
 

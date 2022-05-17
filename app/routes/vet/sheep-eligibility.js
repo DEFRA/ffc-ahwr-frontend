@@ -37,7 +37,7 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setVetVisitData(request, sheep, request.payload[sheep])
-        return h.redirect('/vet/sheep-epg')
+        return h.redirect('/vet/sheep-test')
       }
     }
   }

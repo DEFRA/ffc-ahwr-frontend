@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Dairy Cattle on farm test', () => {
+describe('Sheep worming test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/dairy-cattle-on-farm'
+  const url = '/vet/sheep-test'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Dairy Cattle on farm test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Were there more than 10 dairy cattle on the farm at the time of the review?')
+      expect($('h1').text()).toMatch('Percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,13 @@ describe('Dairy Cattle on farm test', () => {
     })
 
     test.each([
-      { dairyCattleOnFarm: 'no' },
-      { dairyCattleOnFarm: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ dairyCattleOnFarm }) => {
+      { epg: 50 },
+      { epg: 2 }
+    ])('returns 302 to next page when acceptable answer given', async ({ epg }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm },
+        payload: { crumb, epg },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -58,19 +58,18 @@ describe('Dairy Cattle on farm test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/milk-test-bvd')
+      expect(res.headers.location).toEqual('/vet/review-report')
     })
 
     test.each([
-      { dairyCattleOnFarm: null },
-      { dairyCattleOnFarm: undefined },
-      { dairyCattleOnFarm: 'wrong' },
-      { dairyCattleOnFarm: '' }
-    ])('returns error when unacceptable answer is given', async ({ dairyCattleOnFarm }) => {
+      { epg: 200, message: 'EPG percentage must be 100 or less' },
+      { epg: -80, message: 'EPG percentage must be 0 or more' },
+      { epg: null, message: 'Enter a valid EPG percentage' }
+    ])('returns error when unacceptable answer is given', async ({ epg, message }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm },
+        payload: { crumb, epg },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -78,15 +77,15 @@ describe('Dairy Cattle on farm test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were more than 10 cattle in the herd')
-      expect(res.statusCode).toBe(200)
+      expect($('p.govuk-error-message').text()).toMatch(message)
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /vet', async () => {
       const options = {
         method,
         url,
-        payload: { crumb, dairyCattleOnFarm: 'no' },
+        payload: { crumb, sheep: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

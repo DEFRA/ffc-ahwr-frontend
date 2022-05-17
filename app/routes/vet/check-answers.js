@@ -1,17 +1,12 @@
+const { getClaimType } = require('../../lib/get-claim-type')
 const session = require('../../session')
 const { vetVisitData } = require('../../session/keys')
 
-const backLink = '/vet/visit-date'
+const backLink = '/vet/review-report'
 
 function getVisitDate (vetVisit) {
   const visitDate = vetVisit[vetVisitData.visitDate]
   return new Date(visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
-}
-function getWhichReview (application) {
-  if (application.data.cattle === 'yes') {
-    return application.data.cattleType
-  }
-  return application.data.pigs === 'yes' ? 'pigs' : 'sheep'
 }
 
 module.exports = [{
@@ -20,8 +15,9 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const vetVisit = session.getVetVisitData(request)
-      const eligible = vetVisit[vetVisitData.sheep] || vetVisit[vetVisitData.beef] || vetVisit[vetVisitData.dairyCattleOnFarm]
-      const eligibleUrl = vetVisit[vetVisitData.sheep] ? 'sheep' : 'beef'
+      const eligible = vetVisit[vetVisitData.sheep] || vetVisit[vetVisitData.beef] || vetVisit[vetVisitData.dairy]
+      const claimType = getClaimType(vetVisit.farmerApplication.data)
+      const eligibilityPath = `/vet/${claimType}-eligibility`
       const rows = [{
         key: { text: 'Farm visit date' },
         value: { html: getVisitDate(vetVisit) },
@@ -29,32 +25,41 @@ module.exports = [{
       }, {
         key: { text: 'Eligible number of animals' },
         value: { html: eligible },
-        actions: { items: [{ href: `/vet/${eligibleUrl}-eligibility`, text: 'Change', visuallyHiddenText: 'name' }] }
+        actions: { items: [{ href: eligibilityPath, text: 'Change', visuallyHiddenText: 'name' }] }
       }]
 
-      if (vetVisit[vetVisitData.sheepEpg]) {
-        rows.push({
-          key: { text: 'Worming treatment effectiveness' },
-          value: { html: vetVisit[vetVisitData.sheepEpg] },
-          actions: { items: [{ href: '/vet/review-report', text: 'Change', visuallyHiddenText: 'name' }] }
-        })
+      let text
+      let value
+      let path
+      switch (claimType) {
+        case 'beef':
+          text = 'BVD in herd'
+          value = vetVisit[vetVisitData.beefTest]
+          path = '/vet/beef-test'
+          break
+        case 'sheep':
+          text = 'Worming treatment effectiveness'
+          value = vetVisit[vetVisitData.sheepEpg]
+          path = '/vet/sheep-test'
+          break
+        case 'dairy':
+          text = 'BVD in herd'
+          value = vetVisit[vetVisitData.dairyTest]
+          path = '/vet/dairy-test'
+          break
+        case 'pigs':
+          text = 'PRRS in herd'
+          value = 'TBD'
+          path = '/vet/pigs-test'
+          break
+        default:
       }
 
-      if (vetVisit[vetVisitData.vetBvdResult]) {
-        rows.push({
-          key: { text: 'BVD in herd' },
-          value: { html: vetVisit[vetVisitData.vetBvdResult] },
-          actions: { items: [{ href: '/vet/cows-bvd-present-breeder', text: 'Change', visuallyHiddenText: 'name' }] }
-        })
-      }
-
-      if (vetVisit[vetVisitData.milkTestBvdResult]) {
-        rows.push({
-          key: { text: 'BVD in herd' },
-          value: { html: vetVisit[vetVisitData.milkTestBvdResult] },
-          actions: { items: [{ href: '/vet/milk-test-bvd', text: 'Change', visuallyHiddenText: 'name' }] }
-        })
-      }
+      rows.push({
+        key: { text },
+        value: { html: value },
+        actions: { items: [{ href: path, text: 'Change', visuallyHiddenText: 'name' }] }
+      })
 
       rows.push({
         key: { text: 'Written report given to farmer' },
@@ -71,9 +76,7 @@ module.exports = [{
   path: '/vet/check-answers',
   options: {
     handler: async (request, h) => {
-      // Check what selected in Former application and then redirect to respective page => beef/pigs/sheep/dairy
-      const application = session.getVetVisitData(request, vetVisitData.farmerApplication)
-      return h.redirect(`/vet/${getWhichReview(application)}-eligibility`)
+      return h.redirect('/vet/declaration')
     }
   }
 }]

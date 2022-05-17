@@ -58,7 +58,7 @@ describe('Beef Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/cows-bvd-present-breeder')
+      expect(res.headers.location).toEqual('/vet/beef-test')
     })
 
     test.each([

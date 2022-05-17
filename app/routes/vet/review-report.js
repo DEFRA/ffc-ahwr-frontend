@@ -7,7 +7,7 @@ const legendText = 'Have you given the farmer a written report of the review?'
 const radioId = 'reviewReport'
 const errorText = 'Select yes if you have given the farmer a written report of the review'
 const hintText = 'The report must include follow-up actions and recommendations. It will not be shared with Defra.'
-const backLink = '/vet/sheep-epg'
+const backLink = '/vet/sheep-test'
 const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText }
 
 module.exports = [

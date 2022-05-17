@@ -3,22 +3,25 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const session = require('../../../../../app/session')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const visitDate = new Date(2022, 4, 12)
-let crumb
+
 session.getVetVisitData = jest.fn().mockReturnValue({
-  visitDate,
-  data: {
-    cattle: 'yes',
-    cattleType: 'beef'
-  }
+  farmerApplication: {
+    data: {
+      cattle: 'yes',
+      cattleType: 'beef'
+    }
+  },
+  visitDate
 })
 
 describe('Vet check answers test', () => {
+  let crumb
+  const auth = { credentials: {}, strategy: 'cookie' }
+  const url = '/vet/check-answers'
+
   afterAll(() => {
     jest.resetAllMocks()
   })
-
-  const auth = { credentials: {}, strategy: 'cookie' }
-  const url = '/vet/check-answers'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -27,7 +30,9 @@ describe('Vet check answers test', () => {
         url,
         auth
       }
+
       const res = await global.__SERVER__.inject(options)
+
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1.govuk-heading-l').text()).toEqual('Check your answers')
@@ -47,6 +52,7 @@ describe('Vet check answers test', () => {
       expect(res.headers.location).toEqual('/vet')
     })
 
+    // TODO: extend tests to cover the different species
     test('does not show beef and dairy option when cattle is not selected is both', async () => {
       const options = {
         method: 'GET',
@@ -58,7 +64,7 @@ describe('Vet check answers test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('.govuk-summary-list__row').length).toEqual(3)
+      expect($('.govuk-summary-list__row').length).toEqual(4)
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Farm visit date')
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
@@ -66,10 +72,12 @@ describe('Vet check answers test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('redirect beef eligibility if beef is selected', async () => {
+    const method = 'POST'
+
+    test('redirects to declaration', async () => {
       crumb = await getCrumbs(global.__SERVER__)
       const options = {
-        method: 'POST',
+        method,
         url,
         payload: { crumb },
         auth,
@@ -79,56 +87,21 @@ describe('Vet check answers test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/beef-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(3)
+      expect(res.headers.location).toEqual('/vet/declaration')
     })
 
-    test('redirect pig eligibility if pigs is selected', async () => {
-      crumb = await getCrumbs(global.__SERVER__)
-
-      session.getVetVisitData = jest.fn().mockReturnValue({
-        visitDate,
-        data: {
-          pigs: 'yes'
-        }
-      })
+    test('when not logged in redirects to /vet', async () => {
       const options = {
-        method: 'POST',
+        method,
         url,
-        payload: { crumb },
-        auth,
+        payload: { crumb, beefTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/pigs-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
-    })
-
-    test('redirect sheep eligibility if sheep is selected', async () => {
-      crumb = await getCrumbs(global.__SERVER__)
-
-      session.getVetVisitData = jest.fn().mockReturnValue({
-        visitDate,
-        data: {
-          sheeps: 'yes'
-        }
-      })
-      const options = {
-        method: 'POST',
-        url,
-        payload: { crumb },
-        auth,
-        headers: { cookie: `crumb=${crumb}` }
-      }
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/sheep-eligibility')
-      expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
+      expect(res.headers.location).toEqual('/vet')
     })
   })
 })

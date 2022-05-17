@@ -26,18 +26,18 @@ const routes = [].concat(
   require('../routes/vet/check-answers'),
   require('../routes/vet/check-email'),
   require('../routes/vet/confirmation'),
-  require('../routes/vet/cows-bvd-present-breeder'),
+  require('../routes/vet/beef-test'),
   require('../routes/vet/dairy-eligibility'),
   require('../routes/vet/declaration'),
   require('../routes/vet/email'),
-  require('../routes/vet/milk-test-bvd'),
+  require('../routes/vet/dairy-test'),
   require('../routes/vet/name'),
   require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
   require('../routes/vet/reference'),
   require('../routes/vet/review-report'),
   require('../routes/vet/sheep-eligibility'),
-  require('../routes/vet/sheep-epg'),
+  require('../routes/vet/sheep-test'),
   require('../routes/vet/visit-date')
 )
 
