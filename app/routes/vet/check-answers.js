@@ -1,3 +1,4 @@
+const species = require('../../constants/species')
 const { getClaimType } = require('../../lib/get-claim-type')
 const session = require('../../session')
 const { vetVisitData } = require('../../session/keys')
@@ -13,13 +14,13 @@ function hasEligibleNumberOfAnimals (vetVisit) {
   const claimType = getClaimType(vetVisit.farmerApplication.data)
 
   switch (claimType) {
-    case 'sheep':
+    case species.sheep:
       return vetVisit[vetVisitData.sheep] || 'no'
-    case 'pigs':
+    case species.pigs:
       return vetVisit[vetVisitData.pigs] || 'no'
-    case 'beef':
+    case species.beef:
       return vetVisit[vetVisitData.beef] || 'no'
-    case 'dairy':
+    case species.dairy:
       return vetVisit[vetVisitData.dairy] || 'no'
   }
 }
@@ -47,22 +48,22 @@ module.exports = [{
       let value
       let href
       switch (claimType) {
-        case 'beef':
+        case species.beef:
           text = 'BVD in herd'
           value = vetVisit[vetVisitData.beefTest]
           href = '/vet/beef-test'
           break
-        case 'sheep':
+        case species.sheep:
           text = 'Worming treatment effectiveness'
           value = vetVisit[vetVisitData.sheepTest]
           href = '/vet/sheep-test'
           break
-        case 'dairy':
+        case species.dairy:
           text = 'BVD in herd'
           value = vetVisit[vetVisitData.dairyTest]
           href = '/vet/dairy-test'
           break
-        case 'pigs':
+        case species.pigs:
           text = 'PRRS in herd'
           value = vetVisit[vetVisitData.pigsTest]
           href = '/vet/pigs-test'

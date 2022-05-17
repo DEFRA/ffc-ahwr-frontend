@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
+const species = require('../../../../../app/constants/species')
 
 jest.mock('../../../../../app/session')
 const session = require('../../../../../app/session')
@@ -28,21 +29,21 @@ describe('Vet check answers test', () => {
     })
 
     test.each([
-      { species: 'pigs', data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
-      { species: 'sheep', data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
-      { species: 'beef', data: { cattle: 'yes', cattleType: 'beef' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
-      { species: 'dairy', data: { cattle: 'yes', cattleType: 'dairy' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' }
-    ])('returns 200 with answers for specific claim type - $species', async ({ species, data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
+      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Worming treatment effectiveness', speciesTestValue: { sheepTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' },
+      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'yes', reviewReport: 'yes' }
+    ])('returns 200 with answers for specific claim type - $species', async ({ speciesTest, data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
       const visitDate = new Date(2022, 4, 12)
       session.getVetVisitData.mockReturnValueOnce({
         farmerApplication: {
           data
         },
         visitDate,
-        sheep: species === 'sheep' ? 'yes' : 'no',
-        pigs: species === 'pigs' ? 'yes' : 'no',
-        beef: species === 'beef' ? 'yes' : 'no',
-        dairy: species === 'dairy' ? 'yes' : 'no',
+        sheep: speciesTest === species.sheep ? 'yes' : 'no',
+        pigs: speciesTest === species.pigs ? 'yes' : 'no',
+        beef: speciesTest === species.beef ? 'yes' : 'no',
+        dairy: speciesTest === species.dairy ? 'yes' : 'no',
         ...speciesTestValue,
         reviewReport
       })
