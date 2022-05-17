@@ -74,7 +74,7 @@ const schema = Joi.object({
     usersFile: Joi.string().default('users.json')
   },
   useRedis: Joi.boolean().default(false),
-  testToken: Joi.string().uuid()
+  testToken: Joi.string().uuid().optional()
 })
 
 const sharedConfig = {
