@@ -28,14 +28,14 @@
       },
       items: [
         {
-          value: 'beef-cattle',
+          value: 'beef',
           text: 'Beef cattle',
-          checked: previousAnswer === 'beef-cattle'
+          checked: previousAnswer === 'beef'
         },
         {
-          value: 'dairy-cattle',
+          value: 'dairy',
           text: 'Dairy cattle',
-          checked: previousAnswer === 'dairy-cattle'
+          checked: previousAnswer === 'dairy'
         },
         {
           value: 'sheep',

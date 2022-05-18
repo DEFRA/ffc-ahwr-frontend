@@ -8,7 +8,7 @@ const radioId = 'whichReview'
 const errorText = 'Select which livestock do you want a review for?'
 const hintHtml = `<p>You can have one review each year for one type of livestock.</p>
 <p>If you're eligible for more than one type of livestock, you must choose which one you want reviewed.</p>`
-const backLink = '/vet/sheep-test'
+const backLink = '/farmer-apply/org-review'
 const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: false, hintHtml }
 
 module.exports = [
@@ -30,7 +30,7 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          whichReview: Joi.string().valid('sheep', 'pigs', 'dairy-cattle', 'beef-cattle').required()
+          whichReview: Joi.string().valid('sheep', 'pigs', 'dairy', 'beef').required()
         }),
         failAction: (request, h, _err) => {
           return h.view('farmer-apply/which-review', {
@@ -41,7 +41,7 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setFarmerApplyData(request, whichReview, request.payload.whichReview)
-        return h.redirect('/vet/check-answers')
+        return h.redirect(`/farmer-apply/${request.payload.whichReview}-eligibility`)
       }
     }
   }
