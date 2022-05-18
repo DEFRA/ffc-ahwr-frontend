@@ -45,8 +45,7 @@ describe('Beef BVD present test', () => {
 
     test.each([
       { beefTest: 'no' },
-      { beefTest: 'yes' },
-      { beefTest: 'further investigation required' }
+      { beefTest: 'yes' }
     ])('returns 302 to next page when acceptable answer given', async ({ beefTest }) => {
       const options = {
         method,

@@ -6,7 +6,7 @@ const { email: emailErrorMessages } = require('../../../../../app/lib/error-mess
 const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('h1').text()).toMatch('Enter your email address')
+  expect($('h1').text()).toMatch('What is the vet practice email address?')
   expect($('label[for=email]').text()).toMatch('Enter your email address')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('Enter email of vet')

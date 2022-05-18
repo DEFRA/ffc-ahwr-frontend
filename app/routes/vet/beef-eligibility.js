@@ -3,8 +3,8 @@ const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 const { vetVisitData: { beef } } = require('../../session/keys')
 
-const legendText = 'Were there more than 10 beef cattle on the farm at the time of the review?'
-const errorText = 'Select yes if you keep more than 10 beef cattle'
+const legendText = 'Were there 11 or more beef cattle on the farm at the time of the review?'
+const errorText = 'Select yes if there were 11 or more beef cattle'
 const backLink = '/vet/check-answers'
 
 const path = 'vet/beef-eligibility'

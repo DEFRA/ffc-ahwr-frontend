@@ -6,8 +6,8 @@ const { name: nameErrorMessages } = require('../../../../../app/lib/error-messag
 const { vetSignup: { name: nameKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('Enter the name of the vet who undertook the visit')
-  expect($('label[for=name]').text()).toMatch('Name of the vet')
+  expect($('.govuk-heading-l').text()).toEqual('What is the name of the vet who did the review?')
+  expect($('label[for=name]').text()).toMatch('Full name')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('Enter name of vet')
   const backLink = $('.govuk-back-link')
