@@ -9,7 +9,7 @@
  *
  * @return {object} object with `radios` property containing radios component.
  */
- function speciesRadios (legendText, id, previousAnswer, errorText = undefined, options = {}) {
+function speciesRadios (legendText, id, previousAnswer, errorText = undefined, options = {}) {
   const { isPageHeading = true, legendClasses = 'govuk-fieldset__legend--l', inline = true, hintHtml = '' } = options
   return {
     radios: {

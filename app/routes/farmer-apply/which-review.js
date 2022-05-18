@@ -3,7 +3,7 @@ const { farmerApplyData: { whichReview } } = require('../../session/keys')
 const { speciesRadios } = require('../helpers/species-radio')
 const session = require('../../session')
 
-const legendText = 'Have you given the farmer a written report of the review?'
+const legendText = 'Which livestock do you want a review for?'
 const radioId = 'whichReview'
 const errorText = 'Select which livestock do you want a review for?'
 const hintHtml = `<p>You can have one review each year for one type of livestock.</p>
