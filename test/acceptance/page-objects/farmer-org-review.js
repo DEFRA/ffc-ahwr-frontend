@@ -25,7 +25,7 @@ class FarmerOrgReview extends Page {
     await this.orgName.getText()
   }
 
-  async clickSignin () {
+  async clickStartSignin () {
     await this.start.click()
   }
 
