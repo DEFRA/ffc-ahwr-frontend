@@ -5,7 +5,7 @@ const { inputErrorClass, labels } = require('../../../../../app/config/visit-dat
 const { vetVisitData: { farmerApplication } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('h1').text()).toMatch('When did the review take place with the farmer?')
+  expect($('h1').text()).toMatch('When was the review completed?')
   expect($(`label[for=${labels.day}]`).text()).toMatch('Day')
   expect($(`label[for=${labels.month}]`).text()).toMatch('Month')
   expect($(`label[for=${labels.year}]`).text()).toMatch('Year')
@@ -54,13 +54,13 @@ describe('Vet, enter date of visit', () => {
     })
 
     test('loads input dates, if in session', async () => {
-      const items = [{ name: 'day', value: 31 }, { name: 'month', value: 12 }, { name: 'year', value: 2022 }]
+      const date = new Date()
       const options = {
         method: 'GET',
         url,
         auth
       }
-      session.getVetVisitData.mockReturnValue(items)
+      session.getVetVisitData.mockReturnValue(date)
 
       const res = await global.__SERVER__.inject(options)
 
@@ -68,9 +68,9 @@ describe('Vet, enter date of visit', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      expect($(`#${labels.day}`).val()).toEqual(items[0].value.toString())
-      expect($(`#${labels.month}`).val()).toEqual(items[1].value.toString())
-      expect($(`#${labels.year}`).val()).toEqual(items[2].value.toString())
+      expect($(`#${labels.day}`).val()).toEqual(date.getDate().toString())
+      expect($(`#${labels.month}`).val()).toEqual((date.getMonth() + 1).toString())
+      expect($(`#${labels.year}`).val()).toEqual(date.getFullYear().toString())
     })
   })
 
@@ -146,19 +146,19 @@ describe('Vet, enter date of visit', () => {
       { description: 'application created 365 days ago, visit date today', applicationCreationDate: yearPast },
       { description: 'application created yesterday, visit date today', applicationCreationDate: yesterday }
     ])('returns 302 to next page when acceptable answer given - $description', async ({ applicationCreationDate }) => {
-      session.getVetVisitData.mockReturnValueOnce({ createdAt: applicationCreationDate })
+      session.getVetVisitData.mockReturnValueOnce({ data: { cattle: 'no', cattleType: '', sheep: '', pigs: 'yes' }, createdAt: applicationCreationDate })
       const options = {
+        auth,
         method,
         url,
         payload: { crumb, [labels.day]: today.getDate(), [labels.month]: today.getMonth() + 1, [labels.year]: today.getFullYear() },
-        auth,
         headers: { cookie: `crumb=${crumb}` }
       }
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/check-answers')
+      expect(res.headers.location).toEqual('/vet/pigs-eligibility')
       expect(session.getVetVisitData).toHaveBeenCalledTimes(1)
       expect(session.getVetVisitData).toHaveBeenCalledWith(res.request, farmerApplication)
     })

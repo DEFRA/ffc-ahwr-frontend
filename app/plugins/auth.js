@@ -1,5 +1,5 @@
 const { getByEmail } = require('../api-requests/users')
-const cookieConfig = require('../config').cookie
+const { cookie: cookieConfig, cookiePolicy } = require('../config')
 const { farmerApply, farmerClaim, vet } = require('../config/user-types')
 const { getOrganisation, setOrganisation } = require('../session')
 
@@ -17,7 +17,8 @@ module.exports = {
           isSecure: cookieConfig.isSecure,
           name: cookieConfig.cookieNameAuth,
           password: cookieConfig.password,
-          path: '/'
+          path: cookiePolicy.path,
+          ttl: cookieConfig.ttl
         },
         keepAlive: true,
         redirectTo: (request) => {

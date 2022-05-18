@@ -1,8 +1,8 @@
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
+const { farmerApply, vet } = require('../../config/user-types')
 const { getApplication } = require('../../messaging/application')
-const { setFarmerClaimData, setOrganisation, setVetVisitData } = require('../../session')
+const { setOrganisation, setVetVisitData } = require('../../session')
 const { vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
 function isRequestValid (cachedEmail, email) {
@@ -17,17 +17,6 @@ function setAuthCookie (request, email, userType) {
 async function cacheFarmerApplyData (request, email) {
   const organisation = await getByEmail(email)
   Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
-}
-
-async function cacheFarmerClaimData (request, email) {
-  // TODO: get the vet_visit record and any additional data for the claim
-  const data = {
-    businessName: 'org-name',
-    dateOfReview: new Date(),
-    email,
-    paymentAmount: 522
-  }
-  Object.entries(data).forEach(([k, v]) => setFarmerClaimData(request, k, v))
 }
 
 async function cacheVetData (request, vetSignupData) {
@@ -90,14 +79,9 @@ module.exports = [{
         case farmerApply:
           await cacheFarmerApplyData(request, email)
           break
-        case farmerClaim:
-          await cacheFarmerClaimData(request, email)
-          break
         case vet:
           await cacheVetData(request, data)
           break
-        default:
-          throw new Error(`Unknow userType ${userType}`)
       }
 
       await clearMagicLinkCache(request, email)

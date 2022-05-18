@@ -34,7 +34,6 @@ overridden by build and release pipelines.
 | MESSAGE_QUEUE_SUFFIX                    | Developer initials                                                                               |
 | MESSAGE_QUEUE_USER                      | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`                              |
 | NOTIFY_API_KEY                          | GOV.UK Notify API Key                                                                            |
-| NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE | Id of email template used for application complete                                               |
 | NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN   | Id of email template used for farmer apply login email                                           |
 | NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN   | Id of email template used for farmer claim login email                                           |
 | NOTIFY_TEMPLATE_ID_VET_LOGIN            | Id of email template used for vet login email                                                    |

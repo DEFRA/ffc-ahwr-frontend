@@ -1,10 +1,7 @@
 const { cache, cookie: cookieConfig } = require('../../app/config')
 
-function hasCorrectContent ($) {
+function errorPageHasCorrectContent ($) {
   expect($('h1').text()).toEqual('Login failed')
-  const newLinkButton = $('.govuk-main-wrapper .govuk-button')
-  expect(newLinkButton.text()).toMatch('Request new link to login')
-  expect(newLinkButton.attr('href')).toEqual('login')
 }
 
 function getCookiesMaxAge (cookieParts) {
@@ -22,7 +19,7 @@ function hasCookiesSet (res) {
   res.headers['set-cookie'].forEach(cookie => {
     const cookieParts = cookie.split('; ')
     if (getCookieName(cookieParts) === cookieConfig.cookieNameAuth) {
-      expect(getCookiesMaxAge(cookieParts)).toBeUndefined()
+      expect(getCookiesMaxAge(cookieParts).split('=')[1]).toEqual((cookieConfig.ttl / 1000).toString())
       authCookieExists = true
     } else if (getCookieName(cookieParts) === cookieConfig.cookieNameSession) {
       expect(getCookiesMaxAge(cookieParts).split('=')[1]).toEqual((cache.expiresIn / 1000).toString())
@@ -34,6 +31,6 @@ function hasCookiesSet (res) {
 }
 
 module.exports = {
-  hasCookiesSet,
-  hasCorrectContent
+  errorPageHasCorrectContent,
+  hasCookiesSet
 }

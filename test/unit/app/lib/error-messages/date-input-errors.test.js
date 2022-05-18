@@ -1,5 +1,5 @@
 const getDateInputErrors = require('../../../../../app/lib/visit-date/date-input-errors')
-const { inputErrorClass, labelPrefix, labels } = require('../../../../../app/config/visit-date')
+const { inputErrorClass, labels } = require('../../../../../app/config/visit-date')
 
 describe('date input error message', () => {
   const emptyErrorDetails = [
@@ -70,7 +70,6 @@ describe('date input error message', () => {
     ]
 
     const { errorMessage, items } = getDateInputErrors(errorDetails, payload)
-
     expect(errorMessage.text).toEqual('Visit date must be a real date')
     const errorItems = items.filter(x => x.classes.includes(inputErrorClass))
     expect(errorItems).toHaveLength(1)
@@ -100,9 +99,9 @@ describe('date input error message', () => {
 
   const firstValidDate = new Date(2022, 6, 13)
   test.each([
-    { label: `${labelPrefix}day`, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
-    { label: `${labelPrefix}month`, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
-    { label: `${labelPrefix}year`, value: 999, expectedErrorMessage: `Visit date must be the same as or after ${firstValidDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created` }
+    { label: labels.day, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
+    { label: labels.month, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
+    { label: labels.year, value: 999, expectedErrorMessage: `Visit date must be the same as or after ${firstValidDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created` }
   ])('returns all items highlighted with values set - %p', ({ label, value, expectedErrorMessage }) => {
     const errorDetails = [{
       context: { label, value, key: label }

@@ -39,13 +39,13 @@ module.exports = {
         {
           key: { text: 'Livestock' },
           value: { html: getLivestockHtml(application) },
-          actions: { items: [{ href: '/farmer-apply/cattle', text: 'Change', visuallyHiddenText: 'name' }] }
+          actions: { items: [{ href: '/farmer-apply/cattle', text: 'Change', visuallyHiddenText: 'change livestock' }] }
         },
         ...(application[answers.cattle] === 'yes'
           ? [{
               key: { text: 'Cattle type' },
               value: { text: getCattleTypeText(application) },
-              actions: { items: [{ href: '/farmer-apply/cattle-type', text: 'Change', visuallyHiddenText: 'name' }] }
+              actions: { items: [{ href: '/farmer-apply/cattle-type', text: 'Change', visuallyHiddenText: 'change cattle type' }] }
             }]
           : [])
       ]

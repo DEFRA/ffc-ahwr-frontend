@@ -27,7 +27,8 @@ const schema = Joi.object({
     cookieNameSession: Joi.string().default('ffc_ahwr_session'),
     isSameSite: Joi.string().default('Lax'),
     isSecure: Joi.boolean().default(true),
-    password: Joi.string().min(32).required()
+    password: Joi.string().min(32).required(),
+    ttl: Joi.number().default(1000 * 3600 * 24 * 3) // 3 days
   },
   cookiePolicy: {
     clearInvalid: Joi.bool().default(false),
@@ -35,13 +36,13 @@ const schema = Joi.object({
     isSameSite: Joi.string().default('Lax'),
     isSecure: Joi.bool().default(true),
     password: Joi.string().min(32).required(),
+    path: Joi.string().default('/'),
     ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
   env: Joi.string().valid('development', 'test', 'production').default('development'),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
-    templateIdApplicationComplete: Joi.string().uuid(),
     templateIdFarmerApplyLogin: Joi.string().uuid(),
     templateIdFarmerClaimLogin: Joi.string().uuid(),
     templateIdVetLogin: Joi.string().uuid()
@@ -54,16 +55,15 @@ const schema = Joi.object({
     ...sharedConfigSchema
   },
   applicationRequestMsgType: Joi.string(),
-  applicationResponseMsgType: Joi.string(),
   applicationResponseQueue: {
     address: Joi.string().default('applicationResponseQueue'),
     type: Joi.string(),
     ...sharedConfigSchema
   },
   fetchApplicationRequestMsgType: Joi.string(),
-  fetchApplicationResponseMsgType: Joi.string(),
+  fetchClaimRequestMsgType: Joi.string(),
+  submitClaimRequestMsgType: Joi.string(),
   vetVisitRequestMsgType: Joi.string(),
-  vetVisitResponseMsgType: Joi.string(),
   serviceUri: Joi.string().uri(),
   storage: {
     connectionString: Joi.string().required(),
@@ -108,7 +108,6 @@ const config = {
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
-    templateIdApplicationComplete: process.env.NOTIFY_TEMPLATE_ID_APPLICATION_COMPLETE,
     templateIdFarmerApplyLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
     templateIdFarmerClaimLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
     templateIdVetLogin: process.env.NOTIFY_TEMPLATE_ID_VET_LOGIN
@@ -120,16 +119,15 @@ const config = {
     ...sharedConfig
   },
   applicationRequestMsgType: `${msgTypePrefix}.app.request`,
-  applicationResponseMsgType: `${msgTypePrefix}.app.response`,
   applicationResponseQueue: {
     address: process.env.APPLICATIONRESPONSE_QUEUE_ADDRESS,
     type: 'queue',
     ...sharedConfig
   },
   fetchApplicationRequestMsgType: `${msgTypePrefix}.fetch.app.request`,
-  fetchApplicationResponseMsgType: `${msgTypePrefix}.fetch.app.response`,
+  fetchClaimRequestMsgType: `${msgTypePrefix}.fetch.claim.request`,
+  submitClaimRequestMsgType: `${msgTypePrefix}.submit.claim.request`,
   vetVisitRequestMsgType: `${msgTypePrefix}.vet.visit.request`,
-  vetVisitResponseMsgType: `${msgTypePrefix}.vet.visit.response`,
   serviceUri: process.env.SERVICE_URI,
   storage: {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING

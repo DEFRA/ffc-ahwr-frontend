@@ -1,10 +1,9 @@
 const Joi = require('joi')
 const { answers } = require('../../session/keys')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 
 const legendText = 'Do you keep more than 50 pigs?'
-const radioId = 'pigs'
 const errorText = 'Select yes if you keep more than 50 pigs'
 const backLink = '/farmer-apply/sheep'
 
@@ -15,7 +14,7 @@ module.exports = [
     options: {
       handler: async (request, h) => {
         return h.view('farmer-apply/pigs', {
-          ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.pigs)),
+          ...getYesNoRadios(legendText, answers.pigs, session.getApplication(request, answers.pigs)),
           backLink
         })
       }
@@ -27,17 +26,17 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          pigs: Joi.string().valid('yes', 'no').required()
+          [answers.pigs]: Joi.string().valid('yes', 'no').required()
         }),
-        failAction: (request, h, err) => {
+        failAction: (request, h, _err) => {
           return h.view('farmer-apply/pigs', {
-            ...getYesNoRadios(legendText, radioId, session.getApplication(request, answers.pigs), errorText),
+            ...getYesNoRadios(legendText, answers.pigs, session.getApplication(request, answers.pigs), errorText),
             backLink
           }).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setApplication(request, answers.pigs, request.payload.pigs)
+        session.setApplication(request, answers.pigs, request.payload[answers.pigs])
         return h.redirect('/farmer-apply/check-answers')
       }
     }

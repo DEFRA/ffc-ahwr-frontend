@@ -1,6 +1,6 @@
 const entries = {
   application: 'application',
-  farmerClaim: 'farmerClaim',
+  claim: 'claim',
   organisation: 'organisation',
   vetSignup: 'vetSignup',
   vetVisitData: 'vetVisitData'
@@ -20,8 +20,8 @@ function setApplication (request, key, value) {
   set(request, entries.application, key, value)
 }
 
-function setFarmerClaimData (request, key, value) {
-  set(request, entries.farmerClaim, key, value)
+function setClaim (request, key, value) {
+  set(request, entries.claim, key, value)
 }
 
 function setOrganisation (request, key, value) {
@@ -40,8 +40,8 @@ function getApplication (request, key) {
   return get(request, entries.application, key)
 }
 
-function getFarmerClaimData (request, key) {
-  return get(request, entries.farmerClaim, key)
+function getClaim (request, key) {
+  return get(request, entries.claim, key)
 }
 
 function getOrganisation (request, key) {
@@ -58,12 +58,12 @@ function getVetVisitData (request, key) {
 
 module.exports = {
   getApplication,
-  getFarmerClaimData,
+  getClaim,
   getOrganisation,
   getVetSignup,
   getVetVisitData,
   setApplication,
-  setFarmerClaimData,
+  setClaim,
   setOrganisation,
   setVetSignup,
   setVetVisitData

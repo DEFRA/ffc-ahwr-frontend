@@ -5,6 +5,9 @@ module.exports = {
     pigs: 'pigs',
     sheep: 'sheep'
   },
+  claim: {
+    detailsCorrect: 'detailsCorrect'
+  },
   vetSignup: {
     email: 'email',
     name: 'name',
@@ -14,8 +17,18 @@ module.exports = {
     applicationState: 'applicationState'
   },
   vetVisitData: {
+    beef: 'beef',
+    beefTest: 'beefTest',
+    dairy: 'dairy',
+    dairyTest: 'dairyTest',
     farmerApplication: 'farmerApplication',
+    pigs: 'pigs',
+    pigsTest: 'pigsTest',
+    reviewReport: 'reviewReport',
+    sheep: 'sheep',
+    sheepTest: 'sheepTest',
     signup: 'signup',
-    visitDate: 'visitDate'
+    visitDate: 'visitDate',
+    whichReview: 'whichReview'
   }
 }
