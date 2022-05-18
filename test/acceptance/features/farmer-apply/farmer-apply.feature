@@ -5,3 +5,12 @@ Feature: Farmer apply
     Then I expect that the title contains "Sign in - Review the health and welfare of your livestock"
     And I expect that element "h1" contains the text "Sign in with your email address"
     When I click on the button "#submit"
+
+  @wip
+  Scenario: Get Login Token
+    Given I open the site "/farmer-apply/login"
+    When I enter my valid "email"
+    And I click on button
+
+    
+    
