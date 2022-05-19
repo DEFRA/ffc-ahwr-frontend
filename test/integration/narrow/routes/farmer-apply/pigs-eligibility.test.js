@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('pigs eligibility test', () => {
+describe('eligibleSpecies eligibility test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/farmer-apply/pigs-eligibility'
+  const url = '/farmer-apply/eligibleSpecies-eligibility'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,9 +18,9 @@ describe('pigs eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Will you have at least 51 pigs on the date of the review?')
-      expect($('title').text()).toEqual('Will you have at least 51 pigs on the date of the review?')
-      expect($('.govuk-hint').text()).toMatch('You are only eligible for funding if you are keeping more than 50 pigs at the registered site on the date the vet visits.')
+      expect($('h1').text()).toMatch('Will you have at least 51 eligibleSpecies on the date of the review?')
+      expect($('title').text()).toEqual('Will you have at least 51 eligibleSpecies on the date of the review?')
+      expect($('.govuk-hint').text()).toMatch('You are only eligible for funding if you are keeping more than 50 eligibleSpecies at the registered site on the date the vet visits.')
       expectPhaseBanner.ok($)
     })
 
@@ -46,13 +46,13 @@ describe('pigs eligibility test', () => {
     })
 
     test.each([
-      { pigs: 'no', nextPage: '/farmer-apply/not-eligible' },
-      { pigs: 'yes', nextPage: '/farmer-apply/check-answers' }
-    ])('returns 302 to next page when acceptable answer given', async ({ pigs, nextPage }) => {
+      { eligibleSpecies: 'no', nextPage: '/farmer-apply/not-eligible' },
+      { eligibleSpecies: 'yes', nextPage: '/farmer-apply/check-answers' }
+    ])('returns 302 to next page when acceptable answer given', async ({ eligibleSpecies, nextPage }) => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs },
+        payload: { crumb, eligibleSpecies },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -64,15 +64,15 @@ describe('pigs eligibility test', () => {
     })
 
     test.each([
-      { pigs: null },
-      { pigs: undefined },
+      { eligibleSpecies: null },
+      { eligibleSpecies: undefined },
       { sheep: 'wrong' },
-      { pigs: '' }
-    ])('returns error when unacceptable answer is given', async ({ pigs }) => {
+      { eligibleSpecies: '' }
+    ])('returns error when unacceptable answer is given', async ({ eligibleSpecies }) => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs },
+        payload: { crumb, eligibleSpecies },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -80,7 +80,7 @@ describe('pigs eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 51 pigs on the date of the review')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 51 eligibleSpecies on the date of the review')
       expect(res.statusCode).toBe(200)
     })
 
@@ -88,7 +88,7 @@ describe('pigs eligibility test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs: 'no' },
+        payload: { crumb, eligibleSpecies: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
