@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('eligibleSpecies eligibility test', () => {
+describe('Dairy eligibility test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/farmer-apply/eligibleSpecies-eligibility'
+  const url = '/farmer-apply/dairy-eligibility'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
