@@ -2,12 +2,15 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
+const loginTypes = require('../../../../../app/constants/login-types')
+const { getActivityText } = require('../../../../../app/lib/auth/get-activity-text')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
 const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('h1').text()).toMatch('Enter your email address')
-  expect($('label[for=email]').text()).toMatch('Enter your email address')
+  expect($('h1').text()).toMatch('What is the vet practice email address?')
+  expect($('label[for=email]').text()).toMatch('Vet practice email address')
+  expect($('#email-hint').text()).toMatch('We\'ll send a link to this email for the vet to record information about the review.')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('Enter email of vet')
   const backLink = $('.govuk-back-link')
@@ -88,7 +91,7 @@ describe('Vet, enter email name test', () => {
     test.each([
       { email: validEmail },
       { email: `  ${validEmail}  ` }
-    ])('returns 302 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
+    ])('returns 200 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
       const signupData = {}
       session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -102,8 +105,11 @@ describe('Vet, enter email name test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
-      expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/check-email')
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toEqual('Check your email')
+      expect($('#email').text()).toEqual(validEmail)
+      expect($('#activity').text()).toEqual(getActivityText(loginTypes.vet))
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
       expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)

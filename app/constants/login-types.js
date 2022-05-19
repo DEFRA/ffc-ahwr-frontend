@@ -1,4 +1,5 @@
 module.exports = {
   apply: 'apply',
-  claim: 'claim'
+  claim: 'claim',
+  vet: 'vet'
 }

@@ -134,6 +134,8 @@ describe('Farmer claim login page test', () => {
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
       if (existingToken) {
         expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
+      } else {
+        expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
       }
       expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
       expect(application.getClaim).toHaveBeenCalledTimes(1)
