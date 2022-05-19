@@ -1,6 +1,18 @@
-function hasCorrectContent ($) {
-  expect($('.govuk-main-wrapper .govuk-heading-l').text()).toEqual('Sign in with your email address')
-  expect($('label[for=email]').text()).toMatch('Enter your email address')
+const loginTypes = require('../../app/constants/login-types')
+
+function hasCorrectContent ($, pageType) {
+  let hintText
+  switch (pageType) {
+    case loginTypes.apply:
+      hintText = 'We\'ll use this to send you a link to apply for a review.'
+      break
+    case loginTypes.claim:
+      hintText = 'We\'ll use this to send you a link to claim funding for a review.'
+      break
+  }
+  expect($('.govuk-main-wrapper .govuk-heading-l').text()).toEqual('Enter your email address')
+  expect($('label[for=email]').text()).toMatch('Email address')
+  expect($('#email-hint').text()).toMatch(hintText)
 }
 
 module.exports = {

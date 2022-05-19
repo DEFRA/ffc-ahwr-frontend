@@ -16,6 +16,7 @@ const routes = [].concat(
   require('../routes/farmer-apply/org-review'),
   require('../routes/farmer-apply/pigs'),
   require('../routes/farmer-apply/sheep'),
+  require('../routes/farmer-apply/which-review'),
   require('../routes/farmer-claim'),
   require('../routes/farmer-claim/details-incorrect'),
   require('../routes/farmer-claim/submit-claim'),

@@ -1,9 +1,11 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
+const loginTypes = require('../../constants/login-types')
+const { getActivityText } = require('../../lib/auth/get-activity-text')
 const { sendVetMagicLinkEmail } = require('../../lib/email/send-magic-link-email')
+const { email: emailValidation } = require('../../lib/validation/email')
 const session = require('../../session')
 const { vetSignup: { email: emailKey } } = require('../../session/keys')
-const { email: emailValidation } = require('../../../app/lib/validation/email')
 
 module.exports = [{
   method: 'GET',
@@ -39,7 +41,7 @@ module.exports = [{
         return boom.internal()
       }
 
-      return h.redirect('/vet/check-email')
+      return h.view('auth/check-email', { activityText: getActivityText(loginTypes.vet), email })
     }
   }
 }]
