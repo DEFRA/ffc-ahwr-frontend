@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Pigs test', () => {
+describe('sheep eligibility test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/farmer-apply/pigs'
+  const url = '/farmer-apply/sheep-eligibility'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,8 +18,9 @@ describe('Pigs test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Do you keep more than 50 pigs?')
-      expect($('title').text()).toEqual('Pig Numbers')
+      expect($('h1').text()).toMatch('Will you have at least 21 sheep on the date of the review?')
+      expect($('title').text()).toEqual('Will you have at least 21 sheep on the date of the review?')
+      expect($('.govuk-hint').text()).toMatch('You are only eligible for funding if you are keeping more than 20 sheep at the registered site on the date the vet visits.')
       expectPhaseBanner.ok($)
     })
 
@@ -45,13 +46,13 @@ describe('Pigs test', () => {
     })
 
     test.each([
-      { pigs: 'no' },
-      { pigs: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ pigs }) => {
+      { sheep: 'no', nextPage: '/farmer-apply/not-eligible' },
+      { sheep: 'yes', nextPage: '/farmer-apply/check-answers' }
+    ])('returns 302 to next page when acceptable answer given', async ({ sheep, nextPage }) => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs },
+        payload: { crumb, sheep },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -59,19 +60,19 @@ describe('Pigs test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/farmer-apply/check-answers')
+      expect(res.headers.location).toEqual(nextPage)
     })
 
     test.each([
-      { pigs: null },
-      { pigs: undefined },
-      { sheep: 'wrong' },
-      { pigs: '' }
-    ])('returns error when unacceptable answer is given', async ({ pigs }) => {
+      { sheep: null },
+      { sheep: undefined },
+      { pigs: 'wrong' },
+      { sheep: '' }
+    ])('returns error when unacceptable answer is given', async ({ sheep }) => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs },
+        payload: { crumb, sheep },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -79,7 +80,7 @@ describe('Pigs test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you keep more than 50 pigs')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 21 sheep on the date of the review')
       expect(res.statusCode).toBe(200)
     })
 
@@ -87,7 +88,7 @@ describe('Pigs test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, pigs: 'no' },
+        payload: { crumb, sheep: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
