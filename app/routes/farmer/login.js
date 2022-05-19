@@ -1,11 +1,12 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { getClaim } = require('../../messaging/application')
-const { setClaim } = require('../../session')
-const { sendFarmerApplyLoginMagicLink, sendFarmerClaimLoginMagicLink } = require('../../lib/email/send-magic-link-email')
-const { email: emailValidation } = require('../../../app/lib/validation/email')
 const loginTypes = require('../../constants/login-types')
+const { getActivityText } = require('../../lib/auth/get-activity-text')
+const { getClaim } = require('../../messaging/application')
+const { sendFarmerApplyLoginMagicLink, sendFarmerClaimLoginMagicLink } = require('../../lib/email/send-magic-link-email')
+const { setClaim } = require('../../session')
+const { email: emailValidation } = require('../../../app/lib/validation/email')
 
 function cacheClaim (claim, request) {
   Object.entries(claim).forEach(([k, v]) => setClaim(request, k, v))
@@ -105,7 +106,7 @@ module.exports = [{
         return boom.internal()
       }
 
-      return h.view('auth/check-email', { email })
+      return h.view('auth/check-email', { activityText: getActivityText(journey), email })
     }
   }
 }]
