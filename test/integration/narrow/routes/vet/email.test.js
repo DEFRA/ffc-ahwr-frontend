@@ -2,6 +2,8 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const pageExpects = require('../../../../utils/page-expects')
+const loginTypes = require('../../../../../app/constants/login-types')
+const { getActivityText } = require('../../../../../app/lib/auth/get-activity-text')
 const { email: emailErrorMessages } = require('../../../../../app/lib/error-messages')
 const { vetSignup: { email: emailKey } } = require('../../../../../app/session/keys')
 
@@ -88,7 +90,7 @@ describe('Vet, enter email name test', () => {
     test.each([
       { email: validEmail },
       { email: `  ${validEmail}  ` }
-    ])('returns 302 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
+    ])('returns 200 when payload is valid, sends email and stores email in session (email = "$email")', async ({ email }) => {
       const signupData = {}
       session.getVetSignup.mockReturnValueOnce(signupData)
       const crumb = await getCrumbs(global.__SERVER__)
@@ -102,8 +104,11 @@ describe('Vet, enter email name test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
-      expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/check-email')
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toEqual('Check your email')
+      expect($('#email').text()).toEqual(validEmail)
+      expect($('#activity').text()).toEqual(getActivityText(loginTypes.vet))
       expect(session.setVetSignup).toHaveBeenCalledTimes(1)
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
       expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
