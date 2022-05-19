@@ -7,6 +7,7 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerClaimLogin }, serviceUri } = require('../../../../../app/config')
 const { farmerClaim } = require('../../../../../app/config/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
+const loginTypes = require('../../../../../app/constants/login-types')
 
 describe('Farmer claim login page test', () => {
   const org = { name: 'my-org' }
@@ -42,7 +43,7 @@ describe('Farmer claim login page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
+      expectLoginPage.hasCorrectContent($, loginTypes.claim)
     })
 
     test('route when already logged in redirects to visit-review', async () => {
@@ -81,7 +82,7 @@ describe('Farmer claim login page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
+      expectLoginPage.hasCorrectContent($, loginTypes.claim)
       pageExpects.errors($, errorMessage)
     })
 
