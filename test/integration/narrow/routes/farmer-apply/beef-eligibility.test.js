@@ -18,9 +18,9 @@ describe('Beef eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Will you have at least 11 eligibleSpecies cattle on the date of the review?')
-      expect($('title').text()).toEqual('Will you have at least 11 eligibleSpecies cattle on the date of the review?')
-      expect($('.govuk-hint').text()).toMatch('You\'re only eligible for funding if you\'re keeping at least 11 eligibleSpecies cattle at the registered site on the date the vet visits.')
+      expect($('h1').text()).toMatch('Will you have at least 11 beef cattle on the date of the review?')
+      expect($('title').text()).toEqual('Will you have at least 11 beef cattle on the date of the review?')
+      expect($('.govuk-hint').text()).toMatch('You\'re only eligible for funding if you\'re keeping at least 11 beef cattle at the registered site on the date the vet visits.')
       expectPhaseBanner.ok($)
     })
 
