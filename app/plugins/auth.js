@@ -1,6 +1,6 @@
 const { getByEmail } = require('../api-requests/users')
 const { cookie: cookieConfig, cookiePolicy } = require('../config')
-const { farmerApply, farmerClaim, vet } = require('../config/user-types')
+const { farmerApply, farmerClaim, vet } = require('../constants/user-types')
 const { getOrganisation, setOrganisation } = require('../session')
 
 function isOrgInSession (request) {

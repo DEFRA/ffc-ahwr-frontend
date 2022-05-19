@@ -5,15 +5,16 @@ const session = require('../../session')
 
 const legendText = 'Will you have at least 21 sheep on the date of the review?'
 const errorText = 'Select yes if you have at least 21 sheep on the date of the review'
-const backLink = '/vet/which-review'
+const backLink = '/vet/check-answers'
 
+const path = 'vet/sheep-eligibility'
 module.exports = [
   {
     method: 'GET',
-    path: '/vet/sheep-eligibility',
+    path: `/${path}`,
     options: {
       handler: async (request, h) => {
-        return h.view('vet/sheep-eligibility', {
+        return h.view(path, {
           ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep)),
           backLink
         })
@@ -22,14 +23,14 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/vet/sheep-eligibility',
+    path: `/${path}`,
     options: {
       validate: {
         payload: Joi.object({
           [sheep]: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, _err) => {
-          return h.view('vet/sheep-eligibility', {
+          return h.view(path, {
             ...getYesNoRadios(legendText, sheep, session.getVetVisitData(request, sheep), errorText),
             backLink
           }).takeover()

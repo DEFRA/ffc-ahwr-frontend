@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { farmerApply, vet } = require('../../config/user-types')
+const { farmerApply, vet } = require('../../constants/user-types')
 const { getApplication } = require('../../messaging/application')
 const { setOrganisation, setVetVisitData } = require('../../session')
 const { vetVisitData: { farmerApplication, signup } } = require('../../session/keys')

@@ -2,7 +2,7 @@ const getToken = require('../get-token')
 const sendEmail = require('./send-email')
 const { serviceUri } = require('../../config')
 const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templateIdVetLogin } } = require('../../config')
-const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
+const { farmerApply, farmerClaim, vet } = require('../../constants/user-types')
 async function createAndCacheToken (request, email, redirectTo, userType, data) {
   const { magiclinkCache } = request.server.app
 
