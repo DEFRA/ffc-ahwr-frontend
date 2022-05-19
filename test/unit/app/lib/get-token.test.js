@@ -1,4 +1,3 @@
-
 const config = require('../../../../app/config')
 jest.mock('../../../../app/config')
 const users = require('../../../../app/api-requests/users')

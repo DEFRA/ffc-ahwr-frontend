@@ -52,7 +52,12 @@ the deployment to non-local environments.
 *NOTE:*
 User data is currently loaded from a file in Azure Storage, an example file is
 available ([users.json](./data/users.json)) where the structure of the data can
-be seen along with examples.
+be seen along with examples. If user record has isTest property set to true and
+TEST_TOKEN is valid UUID, then magic link with same token will be generated.
+
+TEST_TOKEN and isTest property should be used for only test environment to enable
+automation test.
+
 When running the application locally this file (or one matching the format)
 needs to be uploaded to Azurite container that starts with the application. The
 storage container the file resides in also needs to be created. The container

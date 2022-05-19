@@ -120,8 +120,8 @@ describe('Vet, enter email name test', () => {
       { email: validEmail },
       { email: `  ${validEmail}  ` }
     ])('returns 302 when payload is valid, sends email with test token and stores email in session (email = "$email")', async ({ email }) => {
-      config.testToken = '1234567890'
-      users.getByEmail.mockResolvedValue({ email: validEmail, isTest: 'yes' })
+      config.testToken = '0f9ecf32-da18-4e17-8a94-c37732d97489'
+      users.getByEmail.mockResolvedValue({ email: validEmail, isTest: true })
 
       const signupData = {}
       session.getVetSignup.mockReturnValueOnce(signupData)
@@ -141,6 +141,8 @@ describe('Vet, enter email name test', () => {
       expect(session.setVetSignup).toHaveBeenCalledWith(res.request, emailKey, email.trim())
       expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledTimes(1)
       expect(sendMagicLinkEmail.sendVetMagicLinkEmail).toHaveBeenCalledWith(res.request, email.trim(), signupData)
+      expect(res.statusCode).toBe(302)
+      expect(await global.__SERVER__.app.magiclinkCache.get(email.trim())).not.toBeNull()
     })
     test('returns 500 when problem sending email', async () => {
       const signupData = {}
