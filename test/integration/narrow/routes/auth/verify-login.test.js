@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const { farmerApply, farmerClaim, vet } = require('../../../../../app/config/user-types')
+const { farmerApply, farmerClaim, vet } = require('../../../../../app/constants/user-types')
 const { vetVisitData: { farmerApplication, signup } } = require('../../../../../app/session/keys')
 
 const application = require('../../../../../app/messaging/application')

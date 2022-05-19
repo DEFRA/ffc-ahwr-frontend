@@ -5,7 +5,7 @@ const expectLoginPage = require('../../../../utils/login-page-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerClaimLogin }, serviceUri } = require('../../../../../app/config')
-const { farmerClaim } = require('../../../../../app/config/user-types')
+const { farmerClaim } = require('../../../../../app/constants/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
 const loginTypes = require('../../../../../app/constants/login-types')
 
