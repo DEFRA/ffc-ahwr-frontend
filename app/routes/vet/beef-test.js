@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const { vetVisitData: { beefTest } } = require('../../session/keys')
 const session = require('../../session')
-const getYesNoRadios = require('../helpers/yes-no-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
 const errorText = 'Select yes if BVD was found in the herd'
 const backLink = '/vet/check-answers'

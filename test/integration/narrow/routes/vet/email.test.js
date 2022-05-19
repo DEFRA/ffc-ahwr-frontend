@@ -7,9 +7,9 @@ const { vetSignup: { email: emailKey } } = require('../../../../../app/session/k
 
 function expectPageContentOk ($) {
   expect($('h1').text()).toMatch('What is the vet practice email address?')
-  expect($('label[for=email]').text()).toMatch('Enter your email address')
+  expect($('label[for=email]').text()).toMatch('What is the vet practice email address?')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual('Enter email of vet')
+  expect($('title').text()).toEqual('What is the vet practice email address')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/practice')
