@@ -80,7 +80,7 @@ describe('Pigs eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 51 eligibleSpecies on the date of the review')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 51 pigs on the date of the review')
       expect(res.statusCode).toBe(200)
     })
 
