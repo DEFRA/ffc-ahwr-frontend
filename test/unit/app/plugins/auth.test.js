@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid')
-const { farmerApply } = require('../../../../app/config/user-types')
+const { farmerApply } = require('../../../../app/constants/user-types')
 const { cookie: { ttl } } = require('../../../../app/config')
 
 describe('Auth plugin test', () => {

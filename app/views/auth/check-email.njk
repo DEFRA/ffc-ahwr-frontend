@@ -16,18 +16,16 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Email has been sent</h1>
+    <h1 class="govuk-heading-l">Check your email</h1>
 
-    <p>An email has been sent with a link to login. Please check your emails, including the spam folder and be patient as it might take a few minutes to arrive.</p>
-    <p>If it hasn't arrived after 5 minutes request a new link to login by clicking the button below.</p>
+    <p>We've sent an email to <a id="email" href="mailto:{{email}}">{{email}}</a></p>
+    <p id="activity">{{activityText}}</p>
 
-    <form method="POST">
-      <input type="hidden" name="crumb" value="{{crumb}}"/>
-      <input type="hidden" name="email" value="{{email}}"/>
-      {{ govukButton({
-        text: "Request new link to login"
-      }) }}
-    </form>
+    <p>If you do not get an email:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>check your spam or junk folders</li>
+      <li><a href="">enter your email</a> again</li>
+    </ul>
   </div>
 </div>
 {% endblock %}

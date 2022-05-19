@@ -18,14 +18,14 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Sign in with your email address</h1>
+        <h1 class="govuk-heading-l">Enter your email address</h1>
 
         {{ govukInput({
           label: {
-            text: "Enter your email address"
+            text: "Email address"
           },
           hint: {
-            text: "Use the same email address you received the link to this page from"
+            text: hintText
           },
           classes: "govuk-input-!-width-full",
           id: "email",
@@ -35,17 +35,11 @@
         }) }}
 
         {{ govukButton({
-          text: "Sign in",
+          text: "Continue",
           attributes: {
             id: "submit"
           }
         }) }}
-
-        {{ govukDetails({
-          summaryText: "Problems signing in?",
-          html: "Please call the Rural Payments Agency on 03000 200 301"
-        }) }}
-
       </form>
     </div>
   </div>

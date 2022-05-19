@@ -5,8 +5,10 @@ const expectLoginPage = require('../../../../utils/login-page-expect')
 const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { notify: { templateIdFarmerClaimLogin }, serviceUri } = require('../../../../../app/config')
-const { farmerClaim } = require('../../../../../app/config/user-types')
+const { farmerClaim } = require('../../../../../app/constants/user-types')
 const uuidRegex = require('../../../../../app/config/uuid-regex')
+const loginTypes = require('../../../../../app/constants/login-types')
+const { getActivityText } = require('../../../../../app/lib/auth/get-activity-text')
 
 describe('Farmer claim login page test', () => {
   const org = { name: 'my-org' }
@@ -42,7 +44,7 @@ describe('Farmer claim login page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
+      expectLoginPage.hasCorrectContent($, loginTypes.claim)
     })
 
     test('route when already logged in redirects to visit-review', async () => {
@@ -81,7 +83,7 @@ describe('Farmer claim login page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
-      expectLoginPage.hasCorrectContent($)
+      expectLoginPage.hasCorrectContent($, loginTypes.claim)
       pageExpects.errors($, errorMessage)
     })
 
@@ -104,13 +106,21 @@ describe('Farmer claim login page test', () => {
       expect($('.govuk-heading-l').text()).toEqual('403 - Forbidden')
     })
 
-    test('with known email for the first time redirects to email sent page with form filled with email and adds token to cache with redirectTo for farmer', async () => {
+    test.each([
+      { desc: 'with known email for the first time redirects to email sent page with form filled with email and adds token to cache with redirectTo for farmer', existingToken: false },
+      { desc: 'with known email with an existing token redirects to email sent page and adds token to cache with redirectTo for farmer', existingToken: true }
+    ])('$desc', async ({ existingToken }) => {
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
         payload: { crumb, email: validEmail },
         headers: { cookie: `crumb=${crumb}` }
+      }
+      let token
+      if (existingToken) {
+        token = uuid()
+        await global.__SERVER__.app.magiclinkCache.set(validEmail, [token])
       }
 
       const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
@@ -122,49 +132,21 @@ describe('Farmer claim login page test', () => {
       expect(cacheGetSpy).toHaveBeenCalledTimes(1)
       expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
       expect(cacheSetSpy).toHaveBeenCalledTimes(2)
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
-      expect(application.getClaim).toHaveBeenCalledTimes(1)
-      expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
-      expect(session.setClaim).toHaveBeenCalledTimes(1)
-      expect(session.setClaim).toHaveBeenCalledWith(res.request, 'vetVisit', claimWithVisit.vetVisit)
-      const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toEqual('Email has been sent')
-      expect($('form input[name=email]').val()).toEqual(validEmail)
-
-      cacheGetSpy.mockRestore()
-      cacheSetSpy.mockRestore()
-    })
-
-    test('with known email with an existing token redirects to email sent page and adds token to cache with redirectTo for farmer', async () => {
-      const crumb = await getCrumbs(global.__SERVER__)
-      const options = {
-        method: 'POST',
-        url,
-        payload: { crumb, email: validEmail },
-        headers: { cookie: `crumb=${crumb}` }
+      if (existingToken) {
+        expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
+      } else {
+        expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [expect.stringMatching(new RegExp(uuidRegex))])
       }
-      const token = uuid()
-      await global.__SERVER__.app.magiclinkCache.set(validEmail, [token])
-
-      const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
-      const cacheSetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'set')
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(200)
-      expect(cacheGetSpy).toHaveBeenCalledTimes(1)
-      expect(cacheGetSpy).toHaveBeenCalledWith(validEmail)
-      expect(cacheSetSpy).toHaveBeenCalledTimes(2)
-      expect(cacheSetSpy).toHaveBeenNthCalledWith(1, validEmail, [token, expect.stringMatching(new RegExp(uuidRegex))])
       expect(cacheSetSpy).toHaveBeenNthCalledWith(2, expect.stringMatching(new RegExp(uuidRegex)), { email: validEmail, redirectTo: 'farmer-claim/visit-review', userType: farmerClaim })
       expect(application.getClaim).toHaveBeenCalledTimes(1)
       expect(application.getClaim).toHaveBeenCalledWith(validEmail, res.request.yar.id)
       expect(session.setClaim).toHaveBeenCalledTimes(1)
       expect(session.setClaim).toHaveBeenCalledWith(res.request, 'vetVisit', claimWithVisit.vetVisit)
+
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toEqual('Email has been sent')
-      expect($('form input[name=email]').val()).toEqual(validEmail)
+      expect($('h1').text()).toEqual('Check your email')
+      expect($('#email').text()).toEqual(validEmail)
+      expect($('#activity').text()).toEqual(getActivityText(loginTypes.claim))
 
       cacheGetSpy.mockRestore()
       cacheSetSpy.mockRestore()
