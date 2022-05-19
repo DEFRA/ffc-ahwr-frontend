@@ -32,27 +32,39 @@ const requestGetMock = {
 }
 describe('Send Magic Link test', () => {
   test.each([
-    { email: validEmail, data: {} },
-    { email: '', data: null }
-  ])('Returns success on call sendVetMagicLinkEmail', async ({ email, data }) => {
+    { email: validEmail, token: testToken, data: {} },
+    { email: validEmail, token: null, data: {} }
+  ])('Returns success on call sendVetMagicLinkEmail', async ({ email, data, token }) => {
     const response = await sendMagicLinkEmail.sendVetMagicLinkEmail(requestGetMock, email, data)
     expect(response).toBeTruthy()
-    expect(cacheData[testToken]).not.toBeNull()
+    if (token) {
+      expect(cacheData[token]).not.toBeNull()
+    } else {
+      expect(cacheData[email]).not.toBeNull()
+    }
   })
   test.each([
-    { email: validEmail },
-    { email: '' }
-  ])('Returns success on call sendFarmerApplyLoginMagicLink', async ({ email }) => {
+    { email: validEmail, testToken },
+    { email: validEmail, testToken: null }
+  ])('Returns success on call sendFarmerApplyLoginMagicLink', async ({ email, token }) => {
     const response = await sendMagicLinkEmail.sendFarmerApplyLoginMagicLink(requestGetMock, email)
     expect(response).toBeTruthy()
-    expect(cacheData[testToken]).not.toBeNull()
+    if (token) {
+      expect(cacheData[token]).not.toBeNull()
+    } else {
+      expect(cacheData[email]).not.toBeNull()
+    }
   })
   test.each([
-    { email: validEmail },
-    { email: '' }
-  ])('Returns success on call sendFarmerClaimLoginMagicLink', async ({ email }) => {
+    { email: validEmail, testToken },
+    { email: validEmail, testToken: null }
+  ])('Returns success on call sendFarmerClaimLoginMagicLink', async ({ email, token }) => {
     const response = await sendMagicLinkEmail.sendFarmerClaimLoginMagicLink(requestGetMock, email)
     expect(response).toBeTruthy()
-    expect(cacheData[testToken]).not.toBeNull()
+    if (token) {
+      expect(cacheData[token]).not.toBeNull()
+    } else {
+      expect(cacheData[email]).not.toBeNull()
+    }
   })
 })
