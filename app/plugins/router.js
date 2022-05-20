@@ -26,7 +26,6 @@ const routes = [].concat(
   require('../routes/vet/beef-eligibility'),
   require('../routes/vet/beef-test'),
   require('../routes/vet/check-answers'),
-  require('../routes/vet/check-email'),
   require('../routes/vet/confirmation'),
   require('../routes/vet/dairy-eligibility'),
   require('../routes/vet/dairy-test'),
