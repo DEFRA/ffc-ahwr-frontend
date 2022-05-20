@@ -17,12 +17,10 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-
+        <h1 class="govuk-heading-l">What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?</h1>
         {{ govukInput({
           label: {
-            classes: "govuk-label--l",
-            isPageHeading: true,
-            text: "What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?"
+            text: "Percentage"
           },
           classes: "govuk-input-!-width-full",
           id: "sheepTest",

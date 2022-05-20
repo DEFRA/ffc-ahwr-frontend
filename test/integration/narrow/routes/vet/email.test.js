@@ -12,6 +12,7 @@ function expectPageContentOk ($) {
   expect($('label[for=email]').text()).toMatch('What is the vet practice email address?')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('What is the vet practice email address')
+  expect($('#email-hint').text()).toMatch('We\'ll send a link to this email for the vet to record information about the review.')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/practice')
