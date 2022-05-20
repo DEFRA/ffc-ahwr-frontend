@@ -53,8 +53,8 @@ describe('Get users', () => {
   })
 
   test.each([
-    { fileContent: ` [{ "email": "${email}" }] ` },
-    { fileContent: ` [{ "email": "${email}" , "isTest": "yes"}] ` }
+    { fileContent: `[{ "email": "${email}" }]` },
+    { fileContent: `[{ "email": "${email}" , "isTest": true }]` }
   ])('return user data when test email is matched but has different casing', async ({ fileContent }) => {
     downloadBlobMock.mockResolvedValue(fileContent)
 
