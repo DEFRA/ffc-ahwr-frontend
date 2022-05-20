@@ -1,28 +1,12 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const content = require('../../../../../app/constants/species-review-content')
+const sessionMock = require('../../../../../app/session')
+jest.mock('../../../../../app/session')
 
-const varListTemplate = {
-  cattle: 'yes',
-  pigs: 'yes',
-  sheep: 'yes',
-  cattleType: 'both'
-}
-
-let varList
-const mockSession = {
-  getApplication: () => {
-    return varList
-  }
-}
-
-jest.mock('../../../../../app/session', () => mockSession)
 describe('Check Answers test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
   const url = '/farmer-apply/check-answers'
-
-  beforeEach(() => {
-    varList = { ...varListTemplate }
-  })
 
   afterAll(() => {
     jest.resetAllMocks()
@@ -36,6 +20,7 @@ describe('Check Answers test', () => {
         auth
       }
 
+      sessionMock.getFarmerApplyData.mockReturnValueOnce('yes').mockReturnValue('pigs')
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
@@ -46,17 +31,12 @@ describe('Check Answers test', () => {
     })
 
     test('returns 302 when there is no eligible livestock', async () => {
-      varList = {
-        cattle: 'no',
-        pigs: 'no',
-        sheep: 'no',
-        cattleType: 'both'
-      }
       const options = {
         method: 'GET',
         url,
         auth
       }
+      sessionMock.getFarmerApplyData.mockReturnValueOnce('no')
 
       const res = await global.__SERVER__.inject(options)
 
@@ -65,16 +45,12 @@ describe('Check Answers test', () => {
     })
 
     test.each([
-      { cattleType: 'beef', text: 'Beef' },
-      { cattleType: 'both', text: 'Beef and Dairy' },
-      { cattleType: 'dairy', text: 'Dairy' }
-    ])('shows beef and dairy option when cattleType is both - %p', async ({ cattleType, text }) => {
-      varList = {
-        cattle: 'yes',
-        pigs: 'no',
-        sheep: 'no',
-        cattleType
-      }
+      { eligibleSpecies: 'beef' },
+      { eligibleSpecies: 'dairy' },
+      { eligibleSpecies: 'sheep' },
+      { eligibleSpecies: 'pigs' }
+    ])('Show selected species livestock- %p', async ({ eligibleSpecies }) => {
+      sessionMock.getFarmerApplyData.mockReturnValueOnce('yes').mockReturnValueOnce(eligibleSpecies)
       const options = {
         method: 'GET',
         url,
@@ -86,33 +62,10 @@ describe('Check Answers test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('.govuk-summary-list__row').length).toEqual(2)
-      expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Livestock')
-      expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 10 cattle')
-      expect($('.govuk-summary-list__key').eq(1).text()).toMatch('Cattle type')
-      expect($('.govuk-summary-list__value').eq(1).text()).toMatch(text)
-    })
-
-    test('does not show beef and dairy option when cattle is not selected is both', async () => {
-      varList = {
-        cattle: 'no',
-        pigs: 'yes',
-        sheep: 'yes',
-        cattleType: ''
-      }
-      const options = {
-        method: 'GET',
-        url,
-        auth
-      }
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(200)
-      const $ = cheerio.load(res.payload)
-      expect($('.govuk-summary-list__row').length).toEqual(1)
-      expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Livestock')
-      expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 50 pigs')
-      expect($('.govuk-summary-list__value').eq(0).text()).toMatch('More than 20 sheep')
+      expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Type of review')
+      expect($('.govuk-summary-list__value').eq(0).text()).toMatch(content[eligibleSpecies].reivewType)
+      expect($('.govuk-summary-list__value').eq(1).text()).toMatch(content[eligibleSpecies].liveStockNumber)
+      expect($('.govuk-summary-list__actions a').eq(1).attr('href')).toMatch(`/farmer-apply/${eligibleSpecies}-eligibility`)
     })
 
     test('when not logged in redirects to /farmer-apply/login', async () => {

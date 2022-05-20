@@ -1,7 +1,7 @@
 module.exports = {
   beef: {
-   reivewType: 'Beef cattle',
-   liveStockNumber: 'At least 11 beef cattle'
+    reivewType: 'Beef cattle',
+    liveStockNumber: 'At least 11 beef cattle'
   },
   dairy: {
     reivewType: 'Dairy cattle',
