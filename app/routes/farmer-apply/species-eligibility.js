@@ -5,7 +5,6 @@ const session = require('../../session')
 const speciesTypes = require('../../constants/species')
 const speciesContent = require('../../constants/species-content')
 const backLink = '/farmer-apply/which-review'
-const radioId = 'eligibleSpecies'
 
 const getRadioOptions = (species) => {
   return { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText: speciesContent[species].hintText }
@@ -25,7 +24,7 @@ module.exports = [
         const species = request.params.species
         const title = speciesContent[species].title
         return h.view('farmer-apply/species-eligibility', {
-          ...getYesNoRadios(speciesContent[species].legendText, radioId, session.getFarmerApplyData(request, eligibleSpecies), undefined, getRadioOptions(species)),
+          ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getFarmerApplyData(request, eligibleSpecies), undefined, getRadioOptions(species)),
           backLink,
           title
         })
