@@ -18,6 +18,7 @@
     "sbi": "333333333",
     "cph": "33/333/3333",
     "address": "Long dusty road, Middle-of-knowhere, In the countryside, CC33 3CC",
-    "email": "farm@livestock-keeper.com"
+    "email": "farm@livestock-keeper.com",
+    "isTest": true
   }
 ]
