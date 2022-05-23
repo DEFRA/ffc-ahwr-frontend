@@ -46,7 +46,7 @@ describe('Send Magic Link test', () => {
 
     expect(response).toEqual(sendEmailResponse)
     expect(cacheData[email]).toEqual([token])
-    expect(cacheData[token]).toEqual({ email, redirectTo: 'vet/visit-date', userType: vet, data })
+    expect(cacheData[token]).toEqual({ email, redirectTo: 'vet/check-review', userType: vet, data })
     expect(sendEmail).toHaveBeenCalledTimes(1)
     expect(sendEmail).toHaveBeenCalledWith(templateIdVetLogin, email, {
       personalisation: { magiclink: `${serviceUri}/verify-login?token=${token}&email=${email}` },

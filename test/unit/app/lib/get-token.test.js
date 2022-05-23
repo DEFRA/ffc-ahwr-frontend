@@ -42,8 +42,8 @@ describe('Get Token test', () => {
   })
 
   test('when test token does not exist, return uuid token', async () => {
+    config.testToken = null
     const getToken = require('../../../../app/lib/get-token')
-
     const response = await getToken('email@test.com')
 
     expect(response).not.toBe(testToken)
