@@ -25,6 +25,7 @@ module.exports = {
     beefTest: 'beefTest',
     dairy: 'dairy',
     dairyTest: 'dairyTest',
+    detailsCorrect: 'detailsCorrect',
     farmerApplication: 'farmerApplication',
     pigs: 'pigs',
     pigsTest: 'pigsTest',
