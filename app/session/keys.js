@@ -6,7 +6,8 @@ module.exports = {
     sheep: 'sheep'
   },
   farmerApplyData: {
-    whichReview: 'whichReview'
+    whichReview: 'whichReview',
+    eligibleSpecies: 'eligibleSpecies'
   },
   claim: {
     detailsCorrect: 'detailsCorrect'
@@ -24,6 +25,7 @@ module.exports = {
     beefTest: 'beefTest',
     dairy: 'dairy',
     dairyTest: 'dairyTest',
+    detailsCorrect: 'detailsCorrect',
     farmerApplication: 'farmerApplication',
     pigs: 'pigs',
     pigsTest: 'pigsTest',
