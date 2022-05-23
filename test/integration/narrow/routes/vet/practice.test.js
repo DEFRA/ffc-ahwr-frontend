@@ -6,7 +6,7 @@ const { practice: practiceErrorMessages } = require('../../../../../app/lib/erro
 const { vetSignup: { practice: practiceKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('What is the name of the vet practice the vet working for at the time of the review?')
+  expect($('.govuk-heading-l').text()).toEqual('What is the name of the vet practice the vet was working for at the time of the review?')
   expect($('label[for=practice]').text()).toMatch('Vet practice name')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual('What is the name of vet practice')
