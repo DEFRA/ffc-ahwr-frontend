@@ -51,7 +51,7 @@ async function sendFarmerClaimLoginMagicLink (request, email) {
 }
 
 async function sendVetMagicLinkEmail (request, email, data) {
-  return sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet, data)
+  return sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/check-review', vet, data)
 }
 
 module.exports = {
