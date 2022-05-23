@@ -25,6 +25,10 @@ function setClaim (request, key, value) {
   set(request, entries.claim, key, value)
 }
 
+function setFarmerApplyData (request, key, value) {
+  set(request, entries.farmerApplyData, key, value)
+}
+
 function setOrganisation (request, key, value) {
   set(request, entries.organisation, key, value)
 }
@@ -37,16 +41,16 @@ function setVetVisitData (request, key, value) {
   set(request, entries.vetVisitData, key, value)
 }
 
-function setFarmerApplyData (request, key, value) {
-  set(request, entries.farmerApplyData, key, value)
-}
-
 function getApplication (request, key) {
   return get(request, entries.application, key)
 }
 
 function getClaim (request, key) {
   return get(request, entries.claim, key)
+}
+
+function getFarmerApplyData (request, key) {
+  return get(request, entries.farmerApplyData, key)
 }
 
 function getOrganisation (request, key) {
@@ -59,10 +63,6 @@ function getVetSignup (request, key) {
 
 function getVetVisitData (request, key) {
   return get(request, entries.vetVisitData, key)
-}
-
-function getFarmerApplyData (request, key) {
-  return get(request, entries.farmerApplyData, key)
 }
 
 module.exports = {

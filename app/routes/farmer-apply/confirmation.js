@@ -12,7 +12,7 @@ module.exports = {
       const organisation = session.getOrganisation(request)
       session.setApplication(request, 'organisation', organisation)
 
-      const application = session.getApplication(request)
+      const application = session.getFarmerApplyData(request)
       await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)
       if (!response) {
