@@ -45,8 +45,7 @@ describe('Dairy test bvd test', () => {
 
     test.each([
       { dairyTest: 'no' },
-      { dairyTest: 'yes' },
-      { dairyTest: 'further investigation required' }
+      { dairyTest: 'yes' }
     ])('returns 302 to next page when acceptable answer given', async ({ dairyTest }) => {
       const options = {
         method,
