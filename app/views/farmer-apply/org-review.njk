@@ -13,19 +13,20 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Health and welfare review funding for this organisation</h1>
+    <h1 class="govuk-heading-l">Check your details</h1>
 
     <h2 class="govuk-heading-m">{{ organisation.name }}</h2>
     {{ govukSummaryList({
       rows: listData.rows
     }) }}
-
-    <p>If your email is not correct, update your email address at Rural Payments Agency.</p>
-
-    {{ govukButton({
-      text: "Start new application",
-      href: "which-review"
-    }) }}
+    
+    <form method="POST" autocomplete="off" novalidate="novalidate">
+      <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukButton({
+        text: "Continue",
+        attributes: {id: "btnContinue"}
+      }) }}
+    </div>
   </div>
 </div>
 {% endblock %}
