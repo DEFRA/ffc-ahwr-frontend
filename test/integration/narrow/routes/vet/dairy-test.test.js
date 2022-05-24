@@ -18,7 +18,7 @@ describe('Dairy test bvd test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Did bulk milk test results show that BVD is in the herd?')
+      expect($('h1').text()).toMatch('Did antibody test results show that BVD is in the herd?')
       expectPhaseBanner.ok($)
     })
 
