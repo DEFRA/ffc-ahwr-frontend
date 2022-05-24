@@ -10,9 +10,9 @@ module.exports = {
   options: {
     handler: async (request, h) => {
       const organisation = session.getOrganisation(request)
-      session.setApplication(request, 'organisation', organisation)
+      session.setFarmerApplyData(request, 'organisation', organisation)
 
-      const application = session.getApplication(request)
+      const application = session.getFarmerApplyData(request)
       await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)
       if (!response) {

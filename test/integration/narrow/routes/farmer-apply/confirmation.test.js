@@ -10,10 +10,10 @@ jest.mock('../../../../../app/session')
 const messagingMock = require('../../../../../app/messaging')
 jest.mock('../../../../../app/messaging')
 
-const application = { id: 'application' }
+const application = { whichReview: 'pigs' }
 const organisation = { id: 'organisation' }
 sessionMock.getOrganisation.mockReturnValue(organisation)
-sessionMock.getApplication.mockReturnValue(application)
+sessionMock.getFarmerApplyData.mockReturnValue(application)
 
 describe('Confirmation test', () => {
   const url = '/farmer-apply/confirmation'
@@ -43,10 +43,10 @@ describe('Confirmation test', () => {
       expectPhaseBanner.ok($)
       expect(sessionMock.getOrganisation).toHaveBeenCalledTimes(1)
       expect(sessionMock.getOrganisation).toHaveBeenCalledWith(res.request)
-      expect(sessionMock.setApplication).toHaveBeenCalledTimes(1)
-      expect(sessionMock.setApplication).toHaveBeenNthCalledWith(1, res.request, 'organisation', organisation)
-      expect(sessionMock.getApplication).toHaveBeenCalledTimes(1)
-      expect(sessionMock.getApplication).toHaveBeenCalledWith(res.request)
+      expect(sessionMock.setFarmerApplyData).toHaveBeenCalledTimes(1)
+      expect(sessionMock.setFarmerApplyData).toHaveBeenNthCalledWith(1, res.request, 'organisation', organisation)
+      expect(sessionMock.getFarmerApplyData).toHaveBeenCalledTimes(1)
+      expect(sessionMock.getFarmerApplyData).toHaveBeenCalledWith(res.request)
       expect(messagingMock.sendMessage).toHaveBeenCalledTimes(1)
       expect(messagingMock.sendMessage).toHaveBeenCalledWith(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: res.request.yar.id })
     })

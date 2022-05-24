@@ -5,7 +5,7 @@ const { vetVisitData: { beef } } = require('../../session/keys')
 
 const legendText = 'Were there 11 or more beef cattle on the farm at the time of the review?'
 const errorText = 'Select yes if there were 11 or more beef cattle'
-const backLink = '/vet/check-answers'
+const backLink = '/vet/visit-date'
 
 const path = 'vet/beef-eligibility'
 module.exports = [

@@ -29,14 +29,14 @@ describe('Vet check answers test', () => {
     })
 
     test.each([
-      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
-      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'no', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 100 }, speciesTestResultValue: 100, reviewReport: 'no' },
-      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
-      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
-      { speciesTest: species.pigs, data: { pigs: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' },
-      { speciesTest: species.sheep, data: { sheep: 'yes' }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 0 }, speciesTestResultValue: 0, reviewReport: 'yes' },
-      { speciesTest: species.beef, data: { cattle: 'yes', cattleType: species.beef }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' },
-      { speciesTest: species.dairy, data: { cattle: 'yes', cattleType: species.dairy }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' }
+      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleNumberOfAnimals: 'no', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
+      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleNumberOfAnimals: 'no', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 100 }, speciesTestResultValue: 100, reviewReport: 'no' },
+      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
+      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleNumberOfAnimals: 'no', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'no' },
+      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'PRRS in herd', speciesTestValue: { pigsTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' },
+      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 0 }, speciesTestResultValue: 0, reviewReport: 'yes' },
+      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { beefTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' },
+      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleNumberOfAnimals: 'yes', speciesTestText: 'BVD in herd', speciesTestValue: { dairyTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'yes' }
     ])('returns 200 with answers for specific claim type - $species', async ({ data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
       const visitDate = new Date(2022, 4, 12)
       session.getVetVisitData.mockReturnValueOnce({
