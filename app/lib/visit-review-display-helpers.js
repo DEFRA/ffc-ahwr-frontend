@@ -9,7 +9,7 @@ function getSpeciesTestRowForDisplay (claim) {
     beef: { key: { text: 'BVD in herd' }, value: { text: visitData[vetVisitData.beefTest] } },
     dairy: { key: { text: 'BVD in herd' }, value: { text: visitData[vetVisitData.dairyTest] } },
     pigs: { key: { text: 'PRRS in herd' }, value: { text: visitData[vetVisitData.pigsTest] } },
-    sheep: { key: { text: 'Worming treatment effectiveness' }, value: { text: `${visitData[vetVisitData.sheepTest]}%` } }
+    sheep: { key: { text: 'Percentage reduction in eggs per gram (EPG)' }, value: { text: `${visitData[vetVisitData.sheepTest]}%` } }
   }[getClaimType(claimData)]
 }
 

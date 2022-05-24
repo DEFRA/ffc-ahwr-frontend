@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Enter name of vet{% endblock %}
+{% block pageTitle %}What is the name of vet{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -17,14 +17,11 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Enter the name of the vet who undertook the visit</h1>
+        <h1 class="govuk-heading-l">What is the name of the vet who did the review?</h1>
 
         {{ govukInput({
           label: {
-            text: "Name of the vet"
-          },
-          hint: {
-            text: "This is the name of the vet who undertook the visit"
+            text: "Full name"
           },
           classes: "govuk-input-!-width-full",
           id: "name",

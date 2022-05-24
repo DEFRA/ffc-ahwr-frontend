@@ -26,6 +26,9 @@ function hasEligibleNumberOfAnimals (vetVisit) {
 }
 
 const path = 'vet/check-answers'
+function upperFirstLetter (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
 module.exports = [{
   method: 'GET',
   path: `/${path}`,
@@ -50,22 +53,22 @@ module.exports = [{
       switch (claimType) {
         case species.beef:
           text = 'BVD in herd'
-          value = vetVisit[vetVisitData.beefTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.beefTest])
           href = '/vet/beef-test'
           break
         case species.sheep:
-          text = 'Worming treatment effectiveness'
+          text = 'Percentage reduction in eggs per gram (EPG)'
           value = vetVisit[vetVisitData.sheepTest]
           href = '/vet/sheep-test'
           break
         case species.dairy:
           text = 'BVD in herd'
-          value = vetVisit[vetVisitData.dairyTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.dairyTest])
           href = '/vet/dairy-test'
           break
         case species.pigs:
           text = 'PRRS in herd'
-          value = vetVisit[vetVisitData.pigsTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.pigsTest])
           href = '/vet/pigs-test'
           break
       }

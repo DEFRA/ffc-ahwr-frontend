@@ -1,13 +1,13 @@
 const Joi = require('joi')
 const { vetVisitData: { dairyTest } } = require('../../session/keys')
 const session = require('../../session')
-const getYesNoInvestigateRadios = require('../helpers/yes-no-investigate-radios')
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
 const errorText = 'Select yes if BVD was found in the herd'
 const backLink = '/vet/check-answers'
 const legendText = 'Did bulk milk test results show that BVD is in the herd?'
 function getRadios (previousAnswer, _errorText) {
-  return getYesNoInvestigateRadios(legendText, dairyTest, previousAnswer, _errorText)
+  return getYesNoRadios(legendText, dairyTest, previousAnswer, _errorText)
 }
 const path = 'vet/dairy-test'
 module.exports = [
@@ -29,7 +29,7 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          [dairyTest]: Joi.string().valid('yes', 'no', 'further investigation required').required()
+          [dairyTest]: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, _err) => {
           return h.view(path, {
