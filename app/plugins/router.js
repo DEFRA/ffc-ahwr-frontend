@@ -20,12 +20,10 @@ const routes = [].concat(
   require('../routes/farmer-claim/visit-review'),
   require('../routes/privacy-policy'),
   require('../routes/vet'),
-  require('../routes/vet/beef-eligibility'),
   require('../routes/vet/beef-test'),
   require('../routes/vet/check-answers'),
   require('../routes/vet/check-review'),
   require('../routes/vet/confirmation'),
-  require('../routes/vet/dairy-eligibility'),
   require('../routes/vet/dairy-test'),
   require('../routes/vet/declaration'),
   require('../routes/vet/details-incorrect'),
@@ -35,8 +33,8 @@ const routes = [].concat(
   require('../routes/vet/rcvs'),
   require('../routes/vet/reference'),
   require('../routes/vet/review-report'),
-  require('../routes/vet/sheep-eligibility'),
   require('../routes/vet/sheep-test'),
+  require('../routes/vet/species-eligibility'),
   require('../routes/vet/visit-date')
 )
 
