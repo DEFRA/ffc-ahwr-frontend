@@ -9,7 +9,6 @@ const routes = [].concat(
   require('../routes/farmer/login'),
   require('../routes/farmer-apply'),
   require('../routes/farmer-apply/check-answers'),
-  require('../routes/farmer-apply/confirmation'),
   require('../routes/farmer-apply/declaration'),
   require('../routes/farmer-apply/not-eligible'),
   require('../routes/farmer-apply/org-review'),

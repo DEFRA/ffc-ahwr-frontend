@@ -1,11 +1,12 @@
 const { v4: uuid } = require('uuid')
 const { farmerApply } = require('../../../../app/constants/user-types')
 const { cookie: { ttl } } = require('../../../../app/config')
+const { farmerApplyData: { organisation: organisationKey } } = require('../../../../app/session/keys')
 
 describe('Auth plugin test', () => {
   let getByEmail
   let session
-  const org = { name: 'my-org' }
+  const organisation = { name: 'my-org' }
 
   beforeAll(async () => {
     jest.resetAllMocks()
@@ -46,7 +47,7 @@ describe('Auth plugin test', () => {
         url,
         headers: { cookie: cookieHeaders }
       }
-      getByEmail.mockResolvedValue(org)
+      getByEmail.mockResolvedValue(organisation)
 
       const res = await global.__SERVER__.inject(options)
       const cookieHeader = res.headers['set-cookie']
@@ -55,8 +56,8 @@ describe('Auth plugin test', () => {
 
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual(redirectTo)
-      expect(session.setOrganisation).toHaveBeenCalledTimes(1)
-      expect(session.setOrganisation).toHaveBeenCalledWith(res.request, 'name', org.name)
+      expect(session.setFarmerApplyData).toHaveBeenCalledTimes(2)
+      expect(session.setFarmerApplyData).toHaveBeenCalledWith(res.request, organisationKey, organisation)
       expect(parseInt(maxAgeOfCookieInSeconds, 10) * 1000).toEqual(ttl)
 
       const resTwo = await global.__SERVER__.inject(options)
