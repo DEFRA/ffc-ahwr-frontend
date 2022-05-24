@@ -79,7 +79,7 @@ describe('Beef BVD present test', () => {
 
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch('Select yes if BVD was found in the herd')
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /vet', async () => {

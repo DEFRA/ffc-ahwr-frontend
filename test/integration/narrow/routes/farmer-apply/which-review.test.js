@@ -82,7 +82,7 @@ describe('Species review test', () => {
 
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch('Select which livestock do you want a review for?')
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /farmer-apply/login', async () => {

@@ -49,7 +49,7 @@ module.exports = [
             ...getYesNoRadios(speciesContent[species].legendText, species, session.getFarmerApplyData(request, eligibleSpecies), speciesContent[species].errorText, getRadioOptions(species)),
             backLink,
             title
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {
