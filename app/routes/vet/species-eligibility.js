@@ -33,7 +33,7 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          eligibleSpecies: Joi.string().valid('yes', 'no').required()
+          [eligibleSpecies]: Joi.string().valid('yes', 'no').required()
         }),
         params: Joi.object({
           species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
@@ -50,8 +50,8 @@ module.exports = [
       },
       handler: async (request, h) => {
         session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
-        const redirect = request.payload.eligibleSpecies === 'yes' ? 'check-answers' : 'not-eligible'
-        return h.redirect(`/vet/${redirect}`)
+        const species = request.params.species
+        return h.redirect(`/vet/${species}-test`)
       }
     }
   }
