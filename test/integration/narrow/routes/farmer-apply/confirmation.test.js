@@ -38,8 +38,8 @@ describe('Confirmation test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Application complete')
-      expect($('title').text()).toEqual('Confirmation')
+      expect($('h1').text()).toMatch('Application successful')
+      expect($('title').text()).toEqual('Application successful')
       expectPhaseBanner.ok($)
       expect(sessionMock.getOrganisation).toHaveBeenCalledTimes(1)
       expect(sessionMock.getOrganisation).toHaveBeenCalledWith(res.request)
