@@ -41,7 +41,6 @@ module.exports = {
               result.valid = !!organisation
             }
           } else if (path.startsWith('/farmer-claim') && userType === farmerClaim) {
-            // TODO: Update this to check for the claim data
             if (getClaim(request, organisationKey)) {
               result.valid = true
             } else {
