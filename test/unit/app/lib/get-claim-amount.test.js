@@ -9,7 +9,6 @@ describe('getClaimAmount returns correct amount', () => {
     { whichReview: species.beef, amount: amounts.beef },
     { whichReview: species.dairy, amount: amounts.dairy }
   ])('for $species', ({ whichReview, amount }) => {
-
     const res = getClaimAmount({ whichReview })
 
     expect(res).toEqual(amount)
