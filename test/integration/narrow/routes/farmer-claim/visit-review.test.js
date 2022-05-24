@@ -6,7 +6,7 @@ const species = require('../../../../../app/constants/species')
 const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
 
 const { getClaimAmount } = require('../../../../../app/lib/get-claim-amount')
-const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/visit-review-display-helpers')
+const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
 
 function expectPageContentOk ($, application) {
   const speciesTestRow = getSpeciesTestRowForDisplay(application)
@@ -37,23 +37,18 @@ describe('Vet visit review page test', () => {
 
   function setupSessionMock (speciesToTest) {
     let vvData
-    let claimData
     switch (speciesToTest) {
       case species.beef:
-        claimData = { cattleType: species.beef, cattle: 'yes' }
         vvData = { beef: 'yes', beefTest: 'yes', reviewReport: 'yes' }
         break
       case species.dairy:
-        claimData = { cattleType: species.dairy, cattle: 'yes' }
         vvData = { dairy: 'yes', dairyTest: 'yes', reviewReport: 'no' }
         break
       case species.pigs:
-        claimData = { pigs: 'yes' }
         vvData = { pigs: 'yes', pigsTest: 'no', reviewReport: 'yes' }
         break
       case species.sheep:
-        claimData = { sheep: 'yes' }
-        vvData = { sheep: 'yes', sheepTest: 100, reviewReport: 'no' }
+        vvData = { sheep: 'yes', sheepTest: '100', reviewReport: 'no' }
         break
     }
     const application = {
@@ -61,7 +56,7 @@ describe('Vet visit review page test', () => {
         organisation: {
           name: 'org-name'
         },
-        ...claimData
+        whichReview: speciesToTest
       },
       vetVisit: {
         data: {

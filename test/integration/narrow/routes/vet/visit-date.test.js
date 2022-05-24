@@ -146,7 +146,7 @@ describe('Vet, enter date of visit', () => {
       { description: 'application created 365 days ago, visit date today', applicationCreationDate: yearPast },
       { description: 'application created yesterday, visit date today', applicationCreationDate: yesterday }
     ])('returns 302 to next page when acceptable answer given - $description', async ({ applicationCreationDate }) => {
-      session.getVetVisitData.mockReturnValueOnce({ data: { cattle: 'no', cattleType: '', sheep: '', pigs: 'yes' }, createdAt: applicationCreationDate })
+      session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: 'pigs' }, createdAt: applicationCreationDate })
       const options = {
         auth,
         method,

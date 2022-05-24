@@ -18,7 +18,7 @@ describe('Sheep Eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Will you have at least 21 sheep on the date of the review?')
+      expect($('h1').text()).toMatch('Were there 21 or more sheep on the farm at the time of the review?')
       expectPhaseBanner.ok($)
     })
 
@@ -78,7 +78,7 @@ describe('Sheep Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have at least 21 sheep on the date of the review')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were 21 or more sheep on the farm at the time of the review')
       expect(res.statusCode).toBe(200)
     })
 

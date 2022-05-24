@@ -3,9 +3,9 @@ const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 const { vetVisitData: { dairy } } = require('../../session/keys')
 
-const legendText = 'Were there more than 10 dairy cattle on the farm at the time of the review?'
-const errorText = 'Select yes if there were more than 10 cattle in the herd'
-const backLink = '/vet/check-answers'
+const legendText = 'Were there 11 or more dairy cattle on the farm at the time of the review?'
+const errorText = 'Select yes if there were 11 or more cattle in the herd'
+const backLink = '/vet/visit-date'
 
 const path = 'vet/dairy-eligibility'
 module.exports = [

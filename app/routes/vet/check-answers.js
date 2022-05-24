@@ -2,6 +2,7 @@ const species = require('../../constants/species')
 const { getClaimType } = require('../../lib/get-claim-type')
 const session = require('../../session')
 const { vetVisitData } = require('../../session/keys')
+const { upperFirstLetter } = require('../../lib/display-helpers')
 
 const backLink = '/vet/review-report'
 
@@ -40,7 +41,7 @@ module.exports = [{
         actions: { items: [{ href: '/vet/visit-date', text: 'Change', visuallyHiddenText: 'change visit date' }] }
       }, {
         key: { text: 'Eligible number of animals' },
-        value: { text: hasEligibleNumberOfAnimals(vetVisit) },
+        value: { text: upperFirstLetter(hasEligibleNumberOfAnimals(vetVisit)) },
         actions: { items: [{ href: eligibilityPath, text: 'Change', visuallyHiddenText: 'change eligible number of animals' }] }
       }]
 
@@ -50,22 +51,22 @@ module.exports = [{
       switch (claimType) {
         case species.beef:
           text = 'BVD in herd'
-          value = vetVisit[vetVisitData.beefTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.beefTest])
           href = '/vet/beef-test'
           break
         case species.sheep:
-          text = 'Worming treatment effectiveness'
+          text = 'Percentage reduction in eggs per gram (EPG)'
           value = vetVisit[vetVisitData.sheepTest]
           href = '/vet/sheep-test'
           break
         case species.dairy:
           text = 'BVD in herd'
-          value = vetVisit[vetVisitData.dairyTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.dairyTest])
           href = '/vet/dairy-test'
           break
         case species.pigs:
           text = 'PRRS in herd'
-          value = vetVisit[vetVisitData.pigsTest]
+          value = upperFirstLetter(vetVisit[vetVisitData.pigsTest])
           href = '/vet/pigs-test'
           break
       }
@@ -78,7 +79,7 @@ module.exports = [{
 
       rows.push({
         key: { text: 'Written report given to farmer' },
-        value: { text: vetVisit[vetVisitData.reviewReport] },
+        value: { text: upperFirstLetter(vetVisit[vetVisitData.reviewReport]) },
         actions: { items: [{ href: '/vet/review-report', text: 'Change', visuallyHiddenText: 'change report provided' }] }
       })
 

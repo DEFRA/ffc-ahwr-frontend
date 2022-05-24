@@ -6,10 +6,10 @@ const { reference: referenceErrorMessages } = require('../../../../../app/lib/er
 const { vetSignup: { reference: referenceKey } } = require('../../../../../app/session/keys')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('Enter the funding application reference number')
-  expect($('label[for=applicationReference]').text()).toMatch('Reference number')
+  expect($('.govuk-heading-l').text()).toEqual('Enter booking reference number')
+  expect($('label[for=applicationReference]').text()).toMatch('Booking reference number')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual('Enter application reference number')
+  expect($('title').text()).toEqual('Enter booking reference number')
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet')

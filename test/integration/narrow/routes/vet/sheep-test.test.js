@@ -18,7 +18,7 @@ describe('Sheep worming test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment')
+      expect($('h1').text()).toMatch('What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?')
       expectPhaseBanner.ok($)
     })
 

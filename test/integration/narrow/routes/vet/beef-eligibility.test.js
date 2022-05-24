@@ -18,7 +18,7 @@ describe('Beef Eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Were there more than 10 beef cattle on the farm at the time of the review?')
+      expect($('h1').text()).toMatch('Were there 11 or more beef cattle on the farm at the time of the review?')
       expectPhaseBanner.ok($)
     })
 
@@ -78,7 +78,7 @@ describe('Beef Eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you keep more than 10 beef cattle')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were 11 or more beef cattle')
       expect(res.statusCode).toBe(200)
     })
 
