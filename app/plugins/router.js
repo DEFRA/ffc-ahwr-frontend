@@ -7,6 +7,7 @@ const routes = [].concat(
   require('../routes/healthz'),
   require('../routes/home'),
   require('../routes/farmer/login'),
+  require('../routes/farmer-apply'),
   require('../routes/farmer-apply/cattle'),
   require('../routes/farmer-apply/cattle-type'),
   require('../routes/farmer-apply/check-answers'),
