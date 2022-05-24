@@ -29,6 +29,7 @@ const routes = [].concat(
   require('../routes/vet/details-incorrect'),
   require('../routes/vet/email'),
   require('../routes/vet/name'),
+  require('../routes/vet/pigs-test'),
   require('../routes/vet/practice'),
   require('../routes/vet/rcvs'),
   require('../routes/vet/reference'),
