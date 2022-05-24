@@ -2,7 +2,7 @@ const Joi = require('joi')
 const boom = require('@hapi/boom')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const { getClaimAmount } = require('../../lib/get-claim-amount')
-const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../lib/visit-review-display-helpers')
+const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../lib/display-helpers')
 const { getClaim, setClaim } = require('../../session')
 const { claim: { detailsCorrect } } = require('../../session/keys')
 

@@ -6,7 +6,7 @@ const species = require('../../../../../app/constants/species')
 const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
 
 const { getClaimAmount } = require('../../../../../app/lib/get-claim-amount')
-const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/visit-review-display-helpers')
+const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
 
 function expectPageContentOk ($, application) {
   const speciesTestRow = getSpeciesTestRowForDisplay(application)
@@ -48,7 +48,7 @@ describe('Vet visit review page test', () => {
         vvData = { pigs: 'yes', pigsTest: 'no', reviewReport: 'yes' }
         break
       case species.sheep:
-        vvData = { sheep: 'yes', sheepTest: 100, reviewReport: 'no' }
+        vvData = { sheep: 'yes', sheepTest: '100', reviewReport: 'no' }
         break
     }
     const application = {

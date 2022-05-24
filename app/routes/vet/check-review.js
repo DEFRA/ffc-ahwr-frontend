@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
-const { getTypeOfReviewRowForDisplay } = require('../../lib/visit-review-display-helpers')
+const { getTypeOfReviewRowForDisplay } = require('../../lib/display-helpers')
 const { getVetVisitData, setVetVisitData } = require('../../session')
 const { vetVisitData: { detailsCorrect } } = require('../../session/keys')
 

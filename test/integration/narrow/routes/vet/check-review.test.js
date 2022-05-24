@@ -5,7 +5,7 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
 const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
 
-const { getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/visit-review-display-helpers')
+const { getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
 
 function expectPageContentOk ($, vetVisitData) {
   const typeOfReviewRow = getTypeOfReviewRowForDisplay(vetVisitData.farmerApplication.data)
