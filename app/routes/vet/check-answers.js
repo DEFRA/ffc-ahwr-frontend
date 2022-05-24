@@ -27,7 +27,6 @@ function hasEligibleNumberOfAnimals (vetVisit) {
 
 const path = 'vet/check-answers'
 function upperFirstLetter (str) {
-  console.log(str.toString(), typeof str, 'type')
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 module.exports = [{
