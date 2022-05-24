@@ -27,22 +27,17 @@ describe('Vet check review page test', () => {
 
   function setupSessionMock (speciesToTest) {
     let vvData
-    let claimData
     switch (speciesToTest) {
       case species.beef:
-        claimData = { cattleType: species.beef, cattle: 'yes' }
         vvData = { beef: 'yes', beefTest: 'yes', reviewReport: 'yes' }
         break
       case species.dairy:
-        claimData = { cattleType: species.dairy, cattle: 'yes' }
         vvData = { dairy: 'yes', dairyTest: 'yes', reviewReport: 'no' }
         break
       case species.pigs:
-        claimData = { pigs: 'yes' }
         vvData = { pigs: 'yes', pigsTest: 'no', reviewReport: 'yes' }
         break
       case species.sheep:
-        claimData = { sheep: 'yes' }
         vvData = { sheep: 'yes', sheepTest: 100, reviewReport: 'no' }
         break
     }
@@ -52,7 +47,7 @@ describe('Vet check review page test', () => {
           organisation: {
             name: 'org-name'
           },
-          ...claimData
+          whichReview: speciesToTest
         }
       },
       ...vvData

@@ -4,24 +4,13 @@ const species = require('../../../../app/constants/species')
 
 describe('getClaimAmount returns correct amount', () => {
   test.each([
-    { species: species.pigs, cattle: '', amount: amounts.pigs },
-    { species: species.sheep, cattle: '', amount: amounts.sheep },
-    { species: species.beef, cattle: 'yes', amount: amounts.beef },
-    { species: 'both', cattle: 'yes', amount: amounts.beef },
-    { species: species.dairy, cattle: 'yes', amount: amounts.dairy }
-  ])('for $species', ({ species, cattle, amount }) => {
-    const claimData = {
-      pigs: '',
-      sheep: ''
-    }
-    if (cattle === 'yes') {
-      claimData.cattle = cattle
-      claimData.cattleType = species
-    } else {
-      claimData[species] = 'yes'
-    }
+    { whichReview: species.pigs, amount: amounts.pigs },
+    { whichReview: species.sheep, amount: amounts.sheep },
+    { whichReview: species.beef, amount: amounts.beef },
+    { whichReview: species.dairy, amount: amounts.dairy }
+  ])('for $species', ({ whichReview, amount }) => {
 
-    const res = getClaimAmount(claimData)
+    const res = getClaimAmount({ whichReview })
 
     expect(res).toEqual(amount)
   })
