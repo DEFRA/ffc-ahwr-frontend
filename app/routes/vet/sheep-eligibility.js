@@ -5,7 +5,7 @@ const session = require('../../session')
 
 const legendText = 'Were there 21 or more sheep on the farm at the time of the review?'
 const errorText = 'Select yes if there were 21 or more sheep on the farm at the time of the review'
-const backLink = '/vet/check-answers'
+const backLink = '/vet/visit-date'
 
 const path = 'vet/sheep-eligibility'
 module.exports = [

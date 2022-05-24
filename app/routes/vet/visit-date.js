@@ -9,6 +9,7 @@ const { vetVisitData: { farmerApplication, visitDate } } = require('../../sessio
 
 const templatePath = 'vet/visit-date'
 const path = `/${templatePath}`
+const backLink = '/vet/check-review'
 
 function getDateFromPayload (payload) {
   const day = payload[labels.day]
@@ -24,7 +25,7 @@ module.exports = [{
     handler: async (request, h) => {
       const date = session.getVetVisitData(request, visitDate)
       const items = createItemsFromDate(new Date(date), false)
-      return h.view(templatePath, { items })
+      return h.view(templatePath, { items, backLink })
     }
   }
 }, {
@@ -47,7 +48,7 @@ module.exports = [{
       failAction: async (request, h, error) => {
         const { createdAt } = session.getVetVisitData(request, farmerApplication)
         const dateInputErrors = getDateInputErrors(error.details, request.payload, createdAt)
-        return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
+        return h.view(templatePath, { ...request.payload, ...dateInputErrors, backLink }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
@@ -60,7 +61,7 @@ module.exports = [{
           errorMessage,
           items: createItemsFromPayload(request.payload, true)
         }
-        return h.view(templatePath, { ...request.payload, ...dateInputErrors }).code(400).takeover()
+        return h.view(templatePath, { ...request.payload, ...dateInputErrors, backLink }).code(400).takeover()
       }
       session.setVetVisitData(request, visitDate, date)
       const claimType = getClaimType(application.data)

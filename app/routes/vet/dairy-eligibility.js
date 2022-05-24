@@ -5,7 +5,7 @@ const { vetVisitData: { dairy } } = require('../../session/keys')
 
 const legendText = 'Were there 11 or more dairy cattle on the farm at the time of the review?'
 const errorText = 'Select yes if there were 11 or more cattle in the herd'
-const backLink = '/vet/check-answers'
+const backLink = '/vet/visit-date'
 
 const path = 'vet/dairy-eligibility'
 module.exports = [
