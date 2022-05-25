@@ -84,7 +84,7 @@ describe('Farmert review report test', () => {
 
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch('Select yes if you have given the farmer a written report of the review')
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /vet', async () => {

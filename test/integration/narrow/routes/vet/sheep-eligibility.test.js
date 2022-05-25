@@ -79,7 +79,7 @@ describe('Sheep Eligibility test', () => {
 
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch('Select yes if there were 21 or more sheep on the farm at the time of the review')
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
 
     test('when not logged in redirects to /vet', async () => {

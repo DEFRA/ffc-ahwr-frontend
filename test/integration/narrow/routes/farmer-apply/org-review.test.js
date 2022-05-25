@@ -21,7 +21,7 @@ describe('Org review page test', () => {
         name: 'org-name',
         sbi: '123456789'
       }
-      session.getOrganisation.mockReturnValue(org)
+      session.getFarmerApplyData.mockReturnValue(org)
       const options = {
         auth: { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' },
         method: 'GET',
@@ -49,7 +49,7 @@ describe('Org review page test', () => {
     })
 
     test('returns 404 when no organisation is found', async () => {
-      session.getOrganisation.mockReturnValue(undefined)
+      session.getFarmerApplyData.mockReturnValue(undefined)
       const options = {
         auth: { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' },
         method: 'GET',

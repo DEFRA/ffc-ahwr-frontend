@@ -1,11 +1,8 @@
 const { getByEmail } = require('../api-requests/users')
 const { cookie: cookieConfig, cookiePolicy } = require('../config')
 const { farmerApply, farmerClaim, vet } = require('../constants/user-types')
-const { getOrganisation, setOrganisation } = require('../session')
-
-function isOrgInSession (request) {
-  return !!getOrganisation(request)
-}
+const { getClaim, getFarmerApplyData, setClaim, setFarmerApplyData } = require('../session')
+const { farmerApplyData: { organisation: organisationKey } } = require('../session/keys')
 
 module.exports = {
   plugin: {
@@ -36,21 +33,20 @@ module.exports = {
 
           const result = { valid: false }
           if (path.startsWith('/farmer-apply') && userType === farmerApply) {
-            if (isOrgInSession(request)) {
+            if (getFarmerApplyData(request, organisationKey)) {
               result.valid = true
             } else {
-              const org = (await getByEmail(session.email)) ?? {}
-              Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
-              result.valid = !!org
+              const organisation = (await getByEmail(session.email)) ?? {}
+              setFarmerApplyData(request, organisationKey, organisation)
+              result.valid = !!organisation
             }
           } else if (path.startsWith('/farmer-claim') && userType === farmerClaim) {
-            // TODO: Update this to check for the claim data
-            if (isOrgInSession(request)) {
+            if (getClaim(request, organisationKey)) {
               result.valid = true
             } else {
-              const org = (await getByEmail(session.email)) ?? {}
-              Object.entries(org).forEach(([k, v]) => setOrganisation(request, k, v))
-              result.valid = !!org
+              const organisation = (await getByEmail(session.email)) ?? {}
+              setClaim(request, organisationKey, organisation)
+              result.valid = !!organisation
             }
           } else if (path.startsWith('/vet') && userType === vet) {
             result.valid = true
