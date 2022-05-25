@@ -63,6 +63,20 @@ describe('Declaration test', () => {
       expect(res.statusCode).toBe(302)
       expect(res.headers.location).toEqual('/farmer-apply/login')
     })
+
+    test('returns 400 when no application found', async () => {
+      const options = {
+        method: 'GET',
+        url,
+        auth
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(404)
+      const $ = cheerio.load(res.payload)
+      expect($('.govuk-heading-l').text()).toEqual('404 - Not Found')
+    })
   })
 
   describe(`POST ${url} route`, () => {
@@ -126,13 +140,13 @@ describe('Declaration test', () => {
       expect(sessionMock.getFarmerApplyData).toHaveBeenCalledWith(res.request)
     })
 
-    test('returns 500 when no message response', async () => {
+    test('returns 500 when request is not valid and there is no message response', async () => {
       messagingMock.receiveMessage.mockResolvedValueOnce(null)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
         url,
-        payload: { crumb },
+        payload: { crumb, terms: 'agree' },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
