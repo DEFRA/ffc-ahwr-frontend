@@ -10,7 +10,7 @@ module.exports = {
     title: 'Were there 11 or more dairy cattle on the farm at the time of the review?'
   },
   pigs: {
-    errorText: 'Select yes if there were more than 51 pig on the farm at the time of the review',
+    errorText: 'Select yes if there were more than 51 pigs on the farm at the time of the review',
     legendText: 'Were there more than 51 pig on the farm at the time of the review?',
     title: 'Were there more than 51 pig on the farm at the time of the review?'
   },

@@ -2,7 +2,7 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Pigs BVD present test', () => {
+describe('Pigs PRRS present test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
   const url = '/vet/pigs-test'
 
