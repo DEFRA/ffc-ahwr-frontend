@@ -50,9 +50,10 @@ module.exports = [{
   path: '/farmer-apply/org-review',
   options: {
     handler: async (request, h) => {
-	  const organisation = session.getFarmerApplyData(request, organisationKey)
+      const organisation = session.getFarmerApplyData(request, organisationKey)
       if (!organisation) {
         return boom.notFound()
+      }
       return h.view('farmer-apply/org-review', getView(request))
     }
   }
