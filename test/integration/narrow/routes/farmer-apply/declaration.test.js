@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { applicationRequestMsgType, applicationRequestQueue } = require('../../../../../app/config')
 const { farmerApplyData: { declaration } } = require('../../../../../app/session/keys')
+const species = require('../../../../../app/constants/species')
 
 const sessionMock = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
@@ -19,7 +20,6 @@ function expectPageContentOk ($, organisation) {
 
 describe('Declaration test', () => {
   const organisation = { id: 'organisation', name: 'org-name', address: 'org-address', sbi: '0123456789' }
-  const application = { whichReview: 'pigs', organisation }
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
   const url = '/farmer-apply/declaration'
 
@@ -28,7 +28,13 @@ describe('Declaration test', () => {
   })
 
   describe(`GET ${url} route`, () => {
-    test('returns 200', async () => {
+    test.each([
+      { whichReview: species.beef },
+      { whichReview: species.dairy },
+      { whichReview: species.pigs },
+      { whichReview: species.sheep }
+    ])('returns 200 for $whichReview', async ({ whichReview }) => {
+      const application = { whichReview, organisation }
       sessionMock.getFarmerApplyData.mockReturnValue(application)
       const options = {
         method: 'GET',
@@ -60,9 +66,15 @@ describe('Declaration test', () => {
   })
 
   describe(`POST ${url} route`, () => {
-    test('returns 200, caches data and sends message for valid request', async () => {
-      messagingMock.receiveMessage.mockResolvedValueOnce({ applicationReference: 'abc123' })
+    test.each([
+      { whichReview: species.beef },
+      { whichReview: species.dairy },
+      { whichReview: species.pigs },
+      { whichReview: species.sheep }
+    ])('returns 200, caches data and sends message for valid request for $whichReview', async ({ whichReview }) => {
+      const application = { whichReview, organisation }
       sessionMock.getFarmerApplyData.mockReturnValue(application)
+      messagingMock.receiveMessage.mockResolvedValueOnce({ applicationReference: 'abc123' })
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -87,7 +99,13 @@ describe('Declaration test', () => {
       expect(messagingMock.sendMessage).toHaveBeenCalledWith(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: res.request.yar.id })
     })
 
-    test('returns 400 when request is not valid', async () => {
+    test.each([
+      { whichReview: species.beef },
+      { whichReview: species.dairy },
+      { whichReview: species.pigs },
+      { whichReview: species.sheep }
+    ])('returns 400 when request is not valid for $whichReview', async ({ whichReview }) => {
+      const application = { whichReview, organisation }
       sessionMock.getFarmerApplyData.mockReturnValue(application)
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
