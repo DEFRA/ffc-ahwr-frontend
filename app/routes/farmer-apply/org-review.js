@@ -1,18 +1,39 @@
 const boom = require('@hapi/boom')
 const session = require('../../session')
 const Joi = require('joi')
-const { farmerApplyData: { whichReview } } = require('../../session/keys')
-const { speciesRadios } = require('../helpers/species-radio')
-const radioId = 'whichReview'
-const errorText = 'Select yes and confirm your details?'
-const questionText = 'Are your details correct?'
-
-function getView (request) {
+const { farmerApplyData: { confirmCheckDetails } } = require('../../session/keys')
+const radioId = 'confirmCheckDetails'
+const labelText = 'Are your details correct?'
+function getYesNoRadios (previousAnswer, errorText) {
+  return {
+    radios: {
+      idPrefix: radioId,
+      name: radioId,
+      label: {
+        text: labelText
+      },
+      items: [
+        {
+          value: 'yes',
+          text: 'Yes',
+          checked: previousAnswer === 'yes'
+        },
+        {
+          value: 'no',
+          text: 'No',
+          checked: previousAnswer === 'no'
+        }
+      ],
+      ...(errorText ? { errorMessage: { text: errorText } } : {})
+    }
+  }
+}
+function getView (request, errorText) {
   const organisation = session.getOrganisation(request)
   if (!organisation) {
     return boom.notFound()
   }
-
+  const prevAnswer = session.getFarmerApplyData(request, confirmCheckDetails)
   const rows = [
     { key: { text: 'Farmer name:' }, value: { text: organisation.name } },
     { key: { text: 'Business name:' }, value: { text: organisation.name } },
@@ -21,7 +42,7 @@ function getView (request) {
     { key: { text: 'Address:' }, value: { text: organisation.address } },
     { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
   ]
-  return { organisation, listData: { rows } }
+  return { organisation, listData: { rows }, radio: getYesNoRadios(prevAnswer, errorText) }
 }
 
 module.exports = [{
@@ -39,17 +60,16 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        whichReview: Joi.string().valid('yes', 'no').required()
+        confirmCheckDetails: Joi.string().valid('yes', 'no').required()
       }),
       failAction: (request, h, _err) => {
         return h.view('/farmer-apply/org-review', {
-          ...speciesRadios(legendText, radioId, session.getFarmerApplyData(request, whichReview), errorText, radioOptions),
-          backLink
+          ...getView(request, 'Select yes and confirm your details?')
         }).takeover()
       }
     },
     handler: async (request, h) => {
-      session.setFarmerApplyData(request, whichReview, request.payload.whichReview)
+      session.setFarmerApplyData(request, confirmCheckDetails, request.payload.confirmCheckDetails)
       return h.redirect(`/farmer-apply/${request.payload.whichReview}-eligibility`)
     }
   }
