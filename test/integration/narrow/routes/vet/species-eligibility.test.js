@@ -112,7 +112,7 @@ describe('Vet species eligibility test', () => {
 
       const $ = cheerio.load(res.payload)
       expect($('p.govuk-error-message').text()).toMatch(speciesContent[species].errorText)
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
 
     test.each([

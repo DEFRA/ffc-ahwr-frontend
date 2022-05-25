@@ -36,7 +36,7 @@ module.exports = [
           return h.view(path, {
             ...getRadios(session.getVetVisitData(request, pigsTest), errorText),
             backLink
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {

@@ -45,7 +45,7 @@ module.exports = [
             ...getYesNoRadios(speciesContent[species].legendText, species, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
             backLink,
             title
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {
