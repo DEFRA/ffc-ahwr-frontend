@@ -23,6 +23,7 @@ module.exports = {
     reference: 'reference'
   },
   vetVisitData: {
+    eligibleSpecies: 'eligibleSpecies',
     beef: 'beef',
     beefTest: 'beefTest',
     dairy: 'dairy',
