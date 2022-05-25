@@ -33,7 +33,7 @@ module.exports = [
           return h.view(path, {
             ...getYesNoRadios(legendText, dairy, session.getVetVisitData(request, dairy), errorText),
             backLink
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {

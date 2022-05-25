@@ -5,7 +5,7 @@ const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
 const errorText = 'Select yes if BVD was found in the herd'
 const backLink = '/vet/check-answers'
-const legendText = 'Did bulk milk test results show that BVD is in the herd?'
+const legendText = 'Did testing results show that BVD is in the herd?'
 function getRadios (previousAnswer, _errorText) {
   return getYesNoRadios(legendText, dairyTest, previousAnswer, _errorText)
 }
@@ -35,7 +35,7 @@ module.exports = [
           return h.view(path, {
             ...getRadios(session.getVetVisitData(request, dairyTest), errorText),
             backLink
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {

@@ -1,12 +1,13 @@
 const boom = require('@hapi/boom')
 const session = require('../../session')
+const { farmerApplyData: { organisation: organisationKey } } = require('../../session/keys')
 
 module.exports = {
   method: 'GET',
   path: '/farmer-apply/org-review',
   options: {
     handler: async (request, h) => {
-      const organisation = session.getOrganisation(request)
+      const organisation = session.getFarmerApplyData(request, organisationKey)
       if (!organisation) {
         return boom.notFound()
       }

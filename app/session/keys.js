@@ -6,19 +6,21 @@ module.exports = {
     sheep: 'sheep'
   },
   farmerApplyData: {
-    whichReview: 'whichReview',
-    eligibleSpecies: 'eligibleSpecies'
+    eligibleSpecies: 'eligibleSpecies',
+    declaration: 'declaration',
+    organisation: 'organisation',
+    whichReview: 'whichReview'
   },
   claim: {
     detailsCorrect: 'detailsCorrect'
   },
   vetSignup: {
+    applicationState: 'applicationState',
     email: 'email',
     name: 'name',
     practice: 'practice',
     rcvs: 'rcvs',
-    reference: 'reference',
-    applicationState: 'applicationState'
+    reference: 'reference'
   },
   vetVisitData: {
     beef: 'beef',

@@ -36,7 +36,7 @@ module.exports = [
           return h.view('farmer-apply/which-review', {
             ...speciesRadios(legendText, radioId, session.getFarmerApplyData(request, whichReview), errorText, radioOptions),
             backLink
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {

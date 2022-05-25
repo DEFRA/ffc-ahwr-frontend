@@ -3,7 +3,7 @@ const session = require('../../../../app/session')
 describe('session', () => {
   const applicationSectionKey = 'application'
   const claimKey = 'claim'
-  const organisationSectionKey = 'organisation'
+  const farmerApplyDataSectionKey = 'farmerApplyData'
   const vetSignupSectionKey = 'vetSignup'
   const vetVisitSectionKey = 'vetVisitData'
 
@@ -13,7 +13,7 @@ describe('session', () => {
   const getFunctionsToTest = [
     { func: 'getApplication', expectedSectionKey: applicationSectionKey },
     { func: 'getClaim', expectedSectionKey: claimKey },
-    { func: 'getOrganisation', expectedSectionKey: organisationSectionKey },
+    { func: 'getFarmerApplyData', expectedSectionKey: farmerApplyDataSectionKey },
     { func: 'getVetSignup', expectedSectionKey: vetSignupSectionKey },
     { func: 'getVetVisitData', expectedSectionKey: vetVisitSectionKey }
   ]
@@ -21,7 +21,7 @@ describe('session', () => {
   const setFunctionsToTest = [
     { func: 'setApplication', expectedSectionKey: applicationSectionKey },
     { func: 'setClaim', expectedSectionKey: claimKey },
-    { func: 'setOrganisation', expectedSectionKey: organisationSectionKey },
+    { func: 'setFarmerApplyData', expectedSectionKey: farmerApplyDataSectionKey },
     { func: 'setVetSignup', expectedSectionKey: vetSignupSectionKey },
     { func: 'setVetVisitData', expectedSectionKey: vetVisitSectionKey }
   ]

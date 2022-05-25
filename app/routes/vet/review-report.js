@@ -41,7 +41,7 @@ module.exports = [
           return h.view('vet/review-report', {
             ...getYesNoRadios(legendText, radioId, session.getVetVisitData(request, reviewReport), errorText, radioOptions),
             backLink
-          }).takeover()
+          }).code(400).takeover()
         }
       },
       handler: async (request, h) => {
