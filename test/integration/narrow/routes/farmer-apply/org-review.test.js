@@ -118,6 +118,15 @@ describe('Org review page test', () => {
       { confirmCheckDetails: '' },
       { confirmCheckDetails: 'no' }
     ])('returns error when unacceptable answer is given', async ({ confirmCheckDetails }) => {
+      const org = {
+        farmerName: 'Dailry Farmer',
+        address: ' org-address-here',
+        cph: '11/222/3333',
+        email: 'org@test.com',
+        name: 'org-name',
+        sbi: '123456789'
+      }
+      session.getFarmerApplyData.mockReturnValue(org)
       const options = {
         method,
         url,
@@ -129,6 +138,7 @@ describe('Org review page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
+      expect(res.statusCode).toBe(200)
       expect($('p.govuk-error-message').text()).toMatch('Select yes and confirm your details')
       expect(res.statusCode).toBe(200)
     })

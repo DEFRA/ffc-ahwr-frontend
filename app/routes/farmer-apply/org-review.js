@@ -73,7 +73,7 @@ module.exports = [{
       failAction: (request, h, _err) => {
         return h.view('farmer-apply/org-review', {
           ...getView(request, 'Select yes and confirm your details')
-        }).takeover()
+        }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
