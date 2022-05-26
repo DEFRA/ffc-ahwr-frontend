@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Health and welfare review funding for this organisation{% endblock %}
+{% block pageTitle %}Check your details{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -15,18 +15,18 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Check your details</h1>
 
-    <h2 class="govuk-heading-m">{{ organisation.name }}</h2>
     {{ govukSummaryList({
       rows: listData.rows
     }) }}
     
     <form method="POST" autocomplete="off" novalidate="novalidate">
       <input type="hidden" name="crumb" value="{{crumb}}"/>
+      {{ govukRadios(radios) }}
       {{ govukButton({
         text: "Continue",
         attributes: {id: "btnContinue"}
       }) }}
-    </div>
+    </form>
   </div>
 </div>
 {% endblock %}

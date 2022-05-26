@@ -9,8 +9,12 @@ function getYesNoRadios (previousAnswer, errorText) {
     radios: {
       idPrefix: radioId,
       name: radioId,
-      label: {
-        text: labelText
+      fieldset: {
+        legend: {
+          text: labelText,
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
       },
       items: [
         {
@@ -29,7 +33,7 @@ function getYesNoRadios (previousAnswer, errorText) {
   }
 }
 function getView (request, errorText) {
-  const organisation = session.getOrganisation(request)
+  const organisation = session.getFarmerApplyData(request, organisationKey)
   if (!organisation) {
     return boom.notFound()
   }
@@ -42,7 +46,7 @@ function getView (request, errorText) {
     { key: { text: 'Address:' }, value: { text: organisation.address } },
     { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
   ]
-  return { organisation, listData: { rows }, radio: getYesNoRadios(prevAnswer, errorText) }
+  return { organisation, listData: { rows }, ...getYesNoRadios(prevAnswer, errorText) }
 }
 
 module.exports = [{
@@ -64,17 +68,17 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        confirmCheckDetails: Joi.string().valid('yes', 'no').required()
+        confirmCheckDetails: Joi.string().valid('yes').required()
       }),
       failAction: (request, h, _err) => {
-        return h.view('/farmer-apply/org-review', {
+        return h.view('farmer-apply/org-review', {
           ...getView(request, 'Select yes and confirm your details?')
         }).takeover()
       }
     },
     handler: async (request, h) => {
       session.setFarmerApplyData(request, confirmCheckDetails, request.payload.confirmCheckDetails)
-      return h.redirect(`/farmer-apply/${request.payload.whichReview}-eligibility`)
+      return h.redirect('/farmer-apply/which-review')
     }
   }
 }
