@@ -138,9 +138,8 @@ describe('Org review page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect(res.statusCode).toBe(200)
       expect($('p.govuk-error-message').text()).toMatch('Select yes and confirm your details')
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(400)
     })
   })
 })
