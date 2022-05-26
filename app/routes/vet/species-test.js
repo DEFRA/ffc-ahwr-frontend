@@ -4,13 +4,13 @@ const { vetVisitData: { speciesTest, farmerApplication } } = require('../../sess
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 const speciesTypes = require('../../constants/species')
-const speciesContent = require('../../constants/species-content-vet')
+const speciesContent = require('../../constants/species-test-content-vet')
 const backLink = '/vet/visit-date'
 
 module.exports = [
   {
     method: 'GET',
-    path: '/vet/{species}-eligibility',
+    path: '/vet/{species}-test',
     options: {
       validate: {
         params: Joi.object({
@@ -20,9 +20,11 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
-        if (application.data.whichReview !== species) throw boom.badRequest()
+        if (application.data.whichReview !== species) {
+          throw boom.badRequest()
+        }
         const title = speciesContent[species].title
-        return h.view('vet/species-eligibility', {
+        return h.view('vet/species-test', {
           ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest)),
           backLink,
           title
@@ -32,19 +34,19 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/vet/{species}-eligibility',
+    path: '/vet/{species}-test',
     options: {
       validate: {
         payload: Joi.object({
           [speciesTest]: Joi.string().valid('yes', 'no').required()
         }),
         params: Joi.object({
-          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
+          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs)
         }),
         failAction: (request, h, _err) => {
           const species = request.params.species
           const title = speciesContent[species].title
-          return h.view('vet/species-eligibility', {
+          return h.view('vet/species-test', {
             ...getYesNoRadios(speciesContent[species].legendText, species, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText),
             backLink,
             title
@@ -54,7 +56,9 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
-        if (application.data.whichReview !== species) throw boom.badRequest()
+        if (application.data.whichReview !== species) {
+          throw boom.badRequest()
+        }
         session.setVetVisitData(request, speciesTest, request.payload.speciesTest)
         return h.redirect('/vet/review-report')
       }
