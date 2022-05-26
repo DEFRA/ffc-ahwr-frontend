@@ -1,7 +1,9 @@
 const Joi = require('joi')
-const { vetVisitData: { beefTest } } = require('../../session/keys')
+const boom = require('@hapi/boom')
+const { vetVisitData: { beefTest, farmerApplication } } = require('../../session/keys')
 const session = require('../../session')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
+const species = require('../../constants/species')
 
 const errorText = 'Select yes if BVD was found in the herd'
 const backLink = '/vet/check-answers'
@@ -17,6 +19,8 @@ module.exports = [
     path: `/${path}`,
     options: {
       handler: async (request, h) => {
+        const application = session.getVetVisitData(request, farmerApplication)
+        if (application.data.whichReview !== species.beef) throw boom.badRequest()
         return h.view(path, {
           ...getRadios(session.getVetVisitData(request, beefTest)),
           backLink
@@ -40,6 +44,8 @@ module.exports = [
         }
       },
       handler: async (request, h) => {
+        const application = session.getVetVisitData(request, farmerApplication)
+        if (application.data.whichReview !== species.beef) throw boom.badRequest()
         session.setVetVisitData(request, beefTest, request.payload[beefTest])
         return h.redirect('/vet/review-report')
       }

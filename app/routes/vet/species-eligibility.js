@@ -1,5 +1,6 @@
 const Joi = require('joi')
-const { vetVisitData: { eligibleSpecies } } = require('../../session/keys')
+const boom = require('@hapi/boom')
+const { vetVisitData: { eligibleSpecies, farmerApplication } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
 const speciesTypes = require('../../constants/species')
@@ -18,6 +19,8 @@ module.exports = [
       },
       handler: async (request, h) => {
         const species = request.params.species
+        const application = session.getVetVisitData(request, farmerApplication)
+        if (application.data.whichReview !== species) throw boom.badRequest()
         const title = speciesContent[species].title
         return h.view('vet/species-eligibility', {
           ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies)),
@@ -49,8 +52,10 @@ module.exports = [
         }
       },
       handler: async (request, h) => {
-        session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
         const species = request.params.species
+        const application = session.getVetVisitData(request, farmerApplication)
+        if (application.data.whichReview !== species) throw boom.badRequest()
+        session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
         return h.redirect(`/vet/${species}-test`)
       }
     }
