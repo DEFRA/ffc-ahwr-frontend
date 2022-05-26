@@ -39,7 +39,7 @@ function getView (request, errorText) {
   }
   const prevAnswer = session.getFarmerApplyData(request, confirmCheckDetails)
   const rows = [
-    { key: { text: 'Farmer name:' }, value: { text: organisation.name } },
+    { key: { text: 'Farmer name:' }, value: { text: organisation.farmerName } },
     { key: { text: 'Business name:' }, value: { text: organisation.name } },
     { key: { text: 'SBI number:' }, value: { text: organisation.sbi } },
     { key: { text: 'CPH number:' }, value: { text: organisation.cph } },
@@ -72,7 +72,7 @@ module.exports = [{
       }),
       failAction: (request, h, _err) => {
         return h.view('farmer-apply/org-review', {
-          ...getView(request, 'Select yes and confirm your details?')
+          ...getView(request, 'Select yes and confirm your details')
         }).takeover()
       }
     },

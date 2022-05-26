@@ -28,6 +28,8 @@ describe('Species eligibility test', () => {
       expect($('title').text()).toEqual(speciesContent[species].title)
       if (species !== species.pigs) {
         expect($('.govuk-hint').text()).toMatch(speciesContent[species].hintText)
+      } else {
+        expect($('.govuk-hint').text()).toMatch(undefined)
       }
       expectPhaseBanner.ok($)
     })
