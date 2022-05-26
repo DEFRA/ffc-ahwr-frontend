@@ -2,9 +2,9 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 
-describe('Dairy Cattle eligibility test', () => {
+describe('Pigs PRRS present test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-  const url = '/vet/dairy-eligibility'
+  const url = '/vet/pigs-test'
 
   describe(`GET ${url} route`, () => {
     test('returns 200', async () => {
@@ -18,7 +18,7 @@ describe('Dairy Cattle eligibility test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Were there 11 or more dairy cattle on the farm at the time of the review?')
+      expect($('h1').text()).toMatch('Did test results show that PRRS in the herd?')
       expectPhaseBanner.ok($)
     })
 
@@ -44,13 +44,13 @@ describe('Dairy Cattle eligibility test', () => {
     })
 
     test.each([
-      { dairy: 'no' },
-      { dairy: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ dairy }) => {
+      { pigsTest: 'no' },
+      { pigsTest: 'yes' }
+    ])('returns 302 to next page when acceptable answer given', async ({ pigsTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairy },
+        payload: { crumb, pigsTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -58,19 +58,19 @@ describe('Dairy Cattle eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/dairy-test')
+      expect(res.headers.location).toEqual('/vet/review-report')
     })
 
     test.each([
-      { dairy: null },
-      { dairy: undefined },
-      { dairy: 'wrong' },
-      { dairy: '' }
-    ])('returns error when unacceptable answer is given', async ({ dairy }) => {
+      { pigsTest: null },
+      { pigsTest: undefined },
+      { pigsTest: 'wrong' },
+      { pigsTest: '' }
+    ])('returns error when unacceptable answer is given', async ({ pigsTest }) => {
       const options = {
         method,
         url,
-        payload: { crumb, dairy },
+        payload: { crumb, pigsTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -78,7 +78,7 @@ describe('Dairy Cattle eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if there were 11 or more cattle in the herd')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if PRRS was found in the herd')
       expect(res.statusCode).toBe(400)
     })
 
@@ -86,7 +86,7 @@ describe('Dairy Cattle eligibility test', () => {
       const options = {
         method,
         url,
-        payload: { crumb, dairy: 'no' },
+        payload: { crumb, pigsTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 
