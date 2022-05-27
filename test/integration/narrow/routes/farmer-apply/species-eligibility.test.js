@@ -26,11 +26,7 @@ describe('Species eligibility test', () => {
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch(speciesContent[species].legendText)
       expect($('title').text()).toEqual(speciesContent[species].title)
-      if (species !== species.pigs) {
-        expect($('.govuk-hint').text()).toMatch(speciesContent[species].hintText)
-      } else {
-        expect($('.govuk-hint').text()).toMatch(undefined)
-      }
+      expect($('.govuk-hint').text()).toMatch(speciesContent[species].hintText)
       expectPhaseBanner.ok($)
     })
 

@@ -7,7 +7,7 @@ const speciesContent = require('../../constants/species-content')
 const backLink = '/farmer-apply/which-review'
 
 const getRadioOptions = (species) => {
-  return species === 'pigs' ? { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true } : { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText: speciesContent[species].hintText }
+  return { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText: speciesContent[species].hintText }
 }
 
 module.exports = [
