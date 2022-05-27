@@ -6,7 +6,14 @@ describe('Org review page test', () => {
   let session
   const url = '/farmer-apply/org-review'
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
-
+  const org = {
+    farmerName: 'Dailry Farmer',
+    address: ' org-address-here',
+    cph: '11/222/3333',
+    email: 'org@test.com',
+    name: 'org-name',
+    sbi: '123456789'
+  }
   describe(`GET ${url} route when logged in`, () => {
     beforeAll(async () => {
       jest.resetAllMocks()
@@ -16,14 +23,6 @@ describe('Org review page test', () => {
     })
 
     test('returns 200', async () => {
-      const org = {
-        farmerName: 'Dailry Farmer',
-        address: ' org-address-here',
-        cph: '11/222/3333',
-        email: 'org@test.com',
-        name: 'org-name',
-        sbi: '123456789'
-      }
       session.getFarmerApplyData.mockReturnValue(org)
       const options = {
         auth,
@@ -118,14 +117,6 @@ describe('Org review page test', () => {
       { confirmCheckDetails: '' },
       { confirmCheckDetails: 'no' }
     ])('returns error when unacceptable answer is given', async ({ confirmCheckDetails }) => {
-      const org = {
-        farmerName: 'Dailry Farmer',
-        address: ' org-address-here',
-        cph: '11/222/3333',
-        email: 'org@test.com',
-        name: 'org-name',
-        sbi: '123456789'
-      }
       session.getFarmerApplyData.mockReturnValue(org)
       const options = {
         method,

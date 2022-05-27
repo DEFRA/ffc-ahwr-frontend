@@ -4,34 +4,8 @@ const Joi = require('joi')
 const { farmerApplyData: { confirmCheckDetails, organisation: organisationKey } } = require('../../session/keys')
 const radioId = 'confirmCheckDetails'
 const labelText = 'Are your details correct?'
-function getYesNoRadios (previousAnswer, errorText) {
-  return {
-    radios: {
-      idPrefix: radioId,
-      name: radioId,
-      fieldset: {
-        legend: {
-          text: labelText,
-          isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: [
-        {
-          value: 'yes',
-          text: 'Yes',
-          checked: previousAnswer === 'yes'
-        },
-        {
-          value: 'no',
-          text: 'No',
-          checked: previousAnswer === 'no'
-        }
-      ],
-      ...(errorText ? { errorMessage: { text: errorText } } : {})
-    }
-  }
-}
+const { getYesNoRadios } = require('../helpers/yes-no-radios')
+
 function getView (request, errorText) {
   const organisation = session.getFarmerApplyData(request, organisationKey)
   if (!organisation) {
@@ -46,7 +20,14 @@ function getView (request, errorText) {
     { key: { text: 'Address:' }, value: { text: organisation.address } },
     { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
   ]
-  return { organisation, listData: { rows }, ...getYesNoRadios(prevAnswer, errorText) }
+  return {
+    organisation,
+    listData: { rows },
+    ...getYesNoRadios(labelText, radioId, prevAnswer, errorText, {
+      isPageHeading: false,
+      classes: 'govuk-fieldset__legend--m'
+    })
+  }
 }
 
 module.exports = [{
