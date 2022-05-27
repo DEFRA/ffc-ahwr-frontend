@@ -16,9 +16,7 @@ function getView (request, errorText) {
     { key: { text: 'Farmer name:' }, value: { text: organisation.farmerName } },
     { key: { text: 'Business name:' }, value: { text: organisation.name } },
     { key: { text: 'SBI number:' }, value: { text: organisation.sbi } },
-    { key: { text: 'CPH number:' }, value: { text: organisation.cph } },
-    { key: { text: 'Address:' }, value: { text: organisation.address } },
-    { key: { text: 'Contact email address:' }, value: { text: organisation.email } }
+    { key: { text: 'Address:' }, value: { text: organisation.address } }
   ]
   return {
     organisation,
