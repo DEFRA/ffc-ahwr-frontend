@@ -20,7 +20,9 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
-        if (application.data.whichReview !== species) throw boom.badRequest()
+        if (application.data.whichReview !== species) {
+          throw boom.badRequest()
+        }
         const title = speciesContent[species].title
         return h.view('vet/species-eligibility', {
           ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies)),
@@ -54,7 +56,9 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
-        if (application.data.whichReview !== species) throw boom.badRequest()
+        if (application.data.whichReview !== species) {
+          throw boom.badRequest()
+        }
         session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
         return h.redirect(`/vet/${species}-test`)
       }

@@ -14,7 +14,7 @@ module.exports = [
     options: {
       validate: {
         params: Joi.object({
-          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
+          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs)
         })
       },
       handler: async (request, h) => {

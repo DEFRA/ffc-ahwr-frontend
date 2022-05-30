@@ -12,7 +12,9 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const application = session.getVetVisitData(request, farmerApplication)
-      if (application.data.whichReview !== species.sheep) throw boom.badRequest()
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
       const testValue = session.getVetVisitData(request, sheepTest)
       return h.view(path, { sheepTest: testValue })
     }
@@ -31,7 +33,9 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const application = session.getVetVisitData(request, farmerApplication)
-      if (application.data.whichReview !== species.sheep) throw boom.badRequest()
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
       session.setVetVisitData(request, sheepTest, request.payload[sheepTest])
       return h.redirect('/vet/review-report')
     }
