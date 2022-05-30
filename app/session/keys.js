@@ -9,7 +9,8 @@ module.exports = {
     eligibleSpecies: 'eligibleSpecies',
     declaration: 'declaration',
     organisation: 'organisation',
-    whichReview: 'whichReview'
+    whichReview: 'whichReview',
+    confirmCheckDetails: 'confirmCheckDetails'
   },
   claim: {
     detailsCorrect: 'detailsCorrect'
