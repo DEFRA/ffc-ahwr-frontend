@@ -25,6 +25,7 @@ module.exports = {
   },
   vetVisitData: {
     eligibleSpecies: 'eligibleSpecies',
+    speciesTest: 'speciesTest',
     beef: 'beef',
     beefTest: 'beefTest',
     dairy: 'dairy',

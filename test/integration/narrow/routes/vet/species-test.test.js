@@ -2,23 +2,22 @@ const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
-const speciesContent = require('../../../../../app/constants/species-content-vet')
+const speciesContent = require('../../../../../app/constants/species-test-content-vet')
 
 const session = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
 
-describe('Vet species eligibility test', () => {
+describe('Vet species test page test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
 
-  describe('GET species eligibility route', () => {
+  describe('GET species test route', () => {
     test.each([
       { species: species.beef },
       { species: species.dairy },
-      { species: species.pigs },
-      { species: species.sheep }
+      { species: species.pigs }
     ])('returns 200', async ({ species }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species } })
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method: 'GET',
         url,
@@ -36,10 +35,9 @@ describe('Vet species eligibility test', () => {
     test.each([
       { species: species.beef },
       { species: species.dairy },
-      { species: species.pigs },
-      { species: species.sheep }
+      { species: species.pigs }
     ])('when not logged in redirects to /vet', async ({ species }) => {
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method: 'GET',
         url
@@ -52,13 +50,12 @@ describe('Vet species eligibility test', () => {
     })
 
     test.each([
-      { species: species.beef, whichReview: species.sheep },
+      { species: species.beef, whichReview: species.pigs },
       { species: species.dairy, whichReview: species.beef },
-      { species: species.pigs, whichReview: species.beef },
-      { species: species.sheep, whichReview: species.beef }
+      { species: species.pigs, whichReview: species.beef }
     ])('returns error when trying to access diff species review page', async ({ species, whichReview }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview } })
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method: 'GET',
         url,
@@ -69,7 +66,7 @@ describe('Vet species eligibility test', () => {
     })
   })
 
-  describe('POST species eligibility route', () => {
+  describe('POST species test route', () => {
     let crumb
     const method = 'POST'
 
@@ -78,21 +75,19 @@ describe('Vet species eligibility test', () => {
     })
 
     test.each([
-      { species: species.beef, eligibleSpecies: 'no' },
-      { species: species.dairy, eligibleSpecies: 'no' },
-      { species: species.pigs, eligibleSpecies: 'no' },
-      { species: species.sheep, eligibleSpecies: 'no' },
-      { species: species.beef, eligibleSpecies: 'yes' },
-      { species: species.dairy, eligibleSpecies: 'yes' },
-      { species: species.pigs, eligibleSpecies: 'yes' },
-      { species: species.sheep, eligibleSpecies: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ species, eligibleSpecies }) => {
+      { species: species.beef, speciesTest: 'no' },
+      { species: species.dairy, speciesTest: 'no' },
+      { species: species.pigs, speciesTest: 'no' },
+      { species: species.beef, speciesTest: 'yes' },
+      { species: species.dairy, speciesTest: 'yes' },
+      { species: species.pigs, speciesTest: 'yes' }
+    ])('returns 302 to next page when acceptable answer given', async ({ species, speciesTest }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species } })
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method,
         url,
-        payload: { crumb, eligibleSpecies },
+        payload: { crumb, speciesTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -100,33 +95,29 @@ describe('Vet species eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/vet/${species}-test`)
+      expect(res.headers.location).toEqual('/vet/review-report')
     })
 
     test.each([
-      { species: species.beef, eligibleSpecies: null },
-      { species: species.dairy, eligibleSpecies: null },
-      { species: species.pigs, eligibleSpecies: null },
-      { species: species.sheep, eligibleSpecies: null },
-      { species: species.beef, eligibleSpecies: undefined },
-      { species: species.dairy, eligibleSpecies: undefined },
-      { species: species.pigs, eligibleSpecies: undefined },
-      { species: species.sheep, eligibleSpecies: undefined },
-      { species: species.beef, eligibleSpecies: 'wrong' },
-      { species: species.dairy, eligibleSpecies: 'wrong' },
-      { species: species.pigs, eligibleSpecies: 'wrong' },
-      { species: species.sheep, eligibleSpecies: 'wrong' },
-      { species: species.beef, eligibleSpecies: '' },
-      { species: species.dairy, eligibleSpecies: '' },
-      { species: species.pigs, eligibleSpecies: '' },
-      { species: species.sheep, eligibleSpecies: '' }
-    ])('returns error when unacceptable answer is given', async ({ species, eligibleSpecies }) => {
+      { species: species.beef, speciesTest: null },
+      { species: species.dairy, speciesTest: null },
+      { species: species.pigs, speciesTest: null },
+      { species: species.beef, speciesTest: undefined },
+      { species: species.dairy, speciesTest: undefined },
+      { species: species.pigs, speciesTest: undefined },
+      { species: species.beef, speciesTest: 'wrong' },
+      { species: species.dairy, speciesTest: 'wrong' },
+      { species: species.pigs, speciesTest: 'wrong' },
+      { species: species.beef, speciesTest: '' },
+      { species: species.dairy, speciesTest: '' },
+      { species: species.pigs, speciesTest: '' }
+    ])('returns error when unacceptable answer is given', async ({ species, speciesTest }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species } })
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method,
         url,
-        payload: { crumb, eligibleSpecies },
+        payload: { crumb, speciesTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -141,15 +132,14 @@ describe('Vet species eligibility test', () => {
     test.each([
       { species: species.beef },
       { species: species.dairy },
-      { species: species.pigs },
-      { species: species.sheep }
+      { species: species.pigs }
     ])('when not logged in redirects to /vet', async ({ species }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species } })
-      const url = `/vet/${species}-eligibility`
+      const url = `/vet/${species}-test`
       const options = {
         method,
         url,
-        payload: { crumb, eligibleSpecies: 'no' },
+        payload: { crumb, speciesTest: 'no' },
         headers: { cookie: `crumb=${crumb}` }
       }
 

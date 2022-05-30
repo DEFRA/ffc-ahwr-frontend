@@ -1,6 +1,9 @@
 const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const species = require('../../../../../app/constants/species')
+const session = require('../../../../../app/session')
+jest.mock('../../../../../app/session')
 
 describe('Sheep worming test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
@@ -13,12 +16,28 @@ describe('Sheep worming test', () => {
         url,
         auth
       }
+      session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.sheep } })
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?')
+      expectPhaseBanner.ok($)
+    })
+
+    test('returns 400 for non-accesible species test page', async () => {
+      const options = {
+        method: 'GET',
+        url,
+        auth
+      }
+      session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.pigs } })
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(400)
+      const $ = cheerio.load(res.payload)
       expectPhaseBanner.ok($)
     })
 
@@ -47,6 +66,7 @@ describe('Sheep worming test', () => {
       { sheepTest: 50 },
       { sheepTest: 2 }
     ])('returns 302 to next page when acceptable answer given', async ({ sheepTest }) => {
+      session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.sheep } })
       const options = {
         method,
         url,

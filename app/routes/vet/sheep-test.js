@@ -1,7 +1,9 @@
 const Joi = require('joi')
+const boom = require('@hapi/boom')
 const session = require('../../session')
-const { vetVisitData: { sheepTest } } = require('../../session/keys')
+const { vetVisitData: { sheepTest, farmerApplication } } = require('../../session/keys')
 const { epg: epgValidation } = require('../../../app/lib/validation/percentage')
+const species = require('../../constants/species')
 
 const path = 'vet/sheep-test'
 module.exports = [{
@@ -9,6 +11,10 @@ module.exports = [{
   path: `/${path}`,
   options: {
     handler: async (request, h) => {
+      const application = session.getVetVisitData(request, farmerApplication)
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
       const testValue = session.getVetVisitData(request, sheepTest)
       return h.view(path, { sheepTest: testValue })
     }
@@ -26,6 +32,10 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
+      const application = session.getVetVisitData(request, farmerApplication)
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
       session.setVetVisitData(request, sheepTest, request.payload[sheepTest])
       return h.redirect('/vet/review-report')
     }
