@@ -29,13 +29,13 @@ describe('Vet check review page test', () => {
     let vvData
     switch (speciesToTest) {
       case species.beef:
-        vvData = { beef: 'yes', beefTest: 'yes', reviewReport: 'yes' }
+        vvData = { beef: 'yes', speciesTest: 'yes', reviewReport: 'yes' }
         break
       case species.dairy:
-        vvData = { dairy: 'yes', dairyTest: 'yes', reviewReport: 'no' }
+        vvData = { dairy: 'yes', speciesTest: 'yes', reviewReport: 'no' }
         break
       case species.pigs:
-        vvData = { pigs: 'yes', pigsTest: 'no', reviewReport: 'yes' }
+        vvData = { pigs: 'yes', speciesTest: 'no', reviewReport: 'yes' }
         break
       case species.sheep:
         vvData = { sheep: 'yes', sheepTest: 100, reviewReport: 'no' }
