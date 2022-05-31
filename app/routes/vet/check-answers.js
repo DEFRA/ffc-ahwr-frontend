@@ -51,7 +51,7 @@ module.exports = [{
       switch (claimType) {
         case species.beef:
           text = 'BVD in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.beefTest])
+          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
           href = '/vet/beef-test'
           break
         case species.sheep:
@@ -61,12 +61,12 @@ module.exports = [{
           break
         case species.dairy:
           text = 'BVD in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.dairyTest])
+          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
           href = '/vet/dairy-test'
           break
         case species.pigs:
           text = 'PRRS in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.pigsTest])
+          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
           href = '/vet/pigs-test'
           break
       }
