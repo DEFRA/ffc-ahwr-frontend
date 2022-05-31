@@ -9,11 +9,11 @@ function getSpeciesTestRowForDisplay (claim) {
 
   switch (claimType) {
     case species.beef:
-      return { key: { text: 'BVD in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.beefTest]) } }
+      return { key: { text: 'BVD in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.speciesTest]) } }
     case species.dairy:
-      return { key: { text: 'BVD in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.dairyTest]) } }
+      return { key: { text: 'BVD in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.speciesTest]) } }
     case species.pigs:
-      return { key: { text: 'PRRS in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.pigsTest]) } }
+      return { key: { text: 'PRRS in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.speciesTest]) } }
     case species.sheep:
       return { key: { text: 'Percentage reduction in eggs per gram (EPG)' }, value: { text: visitData[vetVisitData.sheepTest] } }
   }
