@@ -3,6 +3,7 @@ const Joi = require('joi')
 const util = require('util')
 const { applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
 const species = require('../../constants/species')
+const states = require('../../constants/states')
 const { sendMessage, receiveMessage } = require('../../messaging')
 const session = require('../../session')
 const { farmerApplyData: { declaration } } = require('../../session/keys')
@@ -91,10 +92,11 @@ module.exports = [{
       const application = session.getFarmerApplyData(request)
       await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)
-      if (!response) {
-        return boom.internal()
-      }
       console.info('Response received:', util.inspect(response, false, null, true))
+
+      if (response.applicationState === states.failed) {
+        return boom.internal(`creating application was not successful, check application microservice for details. sessionId: ${request.yar.id}. application data: ${JSON.stringify(application)}`)
+      }
 
       return h.view('farmer-apply/confirmation', { reference: response?.applicationReference })
     }

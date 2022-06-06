@@ -4,6 +4,7 @@ const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { applicationRequestMsgType, applicationRequestQueue } = require('../../../../../app/config')
 const { farmerApplyData: { declaration } } = require('../../../../../app/session/keys')
 const species = require('../../../../../app/constants/species')
+const states = require('../../../../../app/constants/states')
 
 const sessionMock = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
@@ -140,8 +141,8 @@ describe('Declaration test', () => {
       expect(sessionMock.getFarmerApplyData).toHaveBeenCalledWith(res.request)
     })
 
-    test('returns 500 when request is not valid and there is no message response', async () => {
-      messagingMock.receiveMessage.mockResolvedValueOnce(null)
+    test('returns 500 when request failed', async () => {
+      messagingMock.receiveMessage.mockResolvedValueOnce({ applicationState: states.failed })
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
