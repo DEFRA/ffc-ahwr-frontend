@@ -21,7 +21,7 @@ module.exports = [{
   options: {
     handler: async (request, h) => {
       const vetVisitData = session.getVetVisitData(request)
-      sendMessage(vetVisitData, vetVisitRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
+      await sendMessage(vetVisitData, vetVisitRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
       const response = await receiveMessage(request.yar.id, applicationResponseQueue)
       console.info('Response received:', util.inspect(response, false, null, true))
       session.setVetSignup(request, applicationStateKey, response?.applicationState)
