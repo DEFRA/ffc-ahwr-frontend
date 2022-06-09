@@ -63,14 +63,14 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { sheepTest: 50 },
-      { sheepTest: 2 }
-    ])('returns 302 to next page when acceptable answer given', async ({ sheepTest }) => {
+      { speciesTest: 50 },
+      { speciesTest: 2 }
+    ])('returns 302 to next page when acceptable answer given', async ({ speciesTest }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.sheep } })
       const options = {
         method,
         url,
-        payload: { crumb, sheepTest },
+        payload: { crumb, speciesTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -82,14 +82,14 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { sheepTest: 200, message: 'EPG percentage must be 100 or less' },
-      { sheepTest: -80, message: 'EPG percentage must be 0 or more' },
-      { sheepTest: null, message: 'Enter a valid EPG percentage' }
-    ])('returns error when unacceptable answer is given', async ({ sheepTest, message }) => {
+      { speciesTest: 200, message: 'EPG percentage must be 100 or less' },
+      { speciesTest: -80, message: 'EPG percentage must be 0 or more' },
+      { speciesTest: null, message: 'Enter a valid EPG percentage' }
+    ])('returns error when unacceptable answer is given', async ({ speciesTest, message }) => {
       const options = {
         method,
         url,
-        payload: { crumb, sheepTest },
+        payload: { crumb, speciesTest },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }

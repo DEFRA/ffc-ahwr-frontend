@@ -36,7 +36,7 @@ module.exports = {
     pigsTest: 'pigsTest',
     reviewReport: 'reviewReport',
     sheep: 'sheep',
-    sheepTest: 'sheepTest',
+    // sheepTest: 'sheepTest',
     signup: 'signup',
     visitDate: 'visitDate',
     whichReview: 'whichReview'

@@ -29,26 +29,23 @@ describe('Vet check answers test', () => {
     })
 
     test.each([
-      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleNumberOfAnimals: 'No', speciesTestText: 'PRRS in herd', speciesTestValue: { speciesTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'No' },
-      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleNumberOfAnimals: 'No', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 100 }, speciesTestResultValue: 100, reviewReport: 'No' },
-      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleNumberOfAnimals: 'No', speciesTestText: 'BVD in herd', speciesTestValue: { speciesTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'No' },
-      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleNumberOfAnimals: 'No', speciesTestText: 'BVD in herd', speciesTestValue: { speciesTest: 'no' }, speciesTestResultValue: 'No', reviewReport: 'No' },
-      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleNumberOfAnimals: 'Yes', speciesTestText: 'PRRS in herd', speciesTestValue: { speciesTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'Yes' },
-      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleNumberOfAnimals: 'Yes', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: { sheepTest: 0 }, speciesTestResultValue: 0, reviewReport: 'Yes' },
-      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleNumberOfAnimals: 'Yes', speciesTestText: 'BVD in herd', speciesTestValue: { speciesTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'Yes' },
-      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleNumberOfAnimals: 'Yes', speciesTestText: 'BVD in herd', speciesTestValue: { speciesTest: 'yes' }, speciesTestResultValue: 'Yes', reviewReport: 'Yes' }
-    ])('returns 200 with answers for specific claim type - $species', async ({ data, elgibleNumberOfAnimals, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
+      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleSpecies: 'No', speciesTestText: 'PRRS in herd', speciesTestValue: 'no', speciesTestResultValue: 'No', reviewReport: 'No' },
+      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleSpecies: 'No', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: 100, speciesTestResultValue: 100, reviewReport: 'No' },
+      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleSpecies: 'No', speciesTestText: 'BVD in herd', speciesTestValue: 'no', speciesTestResultValue: 'No', reviewReport: 'No' },
+      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleSpecies: 'No', speciesTestText: 'BVD in herd', speciesTestValue: 'no', speciesTestResultValue: 'No', reviewReport: 'No' },
+      { speciesTest: species.pigs, data: { whichReview: species.pigs }, elgibleSpecies: 'Yes', speciesTestText: 'PRRS in herd', speciesTestValue: 'yes', speciesTestResultValue: 'Yes', reviewReport: 'Yes' },
+      { speciesTest: species.sheep, data: { whichReview: species.sheep }, elgibleSpecies: 'Yes', speciesTestText: 'Percentage reduction in eggs per gram (EPG)', speciesTestValue: 0, speciesTestResultValue: 0, reviewReport: 'Yes' },
+      { speciesTest: species.beef, data: { whichReview: species.beef }, elgibleSpecies: 'Yes', speciesTestText: 'BVD in herd', speciesTestValue: 'yes', speciesTestResultValue: 'Yes', reviewReport: 'Yes' },
+      { speciesTest: species.dairy, data: { whichReview: species.dairy }, elgibleSpecies: 'Yes', speciesTestText: 'BVD in herd', speciesTestValue: 'yes', speciesTestResultValue: 'Yes', reviewReport: 'Yes' }
+    ])('returns 200 with answers for specific claim type - $speciesTest', async ({ data, elgibleSpecies, speciesTestText, speciesTestValue, speciesTestResultValue, reviewReport }) => {
       const visitDate = new Date(2022, 4, 12)
       session.getVetVisitData.mockReturnValueOnce({
         farmerApplication: {
           data
         },
         visitDate,
-        sheep: elgibleNumberOfAnimals,
-        pigs: elgibleNumberOfAnimals,
-        beef: elgibleNumberOfAnimals,
-        dairy: elgibleNumberOfAnimals,
-        ...speciesTestValue,
+        eligibleSpecies: elgibleSpecies.toLowerCase(),
+        speciesTest: speciesTestValue,
         reviewReport
       })
       const options = {
@@ -70,7 +67,7 @@ describe('Vet check answers test', () => {
       expect($('.govuk-summary-list__value').eq(0).text()).toMatch(visitDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }))
       expect($('.govuk-summary-list__actions .govuk-link').eq(0).text()).toMatch('Change')
       expect($('.govuk-summary-list__key').eq(1).text()).toMatch('Eligible number of animals')
-      expect($('.govuk-summary-list__value').eq(1).text()).toMatch(elgibleNumberOfAnimals)
+      expect($('.govuk-summary-list__value').eq(1).text()).toMatch(elgibleSpecies)
       expect($('.govuk-summary-list__actions .govuk-link').eq(1).text()).toMatch('Change')
       expect($('.govuk-summary-list__key').eq(2).text()).toMatch(speciesTestText)
       expect($('.govuk-summary-list__value').eq(2).text()).toMatch(speciesTestResultValue.toString())
