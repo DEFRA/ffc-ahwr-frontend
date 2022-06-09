@@ -24,20 +24,19 @@ module.exports = {
     reference: 'reference'
   },
   vetVisitData: {
-    eligibleSpecies: 'eligibleSpecies',
-    speciesTest: 'speciesTest',
     beef: 'beef',
     beefTest: 'beefTest',
     dairy: 'dairy',
     dairyTest: 'dairyTest',
     detailsCorrect: 'detailsCorrect',
+    eligibleSpecies: 'eligibleSpecies',
     farmerApplication: 'farmerApplication',
     pigs: 'pigs',
     pigsTest: 'pigsTest',
     reviewReport: 'reviewReport',
     sheep: 'sheep',
-    // sheepTest: 'sheepTest',
     signup: 'signup',
+    speciesTest: 'speciesTest',
     visitDate: 'visitDate',
     whichReview: 'whichReview'
   }
