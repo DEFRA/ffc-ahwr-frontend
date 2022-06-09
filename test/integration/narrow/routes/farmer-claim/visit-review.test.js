@@ -48,7 +48,7 @@ describe('Vet visit review page test', () => {
         vvData = { pigs: 'yes', speciesTest: 'no', reviewReport: 'yes' }
         break
       case species.sheep:
-        vvData = { sheep: 'yes', sheepTest: '100', reviewReport: 'no' }
+        vvData = { sheep: 'yes', speciesTest: '100', reviewReport: 'no' }
         break
     }
     const application = {

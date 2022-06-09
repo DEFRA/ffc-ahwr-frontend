@@ -15,7 +15,7 @@ function getSpeciesTestRowForDisplay (claim) {
     case species.pigs:
       return { key: { text: 'PRRS in herd' }, value: { text: upperFirstLetter(visitData[vetVisitData.speciesTest]) } }
     case species.sheep:
-      return { key: { text: 'Percentage reduction in eggs per gram (EPG)' }, value: { text: visitData[vetVisitData.sheepTest] } }
+      return { key: { text: 'Percentage reduction in eggs per gram (EPG)' }, value: { text: visitData[vetVisitData.speciesTest] } }
   }
 }
 

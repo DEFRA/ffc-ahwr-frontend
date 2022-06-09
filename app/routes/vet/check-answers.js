@@ -11,21 +11,6 @@ function getVisitDate (vetVisit) {
   return new Date(visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
-function hasEligibleNumberOfAnimals (vetVisit) {
-  const claimType = getClaimType(vetVisit.farmerApplication.data)
-
-  switch (claimType) {
-    case species.sheep:
-      return vetVisit[vetVisitData.sheep] || 'no'
-    case species.pigs:
-      return vetVisit[vetVisitData.pigs] || 'no'
-    case species.beef:
-      return vetVisit[vetVisitData.beef] || 'no'
-    case species.dairy:
-      return vetVisit[vetVisitData.dairy] || 'no'
-  }
-}
-
 const path = 'vet/check-answers'
 module.exports = [{
   method: 'GET',
@@ -41,7 +26,7 @@ module.exports = [{
         actions: { items: [{ href: '/vet/visit-date', text: 'Change', visuallyHiddenText: 'change visit date' }] }
       }, {
         key: { text: 'Eligible number of animals' },
-        value: { text: upperFirstLetter(hasEligibleNumberOfAnimals(vetVisit)) },
+        value: { text: upperFirstLetter(vetVisit[vetVisitData.eligibleSpecies]) },
         actions: { items: [{ href: eligibilityPath, text: 'Change', visuallyHiddenText: 'change eligible number of animals' }] }
       }]
 
@@ -56,7 +41,7 @@ module.exports = [{
           break
         case species.sheep:
           text = 'Percentage reduction in eggs per gram (EPG)'
-          value = vetVisit[vetVisitData.sheepTest]
+          value = vetVisit[vetVisitData.speciesTest]
           href = '/vet/sheep-test'
           break
         case species.dairy:
