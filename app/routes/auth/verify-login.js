@@ -1,9 +1,9 @@
 const Joi = require('joi')
 const { getByEmail } = require('../../api-requests/users')
-const { farmerApply, vet } = require('../../config/user-types')
+const { farmerApply, vet } = require('../../constants/user-types')
 const { getApplication } = require('../../messaging/application')
-const { setOrganisation, setVetVisitData } = require('../../session')
-const { vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
+const { setFarmerApplyData, setVetVisitData } = require('../../session')
+const { farmerApplyData: { organisation: organisationKey }, vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
 function isRequestValid (cachedEmail, email) {
   return !cachedEmail || email !== cachedEmail
@@ -16,7 +16,7 @@ function setAuthCookie (request, email, userType) {
 
 async function cacheFarmerApplyData (request, email) {
   const organisation = await getByEmail(email)
-  Object.entries(organisation).forEach(([k, v]) => setOrganisation(request, k, v))
+  setFarmerApplyData(request, organisationKey, organisation)
 }
 
 async function cacheVetData (request, vetSignupData) {

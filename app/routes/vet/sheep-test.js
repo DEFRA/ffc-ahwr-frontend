@@ -1,7 +1,9 @@
 const Joi = require('joi')
+const boom = require('@hapi/boom')
 const session = require('../../session')
-const { vetVisitData: { sheepTest } } = require('../../session/keys')
+const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
 const { epg: epgValidation } = require('../../../app/lib/validation/percentage')
+const species = require('../../constants/species')
 
 const path = 'vet/sheep-test'
 module.exports = [{
@@ -9,8 +11,12 @@ module.exports = [{
   path: `/${path}`,
   options: {
     handler: async (request, h) => {
-      const testValue = session.getVetVisitData(request, sheepTest)
-      return h.view(path, { sheepTest: testValue })
+      const application = session.getVetVisitData(request, farmerApplication)
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
+      const testValue = session.getVetVisitData(request, speciesTest)
+      return h.view(path, { speciesTest: testValue })
     }
   }
 }, {
@@ -19,14 +25,18 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        [sheepTest]: epgValidation
+        [speciesTest]: epgValidation
       }),
       failAction: async (request, h, error) => {
         return h.view(path, { ...request.payload, errorMessage: { text: error.details[0].message } }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      session.setVetVisitData(request, sheepTest, request.payload[sheepTest])
+      const application = session.getVetVisitData(request, farmerApplication)
+      if (application.data.whichReview !== species.sheep) {
+        throw boom.badRequest()
+      }
+      session.setVetVisitData(request, speciesTest, request.payload[speciesTest])
       return h.redirect('/vet/review-report')
     }
   }

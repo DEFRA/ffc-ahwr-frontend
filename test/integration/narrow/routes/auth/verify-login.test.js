@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const { v4: uuid } = require('uuid')
-const { farmerApply, farmerClaim, vet } = require('../../../../../app/config/user-types')
-const { vetVisitData: { farmerApplication, signup } } = require('../../../../../app/session/keys')
+const { farmerApply, farmerClaim, vet } = require('../../../../../app/constants/user-types')
+const { farmerApplyData: { organisation: organisationKey }, vetVisitData: { farmerApplication, signup } } = require('../../../../../app/session/keys')
 
 const application = require('../../../../../app/messaging/application')
 jest.mock('../../../../../app/messaging/application')
@@ -108,8 +108,8 @@ describe('Verify login page test', () => {
 
       switch (userType) {
         case farmerApply:
-          expect(session.setOrganisation).toHaveBeenCalledTimes(1)
-          expect(session.setOrganisation).toHaveBeenCalledWith(res.request, Object.keys(org)[0], org.name)
+          expect(session.setFarmerApplyData).toHaveBeenCalledTimes(1)
+          expect(session.setFarmerApplyData).toHaveBeenCalledWith(res.request, organisationKey, org)
           break
         case vet:
           expect(application.getApplication).toHaveBeenCalledTimes(1)

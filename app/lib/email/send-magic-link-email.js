@@ -1,13 +1,12 @@
-const { v4: uuid } = require('uuid')
+const getToken = require('../get-token')
 const sendEmail = require('./send-email')
-const { serviceUri } = require('../../config')
-const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templateIdVetLogin } } = require('../../config')
-const { farmerApply, farmerClaim, vet } = require('../../config/user-types')
+const { notify: { templateIdFarmerApplyLogin, templateIdFarmerClaimLogin, templateIdVetLogin }, serviceUri } = require('../../config')
+const { farmerApply, farmerClaim, vet } = require('../../constants/user-types')
 
 async function createAndCacheToken (request, email, redirectTo, userType, data) {
   const { magiclinkCache } = request.server.app
 
-  const token = uuid()
+  const token = await getToken(email)
   const tokens = await magiclinkCache.get(email) ?? []
   tokens.push(token)
   await magiclinkCache.set(email, tokens)
@@ -51,7 +50,7 @@ async function sendFarmerClaimLoginMagicLink (request, email) {
 }
 
 async function sendVetMagicLinkEmail (request, email, data) {
-  return sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/visit-date', vet, data)
+  return sendMagicLinkEmail(request, email, templateIdVetLogin, 'vet/check-review', vet, data)
 }
 
 module.exports = {

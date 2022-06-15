@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Enter email of vet{% endblock %}
+{% block pageTitle %}What is the vet practice email address{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -18,11 +18,13 @@
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
 
+        <h1 class="govuk-heading-l">What is the vet practice email address?</h1>
         {{ govukInput({
           label: {
-            classes: "govuk-label--l",
-            isPageHeading: true,
-            text: "Enter your email address"
+            text: "Vet practice email address?"
+          },
+          hint: {
+            text:"We'll send a link to this email for the vet to record information about the review."
           },
           classes: "govuk-input-!-width-full",
           id: "email",
@@ -31,7 +33,6 @@
           errorMessage: errorMessage
         }) }}
 
-        <p>We'll send you a link to confirm that you have access.</p>
         {{ govukButton({
           text: "Continue",
           attributes: {
