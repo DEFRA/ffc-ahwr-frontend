@@ -1,7 +1,7 @@
 environment: development
 name: ffc-ahwr-frontend
-namespace: ffc-ahwr
-workstream: ffc-ahwr
+namespace: ffc-missing
+workstream: ffc-missing
 image: ffc-ahwr-frontend
 
 labels: {}
