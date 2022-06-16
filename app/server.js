@@ -3,6 +3,8 @@ const Hapi = require('@hapi/hapi')
 const catbox = config.useRedis ? require('@hapi/catbox-redis') : require('@hapi/catbox-memory')
 const cacheConfig = config.useRedis ? config.cache.options : {}
 
+console.log('cacheConfig', cacheConfig)
+
 async function createServer () {
   const server = Hapi.server({
     cache: [{
