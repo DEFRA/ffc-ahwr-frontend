@@ -38,7 +38,7 @@
     "@wdio/cucumber-framework": "^7.16.12",
     "@wdio/spec-reporter": "^7.16.11",
     "chai": "^4.3.4",
-    "chromedriver": "^96.0.0",
+    "chromedriver": "^101.0.0",
     "eslint": "^7.22.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-wdio": "^7.4.2",
