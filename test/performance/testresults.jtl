@@ -1,0 +1,7 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1655798500876,177,/,200,OK,Thread Group 1-1,text,true,,15146,129,1,1,http://host.docker.internal:3000/,177,0,24
+1655798501066,1,Debug Sampler,200,OK,Thread Group 1-1,text,true,,3210,0,1,1,null,0,0,0
+1655798501067,86,/farmer-apply/login,200,OK,Thread Group 1-1,text,true,,13800,147,1,1,http://host.docker.internal:3000/farmer-apply/login,86,0,0
+1655798501155,0,Debug Sampler,200,OK,Thread Group 1-1,text,true,,371,0,1,1,null,0,0,0
+1655798501156,72,/farmer-apply/login - POST,403,Forbidden,Thread Group 1-1,text,false,,12946,318,1,1,http://host.docker.internal:3000/farmer-apply/login,71,0,0
+1655798501230,0,Debug Sampler,200,OK,Thread Group 1-1,text,true,,371,0,1,1,null,0,0,0
