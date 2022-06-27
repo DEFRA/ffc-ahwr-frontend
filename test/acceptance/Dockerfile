@@ -12,3 +12,4 @@ RUN npm install
 COPY --chown=node:node . .
 #CMD [ "npm", "run", "test" ]
 CMD [ "npm", "run", "test:local" ]
+

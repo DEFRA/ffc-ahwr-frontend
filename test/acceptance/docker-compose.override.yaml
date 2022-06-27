@@ -1,18 +1,41 @@
 version: '3.8'
 
+# This override file should be used when running this service in isolation
+# to provide dependencies and expose ports for local testing
+
 services:
-  ffc-ahwr-frontend-acceptance-tests:
-    environment:
-      MAX_INSTANCES: 1
-      CHROME_ARGS: "--verbose"
-    volumes:
-      - ./babel.config.js:/home/node/babel.config.js
-      - ./package.json:/home/node/package.json
-      - ./wdio.conf.js:/home/node/wdio.conf.js
-      - ./features:/home/node/features
-      - ./html-reports:/home/node/html-reports
-      - ./page-objects:/home/node/page-objects
-      - ./steps:/home/node/steps
-      - ./support:/home/node/support
+  ffc-ahwr-frontend:
+    build:
+      target: development
+    depends_on:
+      - ffc-ahwr-frontend-azurite
+      - redis
+    image: ffc-ahwr-frontend-development
+    container_name: ffc-ahwr-frontend-development
     ports:
-      - "9228:9229"
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    volumes:
+      - ./app:/home/node/app
+      - ./package.json:/home/node/package.json
+
+  ffc-ahwr-frontend-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.16.0
+    volumes:
+      - azurite_data:/data
+    ports:
+      - "10050:10000"
+      - "10051:10001"
+
+  redis:
+    image: redis:4.0.14
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+volumes:
+  azurite_data:
+  redis_data:
