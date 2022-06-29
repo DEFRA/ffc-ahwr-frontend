@@ -39,6 +39,7 @@
     "@wdio/spec-reporter": "^7.16.11",
     "chai": "^4.3.4",
     "chromedriver": "^101.0.0",
+    "dotenv": "^16.0.1",
     "eslint": "^7.22.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-wdio": "^7.4.2",

@@ -1,8 +1,8 @@
 import Page from './page'
 
-class Cattle extends Page {
-  get yesRadioButton () { return $('#cattle') }
-  get noRadioButton () { return $('#cattle-2') }
+class FarmerCattleEligibility extends Page {
+  get yesRadioButton () { return $('#eligibleSpecies') }
+  get noRadioButton () { return $('#eligibleSpecies-2') }
   get headerTitle () { return $('.govuk-fieldset__heading') }
   get continue () { return $('#btnContinue') }
 
@@ -12,6 +12,7 @@ class Cattle extends Page {
   }
 
   async selectCattleYes () {
+    await (await this.yesRadioButton).scrollIntoView();
     await (await this.yesRadioButton).click()
   }
 
@@ -28,4 +29,4 @@ class Cattle extends Page {
   }
 }
 
-export default new Cattle()
+export default new FarmerCattleEligibility()

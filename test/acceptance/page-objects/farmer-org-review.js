@@ -1,10 +1,10 @@
 import Page from './page'
 
 class FarmerOrgReview extends Page {
-  get continue () { return $('##btnContinue') }
+  get continue () { return $('#btnContinue') }
   get orgReviewQuestion () { return $('.govuk-form-group legend') }
-  get orgYesRadioOption () { return $('.govuk-form-group #confirmCheckDetails') }
-  get orgNoRadioOption () { return $('.govuk-form-group #confirmCheckDetails-2') }
+  get orgYesRadioOption () { return $('#confirmCheckDetails') }
+  get orgNoRadioOption () { return $('#confirmCheckDetails-2') }
 
   open () {
     super.open('')
@@ -16,15 +16,19 @@ class FarmerOrgReview extends Page {
   }
 
   async selectYes () {
-    await this.orgYesRadioOption.click()
+    await this.orgYesRadioOption.scrollIntoView();
+    await browser.pause(3000);
+    await await(this.orgYesRadioOption).click()
   }
 
   async selectNo () {
     await this.orgNoRadioOption.click()
+    await browser.pause(3000);
+    await await(this.orgNoRadioOption).click()
   }
 
   async clickContinue () {
-    await this.continue.click()
+    await await(this.continue).click()
   }
 
 }
