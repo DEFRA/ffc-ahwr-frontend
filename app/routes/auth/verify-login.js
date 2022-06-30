@@ -5,7 +5,7 @@ const { getApplication } = require('../../messaging/application')
 const { setFarmerApplyData, setVetVisitData } = require('../../session')
 const { farmerApplyData: { organisation: organisationKey }, vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
-function isRequestValid (cachedEmail, email) {
+function isRequestInvalid (cachedEmail, email) {
   return !cachedEmail || email !== cachedEmail
 }
 
@@ -23,19 +23,6 @@ async function cacheVetData (request, vetSignupData) {
   setVetVisitData(request, signup, vetSignupData)
   const application = await getApplication(vetSignupData.reference, request.yar.id)
   setVetVisitData(request, farmerApplication, application)
-}
-
-/**
- * Clear all tokens in the `magiclinkCache` associated to the email.
- *
- * @param {object} request object containing the `magiclinkCache`.
- * @param {string} email address to clear tokens from.
- */
-async function clearMagicLinkCache (request, email) {
-  const { magiclinkCache } = request.server.app
-  const emailTokens = await magiclinkCache.get(email)
-  Promise.all(emailTokens.map(async (token) => await magiclinkCache.drop(token)))
-  await magiclinkCache.drop(email)
 }
 
 /**
@@ -69,7 +56,7 @@ module.exports = [{
       const { email, token } = request.query
 
       const { email: cachedEmail, redirectTo, userType, data } = await lookupToken(request, token)
-      if (isRequestValid(cachedEmail, email)) {
+      if (isRequestInvalid(cachedEmail, email)) {
         return h.view('auth/verify-login-failed').code(400)
       }
 
@@ -83,8 +70,6 @@ module.exports = [{
           await cacheVetData(request, data)
           break
       }
-
-      await clearMagicLinkCache(request, email)
 
       return h.redirect(redirectTo)
     }
