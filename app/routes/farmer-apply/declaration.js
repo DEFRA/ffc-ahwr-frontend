@@ -6,7 +6,7 @@ const species = require('../../constants/species')
 const states = require('../../constants/states')
 const { sendMessage, receiveMessage } = require('../../messaging')
 const session = require('../../session')
-const { farmerApplyData: { declaration } } = require('../../session/keys')
+const { farmerApplyData: { declaration, reference } } = require('../../session/keys')
 
 const backLink = '/farmer-apply/check-answers'
 
@@ -69,6 +69,7 @@ module.exports = [{
         return boom.notFound()
       }
       const viewData = getViewData(application)
+      session.setFarmerApplyData(request, reference, null)
       return h.view(path, { backLink, ...viewData })
     }
   }
@@ -87,18 +88,27 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      session.setFarmerApplyData(request, declaration, true)
+      let applicationReference = session.getFarmerApplyData(request, reference)
 
-      const application = session.getFarmerApplyData(request)
-      await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
-      const response = await receiveMessage(request.yar.id, applicationResponseQueue)
-      console.info('Response received:', util.inspect(response, false, null, true))
+      if (!applicationReference) {
+        session.setFarmerApplyData(request, declaration, true)
 
-      if (response.applicationState === states.failed) {
-        return boom.internal(`creating application was not successful, check application microservice for details. sessionId: ${request.yar.id}. application data: ${JSON.stringify(application)}`)
+        const application = session.getFarmerApplyData(request)
+        await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
+        const response = await receiveMessage(request.yar.id, applicationResponseQueue)
+        applicationReference = response?.applicationReference
+        console.info('Response received:', util.inspect(response, false, null, true))
+
+        if (applicationReference) {
+          session.setFarmerApplyData(request, reference, applicationReference)
+        }
+
+        if (response.applicationState === states.failed) {
+          return boom.internal(`creating application was not successful, check application microservice for details. sessionId: ${request.yar.id}. application data: ${JSON.stringify(application)}`)
+        }
       }
 
-      return h.view('farmer-apply/confirmation', { reference: response?.applicationReference })
+      return h.view('farmer-apply/confirmation', { reference: applicationReference })
     }
   }
 }]
