@@ -89,8 +89,8 @@ describe('Vet, enter reference test', () => {
     })
 
     messaging.receiveMessage = jest.fn()
-      .mockReturnValueOnce({ applicationState: 'not_exist' })
-      .mockReturnValue({ applicationReference: 'VV-1234-5678', applicationState: 'not_submitted' })
+      .mockReturnValueOnce({ applicationReference: 'VV-1234-5678', applicationState: 'already_submitted', claimed: true })
+
     test('returns 404 when payload is valid', async () => {
       const applicationReference = 'VV-1234-5678'
       const crumb = await getCrumbs(global.__SERVER__)
