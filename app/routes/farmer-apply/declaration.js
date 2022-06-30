@@ -89,7 +89,7 @@ module.exports = [{
     },
     handler: async (request, h) => {
       const application = session.getFarmerApplyData(request)
-      let applicationReference = application?.reference
+      let applicationReference = application[reference]
       if (!applicationReference) {
         session.setFarmerApplyData(request, declaration, true)
         await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
