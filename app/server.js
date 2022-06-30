@@ -28,7 +28,11 @@ async function createServer () {
   server.app.magiclinkCache = magiclinkCache
 
   await server.register(require('@hapi/cookie'))
-  await server.register(require('@hapi/crumb'))
+
+  if (!config.disableCrumb) {
+    await server.register(require('@hapi/crumb'))
+  }
+
   await server.register(require('@hapi/inert'))
   await server.register(require('./plugins/auth'))
   await server.register(require('./plugins/cookies'))
