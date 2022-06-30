@@ -1,0 +1,19 @@
+# 2. Do not expire magic-links on use
+
+Date: 2022-06-30
+
+## Status
+
+Accepted
+
+## Context
+
+Vets can currently only submit data once and once submitted the data can not be altered. If the farmer disagreed with the data entered by the vet, there was no way for the vet to change the vet submitted data.
+
+## Decision
+
+Allow vets to change the the vet sumbmitted data until the farmer has made a claim.
+
+## Consequences
+
+Another Farmers data could be potentially changed by the vet by mistake, if an incorrect reference number is entered and the a claim in still in progress.
