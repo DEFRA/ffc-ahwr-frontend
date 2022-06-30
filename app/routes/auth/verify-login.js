@@ -26,19 +26,6 @@ async function cacheVetData (request, vetSignupData) {
 }
 
 /**
- * Clear all tokens in the `magiclinkCache` associated to the email.
- *
- * @param {object} request object containing the `magiclinkCache`.
- * @param {string} email address to clear tokens from.
- */
-async function clearMagicLinkCache (request, email) {
-  const { magiclinkCache } = request.server.app
-  const emailTokens = await magiclinkCache.get(email)
-  Promise.all(emailTokens.map(async (token) => await magiclinkCache.drop(token)))
-  await magiclinkCache.drop(email)
-}
-
-/**
  * Returns the object associated to the token or an empty object if not found.
  *
  * @param {object} request object containing the `magiclinkCache`.
@@ -83,8 +70,6 @@ module.exports = [{
           await cacheVetData(request, data)
           break
       }
-
-      await clearMagicLinkCache(request, email)
 
       return h.redirect(redirectTo)
     }

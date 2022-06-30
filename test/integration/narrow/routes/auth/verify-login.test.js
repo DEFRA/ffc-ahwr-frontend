@@ -75,7 +75,7 @@ describe('Verify login page test', () => {
       { userType: farmerApply, data: {} },
       { userType: farmerClaim, data: {} },
       { userType: vet, data: { reference: 'application-reference' } }
-    ])('route for $userType with valid email and token returns 200, redirects to \'org-review\', caches user data, drops magiclink cache and sets cookies', async ({ userType, data }) => {
+    ])('route for $userType with valid email and token returns 200, redirects to \'org-review\', caches user data and sets cookies', async ({ userType, data }) => {
       const appRes = { createdAt: new Date('2022-04-01') }
       application.getApplication.mockResolvedValueOnce(appRes)
       const claim = { name: 'fake' }
@@ -91,20 +91,14 @@ describe('Verify login page test', () => {
       await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo, userType, data })
 
       const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
-      const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
 
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(cacheGetSpy).toHaveBeenCalledTimes(2)
+      expect(cacheGetSpy).toHaveBeenCalledTimes(1)
       expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
-      expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
-      expect(cacheDropSpy).toHaveBeenCalledTimes(2)
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(1, validToken)
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(2, validEmail)
       expect(res.headers.location).toEqual(redirectTo)
       expectVerifyLoginPage.hasCookiesSet(res)
-      expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
 
       switch (userType) {
         case farmerApply:
@@ -121,49 +115,6 @@ describe('Verify login page test', () => {
       }
 
       cacheGetSpy.mockRestore()
-      cacheDropSpy.mockRestore()
-    })
-
-    test.each([
-      { userType: farmerApply, data: {} },
-      { userType: farmerClaim, data: {} },
-      { userType: vet, data: { reference: 'application-reference' } }
-    ])('route for $userType with valid email and token returns 200 and removes all existing tokens for email, with no error when token has expired', async ({ userType, data }) => {
-      application.getApplication.mockResolvedValueOnce({})
-      application.getClaim.mockResolvedValueOnce({})
-      users.getByEmail.mockResolvedValueOnce({})
-      const options = {
-        method: 'GET',
-        url: `${url}?email=${validEmail}&token=${validToken}`
-      }
-
-      const oldTokens = [uuid(), uuid(), uuid()]
-      await global.__SERVER__.app.magiclinkCache.set(validEmail, [validToken, ...oldTokens])
-      await global.__SERVER__.app.magiclinkCache.set(validToken, { email: validEmail, redirectTo, userType, data })
-      await global.__SERVER__.app.magiclinkCache.set(oldTokens[0], { email: validEmail, redirectTo, userType, data })
-      await global.__SERVER__.app.magiclinkCache.set(oldTokens[1], { email: validEmail, redirectTo, userType, data })
-
-      const cacheGetSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'get')
-      const cacheDropSpy = jest.spyOn(global.__SERVER__.app.magiclinkCache, 'drop')
-
-      const res = await global.__SERVER__.inject(options)
-
-      expect(res.statusCode).toBe(302)
-      expect(cacheGetSpy).toHaveBeenCalledTimes(2)
-      expect(cacheGetSpy).toHaveBeenNthCalledWith(1, validToken)
-      expect(cacheGetSpy).toHaveBeenNthCalledWith(2, validEmail)
-      expect(cacheDropSpy).toHaveBeenCalledTimes(5)
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(1, validToken)
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(2, oldTokens[0])
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(3, oldTokens[1])
-      expect(cacheDropSpy).toHaveBeenNthCalledWith(4, oldTokens[2])
-      expect(cacheDropSpy).toHaveBeenLastCalledWith(validEmail)
-      expect(res.headers.location).toEqual(redirectTo)
-      expectVerifyLoginPage.hasCookiesSet(res)
-      expect(await global.__SERVER__.app.magiclinkCache.get(validEmail)).toBeNull()
-
-      cacheGetSpy.mockRestore()
-      cacheDropSpy.mockRestore()
     })
   })
 })
