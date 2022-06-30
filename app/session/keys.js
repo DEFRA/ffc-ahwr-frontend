@@ -10,7 +10,8 @@ module.exports = {
     declaration: 'declaration',
     organisation: 'organisation',
     whichReview: 'whichReview',
-    confirmCheckDetails: 'confirmCheckDetails'
+    confirmCheckDetails: 'confirmCheckDetails',
+    reference: 'reference'
   },
   claim: {
     detailsCorrect: 'detailsCorrect'
