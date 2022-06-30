@@ -1,5 +1,4 @@
 const routes = [].concat(
-  require('../routes/accessibility'),
   require('../routes/assets'),
   require('../routes/auth/verify-login'),
   require('../routes/cookies'),
@@ -18,7 +17,6 @@ const routes = [].concat(
   require('../routes/farmer-claim/details-incorrect'),
   require('../routes/farmer-claim/submit-claim'),
   require('../routes/farmer-claim/visit-review'),
-  require('../routes/privacy-policy'),
   require('../routes/vet'),
   require('../routes/vet/check-answers'),
   require('../routes/vet/check-review'),
