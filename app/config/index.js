@@ -40,6 +40,7 @@ const schema = Joi.object({
     ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
   env: Joi.string().valid('development', 'test', 'production').default('development'),
+  disableCrumb: Joi.boolean().default(true),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
@@ -106,6 +107,7 @@ const config = {
     password: process.env.COOKIE_PASSWORD
   },
   env: process.env.NODE_ENV,
+  disableCrumb: process.env.DISABLE_CRUMB,
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,

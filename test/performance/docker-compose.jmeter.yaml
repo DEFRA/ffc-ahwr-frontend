@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  ffc-ahwr-frontend:
+    command: npm run start:watch
+    build:
+      target: development
+    image: ffc-ahwr-frontend
+    environment:
+      NODE_ENV: test
+      TEST_TOKEN: 5bf062f7-d17a-40f2-a733-04803e8f48e0
+  jmeter-test:
+    image: justb4/jmeter:5.1.1
+    depends_on:
+      - ffc-ahwr-frontend
+    command: "-JCookieManager.save.cookies=true -Jgroup1.threads=1 -Jgroup1.loops=1 -Jgroup1.ramp=1 -n -t /perf-tests/AHWRTestPlan.jmx -l /perf-tests/testresults.jtl -e -o /test-output/htmlreport -f"
+    volumes:
+      - ./test-output:/test-output
+      - ./test/performance:/perf-tests
