@@ -88,12 +88,10 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      let applicationReference = session.getFarmerApplyData(request, reference)
-
+      const application = session.getFarmerApplyData(request)
+      let applicationReference = application?.reference
       if (!applicationReference) {
         session.setFarmerApplyData(request, declaration, true)
-
-        const application = session.getFarmerApplyData(request)
         await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
         const response = await receiveMessage(request.yar.id, applicationResponseQueue)
         applicationReference = response?.applicationReference

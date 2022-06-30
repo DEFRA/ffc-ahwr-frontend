@@ -106,12 +106,39 @@ describe('Declaration test', () => {
       expect($('h1').text()).toMatch('Application successful')
       expect($('title').text()).toEqual('Application successful')
       expectPhaseBanner.ok($)
-      expect(sessionMock.setFarmerApplyData).toHaveBeenCalledTimes(1)
+      expect(sessionMock.setFarmerApplyData).toHaveBeenCalledTimes(2)
       expect(sessionMock.setFarmerApplyData).toHaveBeenNthCalledWith(1, res.request, declaration, true)
       expect(sessionMock.getFarmerApplyData).toHaveBeenCalledTimes(1)
       expect(sessionMock.getFarmerApplyData).toHaveBeenCalledWith(res.request)
       expect(messagingMock.sendMessage).toHaveBeenCalledTimes(1)
       expect(messagingMock.sendMessage).toHaveBeenCalledWith(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: res.request.yar.id })
+    })
+
+    test('returns 200, checks cached data for a reference to prevent reference recreation', async () => {
+      const whichReview = species.beef
+      const reference = 'abc123'
+      const application = { whichReview, organisation, reference }
+      sessionMock.getFarmerApplyData.mockReturnValue(application)
+      messagingMock.receiveMessage.mockResolvedValueOnce({ applicationReference: 'abc123' })
+      const crumb = await getCrumbs(global.__SERVER__)
+      const options = {
+        method: 'POST',
+        url,
+        payload: { crumb, terms: 'agree' },
+        auth,
+        headers: { cookie: `crumb=${crumb}` }
+      }
+
+      const res = await global.__SERVER__.inject(options)
+
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('h1').text()).toMatch('Application successful')
+      expect($('title').text()).toEqual('Application successful')
+      expectPhaseBanner.ok($)
+      expect(sessionMock.getFarmerApplyData).toHaveBeenCalledTimes(1)
+      expect(sessionMock.setFarmerApplyData).toHaveBeenCalledTimes(0)
+      expect(messagingMock.sendMessage).toHaveBeenCalledTimes(0)
     })
 
     test.each([
