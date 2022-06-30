@@ -5,7 +5,7 @@ const { getApplication } = require('../../messaging/application')
 const { setFarmerApplyData, setVetVisitData } = require('../../session')
 const { farmerApplyData: { organisation: organisationKey }, vetVisitData: { farmerApplication, signup } } = require('../../session/keys')
 
-function isRequestValid (cachedEmail, email) {
+function isRequestInvalid (cachedEmail, email) {
   return !cachedEmail || email !== cachedEmail
 }
 
@@ -69,7 +69,7 @@ module.exports = [{
       const { email, token } = request.query
 
       const { email: cachedEmail, redirectTo, userType, data } = await lookupToken(request, token)
-      if (isRequestValid(cachedEmail, email)) {
+      if (isRequestInvalid(cachedEmail, email)) {
         return h.view('auth/verify-login-failed').code(400)
       }
 
