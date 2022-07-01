@@ -1,7 +1,9 @@
 const boom = require('@hapi/boom')
 const session = require('../../session')
 const Joi = require('joi')
-const { farmerApplyData: { confirmCheckDetails, organisation: organisationKey } } = require('../../session/keys')
+const {
+  farmerApplyData: { confirmCheckDetails, organisation: organisationKey }
+} = require('../../session/keys')
 const radioId = 'confirmCheckDetails'
 const labelText = 'Are your details correct?'
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
@@ -40,8 +42,7 @@ module.exports = [{
       return h.view('farmer-apply/org-review', getView(request))
     }
   }
-},
-{
+}, {
   method: 'POST',
   path: '/farmer-apply/org-review',
   options: {
@@ -54,9 +55,12 @@ module.exports = [{
       }
     },
     handler: async (request, h) => {
-      session.setFarmerApplyData(request, confirmCheckDetails, request.payload.confirmCheckDetails)
+      session.setFarmerApplyData(
+        request,
+        confirmCheckDetails,
+        request.payload.confirmCheckDetails
+      )
       return h.redirect('/farmer-apply/which-review')
     }
   }
-}
-]
+}]
