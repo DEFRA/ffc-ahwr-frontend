@@ -39,7 +39,9 @@ const schema = Joi.object({
     path: Joi.string().default('/'),
     ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
-  env: Joi.string().valid('development', 'test', 'production').default('development'),
+  env: Joi.string().valid('development', 'test', 'production').default(
+    'development'
+  ),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
@@ -109,8 +111,10 @@ const config = {
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
-    templateIdFarmerApplyLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
-    templateIdFarmerClaimLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
+    templateIdFarmerApplyLogin:
+      process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
+    templateIdFarmerClaimLogin:
+      process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
     templateIdVetLogin: process.env.NOTIFY_TEMPLATE_ID_VET_LOGIN
   },
   port: process.env.PORT,
