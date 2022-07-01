@@ -12,11 +12,15 @@ describe('Farmer apply home page test', () => {
 
     expect(res.statusCode).toBe(200)
     const $ = cheerio.load(res.payload)
-    expect($('.govuk-heading-l').text()).toEqual('Apply for an annual health and welfare review of your livestock')
+    expect($('.govuk-heading-l').text()).toEqual(
+      'Apply for an annual health and welfare review of your livestock'
+    )
     const button = $('.govuk-main-wrapper .govuk-button')
     expect(button.attr('href')).toMatch('/farmer-apply/login')
     expect(button.text()).toMatch('Start now')
-    expect($('title').text()).toEqual('Apply for an annual health and welfare review')
+    expect($('title').text()).toEqual(
+      'Apply for an annual health and welfare review of your livestock'
+    )
     expectPhaseBanner.ok($)
   })
 })
