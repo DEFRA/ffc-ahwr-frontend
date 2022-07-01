@@ -8,6 +8,10 @@ const radioId = 'confirmCheckDetails'
 const labelText = 'Are your details correct?'
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
+function formatAddressForDisplay (organisation) {
+  return organisation?.address.replaceAll(',', '<br>')
+}
+
 function getView (request, errorText) {
   const organisation = session.getFarmerApplyData(request, organisationKey)
   if (!organisation) {
@@ -18,7 +22,10 @@ function getView (request, errorText) {
     { key: { text: 'Farmer name' }, value: { text: organisation.farmerName } },
     { key: { text: 'Business name' }, value: { text: organisation.name } },
     { key: { text: 'SBI number' }, value: { text: organisation.sbi } },
-    { key: { text: 'Address' }, value: { text: organisation.address } }
+    {
+      key: { text: 'Address' },
+      value: { html: formatAddressForDisplay(organisation) }
+    }
   ]
   return {
     organisation,
