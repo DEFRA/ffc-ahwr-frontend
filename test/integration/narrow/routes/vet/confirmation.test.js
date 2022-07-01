@@ -4,16 +4,8 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 
 const reference = 'VV-5874-0BFA'
 
-const mockMessage = {
-  sendMessage: () => {
-    return 'nothing'
-  },
-  receiveMessage: jest.fn().mockReturnValueOnce({
-    applicationState: 'submitted'
-  }).mockImplementationOnce({
-    applicationState: 'already_submitted'
-  })
-}
+const messagingMock = require('../../../../../app/messaging')
+jest.mock('../../../../../app/messaging')
 
 const mockSession = {
   getVetVisitData: () => {
@@ -29,9 +21,7 @@ const mockSession = {
     return { reference, applicationState: 'submitted' }
   }
 }
-
 jest.mock('../../../../../app/session', () => mockSession)
-jest.mock('../../../../../app/messaging', () => mockMessage)
 
 describe('Confirmation test', () => {
   const auth = { credentials: {}, strategy: 'cookie' }
@@ -43,6 +33,9 @@ describe('Confirmation test', () => {
 
   describe(`POST ${url} route`, () => {
     test('returns 200', async () => {
+      messagingMock.receiveMessage.mockResolvedValueOnce({
+        applicationState: 'not_claimed'
+      })
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -60,6 +53,9 @@ describe('Confirmation test', () => {
     })
 
     test('returns error message', async () => {
+      messagingMock.receiveMessage.mockResolvedValueOnce({
+        applicationState: 'claimed'
+      })
       const crumb = await getCrumbs(global.__SERVER__)
       const options = {
         method: 'POST',
@@ -71,7 +67,9 @@ describe('Confirmation test', () => {
       const res = await global.__SERVER__.inject(options)
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('No application found, application reference number is no longer valid.')
+      expect($('h1').text()).toMatch(
+        'Application reference number is no longer valid.'
+      )
       expectPhaseBanner.ok($)
     })
 
