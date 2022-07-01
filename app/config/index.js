@@ -50,7 +50,14 @@ const schema = Joi.object({
     templateIdVetLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
-  serviceName: Joi.string().default('Review the health and welfare of your livestock'),
+  serviceName: Joi.string().default(
+    'Annual health and welfare reivew of livestock'
+  ),
+  journeys: {
+    farmerApply: { title: Joi.string() },
+    farmerClaim: { title: Joi.string() },
+    vet: { title: Joi.string() }
+  },
   applicationRequestQueue: {
     address: Joi.string().default('applicationRequestQueue'),
     type: Joi.string(),
@@ -138,6 +145,19 @@ const config = {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
   },
   useRedis: process.env.NODE_ENV !== 'test',
+  journeys: {
+    farmerApply: {
+      title: 'Apply for an annual health and welfare review of your livestock'
+    },
+    farmerClaim: {
+      title:
+        'Claim funding for an annual health and welfare review of your livestock'
+    },
+    vet: {
+      title:
+        'Record information about an annual health and welfare review of livestock'
+    }
+  },
   testToken: process.env.TEST_TOKEN
 }
 
