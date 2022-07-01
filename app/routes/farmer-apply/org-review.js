@@ -13,10 +13,10 @@ function getView (request, errorText) {
   }
   const prevAnswer = session.getFarmerApplyData(request, confirmCheckDetails)
   const rows = [
-    { key: { text: 'Farmer name:' }, value: { text: organisation.farmerName } },
-    { key: { text: 'Business name:' }, value: { text: organisation.name } },
-    { key: { text: 'SBI number:' }, value: { text: organisation.sbi } },
-    { key: { text: 'Address:' }, value: { text: organisation.address } }
+    { key: { text: 'Farmer name' }, value: { text: organisation.farmerName } },
+    { key: { text: 'Business name' }, value: { text: organisation.name } },
+    { key: { text: 'SBI number' }, value: { text: organisation.sbi } },
+    { key: { text: 'Address' }, value: { text: organisation.address } }
   ]
   return {
     organisation,
