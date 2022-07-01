@@ -68,7 +68,7 @@ describe('Confirmation test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch(
-        'No application found, application reference number is no longer valid.'
+        'Application reference number is no longer valid.'
       )
       expectPhaseBanner.ok($)
     })
