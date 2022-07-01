@@ -26,13 +26,13 @@ function getSpeciesTestText (application) {
 function getSpeciesMinNumText (application) {
   switch (application.whichReview) {
     case species.beef:
-      return 'you\'ll have at least 10 beef cattle at the time the vet does the review'
+      return 'you\'ll have 11 or more beef cattle at the time the vet does the review'
     case species.dairy:
-      return 'you\'ll have at least 10 dairy cattle at the time the vet does the review'
+      return 'you\'ll have 11 or more dairy cattle at the time the vet does the review'
     case species.pigs:
-      return 'you\'ll have at least 50 pigs at the time the vet does the review'
+      return 'you\'ll have 51 or more pigs at the time the vet does the review'
     case species.sheep:
-      return 'you\'ll have at least 20 sheep at the time the vet does the review'
+      return 'you\'ll have 21 or more sheep at the time the vet does the review'
   }
 }
 
