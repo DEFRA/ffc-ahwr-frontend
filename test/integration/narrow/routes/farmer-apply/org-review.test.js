@@ -5,7 +5,10 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 describe('Org review page test', () => {
   let session
   const url = '/farmer-apply/org-review'
-  const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
+  const auth = {
+    credentials: { reference: '1111', sbi: '111111111' },
+    strategy: 'cookie'
+  }
   const org = {
     farmerName: 'Dailry Farmer',
     address: ' org-address-here',
@@ -54,7 +57,10 @@ describe('Org review page test', () => {
     test('returns 404 when no organisation is found', async () => {
       session.getFarmerApplyData.mockReturnValue(undefined)
       const options = {
-        auth: { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' },
+        auth: {
+          credentials: { reference: '1111', sbi: '111111111' },
+          strategy: 'cookie'
+        },
         method: 'GET',
         url
       }
@@ -89,13 +95,11 @@ describe('Org review page test', () => {
       crumb = await getCrumbs(global.__SERVER__)
     })
 
-    test.each([
-      { confirmCheckDetails: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ confirmCheckDetails }) => {
+    test('returns 302 to next page when acceptable answer given', async () => {
       const options = {
         method,
         url,
-        payload: { crumb, confirmCheckDetails },
+        payload: { crumb, confirmCheckDetails: 'yes' },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
@@ -106,27 +110,47 @@ describe('Org review page test', () => {
       expect(res.headers.location).toEqual('/farmer-apply/which-review')
     })
 
-    test.each([
-      { confirmCheckDetails: null },
-      { confirmCheckDetails: undefined },
-      { confirmCheckDetails: 'wrong' },
-      { confirmCheckDetails: '' },
-      { confirmCheckDetails: 'no' }
-    ])('returns error when unacceptable answer is given', async ({ confirmCheckDetails }) => {
-      session.getFarmerApplyData.mockReturnValue(org)
+    test('returns 200 with update your details when no is answered', async () => {
       const options = {
         method,
         url,
-        payload: { crumb, confirmCheckDetails },
+        payload: { crumb, confirmCheckDetails: 'no' },
         auth,
         headers: { cookie: `crumb=${crumb}` }
       }
 
       const res = await global.__SERVER__.inject(options)
 
-      expect(res.statusCode).toBe(400)
-      expect(res.request.response.variety).toBe('view')
-      expect(res.request.response.source.template).toBe('farmer-apply/update-details')
+      expect(res.statusCode).toBe(200)
+      const $ = cheerio.load(res.payload)
+      expect($('.govuk-heading-l').text()).toEqual('Update your details')
     })
+
+    test.each([
+      { confirmCheckDetails: null },
+      { confirmCheckDetails: undefined },
+      { confirmCheckDetails: 'wrong' },
+      { confirmCheckDetails: '' }
+    ])(
+      'returns error when unacceptable answer is given',
+      async ({ confirmCheckDetails }) => {
+        session.getFarmerApplyData.mockReturnValue(org)
+        const options = {
+          method,
+          url,
+          payload: { crumb, confirmCheckDetails },
+          auth,
+          headers: { cookie: `crumb=${crumb}` }
+        }
+
+        const res = await global.__SERVER__.inject(options)
+
+        expect(res.statusCode).toBe(400)
+        expect(res.request.response.variety).toBe('view')
+        expect(res.request.response.source.template).toBe(
+          'farmer-apply/update-details'
+        )
+      }
+    )
   })
 })

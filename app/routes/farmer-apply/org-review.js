@@ -55,19 +55,23 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        confirmCheckDetails: Joi.string().valid('yes').required()
+        confirmCheckDetails: Joi.string().valid('yes', 'no').required()
       }),
       failAction: (_request, h, _err) => {
         return h.view('farmer-apply/update-details').code(400).takeover()
       }
     },
     handler: async (request, h) => {
-      session.setFarmerApplyData(
-        request,
-        confirmCheckDetails,
-        request.payload.confirmCheckDetails
-      )
-      return h.redirect('/farmer-apply/which-review')
+      const answer = request.payload[confirmCheckDetails]
+      if (answer === 'yes') {
+        session.setFarmerApplyData(
+          request,
+          confirmCheckDetails,
+          request.payload.confirmCheckDetails
+        )
+        return h.redirect('/farmer-apply/which-review')
+      }
+      return h.view('farmer-apply/details-incorrect')
     }
   }
 }]
