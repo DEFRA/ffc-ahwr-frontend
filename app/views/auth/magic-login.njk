@@ -18,11 +18,11 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">Enter your email address</h1>
-
         {{ govukInput({
           label: {
-            text: "Email address"
+          text: "Enter your email address",
+          classes: "govuk-label--l",
+          isPageHeading: true
           },
           hint: {
             text: hintText

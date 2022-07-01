@@ -1,12 +1,18 @@
 const boom = require('@hapi/boom')
 const Joi = require('joi')
 const util = require('util')
-const { applicationRequestQueue, applicationRequestMsgType, applicationResponseQueue } = require('../../config')
+const {
+  applicationRequestQueue,
+  applicationRequestMsgType,
+  applicationResponseQueue
+} = require('../../config')
 const species = require('../../constants/species')
 const states = require('../../constants/states')
 const { sendMessage, receiveMessage } = require('../../messaging')
 const session = require('../../session')
-const { farmerApplyData: { declaration, reference } } = require('../../session/keys')
+const { farmerApplyData: { declaration, reference } } = require(
+  '../../session/keys'
+)
 
 const backLink = '/farmer-apply/check-answers'
 
@@ -26,13 +32,13 @@ function getSpeciesTestText (application) {
 function getSpeciesMinNumText (application) {
   switch (application.whichReview) {
     case species.beef:
-      return 'you\'ll have 11 or more beef cattle at the time the vet does the review'
+      return "you'll have 11 or more beef cattle at the time the vet does the review"
     case species.dairy:
-      return 'you\'ll have 11 or more dairy cattle at the time the vet does the review'
+      return "you'll have 11 or more dairy cattle at the time the vet does the review"
     case species.pigs:
-      return 'you\'ll have 51 or more pigs at the time the vet does the review'
+      return "you'll have 51 or more pigs at the time the vet does the review"
     case species.sheep:
-      return 'you\'ll have 21 or more sheep at the time the vet does the review'
+      return "you'll have 21 or more sheep at the time the vet does the review"
   }
 }
 
@@ -49,9 +55,19 @@ function getSpeciesApplicationText (application) {
   }
 }
 
+function getOrganisationForDisplay (application) {
+  const organisation = { ...application.organisation }
+  organisation.address = formatAddressForDisplay(organisation)
+  return organisation
+}
+
+function formatAddressForDisplay (organisation) {
+  return organisation?.address.replaceAll(',', '<br>')
+}
+
 function getViewData (application) {
   return {
-    organisation: application.organisation,
+    organisation: getOrganisationForDisplay(application),
     minNumText: getSpeciesMinNumText(application),
     species: getSpeciesApplicationText(application),
     testText: getSpeciesTestText(application)
@@ -84,7 +100,11 @@ module.exports = [{
       failAction: async (request, h, _) => {
         const application = session.getFarmerApplyData(request)
         const viewData = getViewData(application)
-        return h.view(path, { backLink, ...viewData, errorMessage: { text: 'Select I agree to the terms and conditions' } }).code(400).takeover()
+        return h.view(path, {
+          backLink,
+          ...viewData,
+          errorMessage: { text: 'Select I agree to the terms and conditions' }
+        }).code(400).takeover()
       }
     },
     handler: async (request, h) => {
@@ -92,21 +112,38 @@ module.exports = [{
       let applicationReference = application[reference]
       if (!applicationReference) {
         session.setFarmerApplyData(request, declaration, true)
-        await sendMessage(application, applicationRequestMsgType, applicationRequestQueue, { sessionId: request.yar.id })
-        const response = await receiveMessage(request.yar.id, applicationResponseQueue)
+        await sendMessage(
+          application,
+          applicationRequestMsgType,
+          applicationRequestQueue,
+          { sessionId: request.yar.id }
+        )
+        const response = await receiveMessage(
+          request.yar.id,
+          applicationResponseQueue
+        )
         applicationReference = response?.applicationReference
-        console.info('Response received:', util.inspect(response, false, null, true))
+        console.info(
+          'Response received:',
+          util.inspect(response, false, null, true)
+        )
 
         if (applicationReference) {
           session.setFarmerApplyData(request, reference, applicationReference)
         }
 
         if (response.applicationState === states.failed) {
-          return boom.internal(`creating application was not successful, check application microservice for details. sessionId: ${request.yar.id}. application data: ${JSON.stringify(application)}`)
+          return boom.internal(
+            `creating application was not successful, check application microservice for details. sessionId: ${request.yar.id}. application data: ${
+              JSON.stringify(application)
+            }`
+          )
         }
       }
 
-      return h.view('farmer-apply/confirmation', { reference: applicationReference })
+      return h.view('farmer-apply/confirmation', {
+        reference: applicationReference
+      })
     }
   }
 }]
