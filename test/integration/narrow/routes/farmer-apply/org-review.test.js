@@ -124,9 +124,9 @@ describe('Org review page test', () => {
 
       const res = await global.__SERVER__.inject(options)
 
-      const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes and confirm your details')
       expect(res.statusCode).toBe(400)
+      expect(res.request.response.variety).toBe('view')
+      expect(res.request.response.source.template).toBe('farmer-apply/update-details')
     })
   })
 })

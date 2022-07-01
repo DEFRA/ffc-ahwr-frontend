@@ -49,10 +49,8 @@ module.exports = [{
       payload: Joi.object({
         confirmCheckDetails: Joi.string().valid('yes').required()
       }),
-      failAction: (request, h, _err) => {
-        return h.view('farmer-apply/org-review', {
-          ...getView(request, 'Select yes and confirm your details')
-        }).code(400).takeover()
+      failAction: (_request, h, _err) => {
+        return h.view('farmer-apply/update-details').code(400).takeover()
       }
     },
     handler: async (request, h) => {
