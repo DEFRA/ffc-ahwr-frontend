@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
+const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 
 describe('Org review page test', () => {
   let session
@@ -48,7 +49,7 @@ describe('Org review page test', () => {
       expect(values.eq(2).text()).toMatch(org.sbi)
       expect(keys.eq(3).text()).toMatch('Address')
       expect(values.eq(3).text()).toMatch(org.address)
-      expect($('title').text()).toEqual('Check your details')
+      expect($('title').text()).toEqual(`Check your details - ${title}`)
       expect($('legend').text().trim()).toEqual('Are your details correct?')
       expect($('.govuk-radios__item').length).toEqual(2)
       expectPhaseBanner.ok($)

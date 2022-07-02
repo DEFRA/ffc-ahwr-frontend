@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 describe('Vet home page test', () => {
   test('GET /vet route returns 200 when not logged in', async () => {
@@ -16,7 +17,7 @@ describe('Vet home page test', () => {
     const button = $('.govuk-main-wrapper .govuk-button')
     expect(button.attr('href')).toMatch('/vet/reference')
     expect(button.text()).toMatch('Start now')
-    expect($('title').text()).toEqual('Record Animal Health and Welfare Review data')
+    expect($('title').text()).toEqual(title)
     expectPhaseBanner.ok($)
   })
 })

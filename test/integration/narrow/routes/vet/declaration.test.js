@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 describe('Declaration test', () => {
   const auth = { credentials: {}, strategy: 'cookie' }
@@ -16,7 +17,7 @@ describe('Declaration test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1.govuk-heading-l').text()).toEqual('Submit your record')
-      expect($('title').text()).toEqual('Declaration')
+      expect($('title').text()).toEqual(`Declaration - ${title}`)
       expectPhaseBanner.ok($)
     })
 

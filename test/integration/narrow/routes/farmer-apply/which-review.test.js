@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 
 describe('Species review test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
@@ -19,7 +20,7 @@ describe('Species review test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Which livestock do you want a review for?')
-      expect($('title').text()).toEqual('Which livestock do you want a review for?')
+      expect($('title').text()).toEqual(`Which livestock do you want a review for? - ${title}`)
       expectPhaseBanner.ok($)
     })
 

@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 
 describe('Not eligible page test', () => {
   const url = '/farmer-apply/not-eligible'
@@ -17,7 +18,7 @@ describe('Not eligible page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('.govuk-heading-l').text()).toEqual('You\'re not eligible to apply')
-      expect($('title').text()).toEqual('Not Eligible')
+      expect($('title').text()).toEqual(`Not Eligible - ${title}`)
       expectPhaseBanner.ok($)
     })
 

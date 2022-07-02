@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
 const speciesContent = require('../../../../../app/constants/species-content')
+const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 
 describe('Species eligibility test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
@@ -25,7 +26,7 @@ describe('Species eligibility test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch(speciesContent[species].legendText)
-      expect($('title').text()).toEqual(speciesContent[species].title)
+      expect($('title').text()).toEqual(speciesContent[species].title + ` - ${title}`)
       expect($('.govuk-hint').text()).toMatch(speciesContent[species].hintText)
       expectPhaseBanner.ok($)
     })

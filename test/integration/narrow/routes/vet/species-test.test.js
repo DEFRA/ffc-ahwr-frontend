@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
 const speciesContent = require('../../../../../app/constants/species-test-content-vet')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 const session = require('../../../../../app/session')
 jest.mock('../../../../../app/session')
@@ -28,7 +29,7 @@ describe('Vet species test page test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch(speciesContent[species].legendText)
-      expect($('title').text()).toEqual(speciesContent[species].title)
+      expect($('title').text()).toEqual(speciesContent[species].title + ` - ${title}`)
       expectPhaseBanner.ok($)
     })
 

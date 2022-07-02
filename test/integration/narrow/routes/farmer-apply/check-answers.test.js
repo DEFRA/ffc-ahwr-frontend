@@ -2,6 +2,7 @@ const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const content = require('../../../../../app/constants/species-review-content')
 const sessionMock = require('../../../../../app/session')
+const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 jest.mock('../../../../../app/session')
 
 describe('Check Answers test', () => {
@@ -26,7 +27,7 @@ describe('Check Answers test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Check your answers')
-      expect($('title').text()).toEqual('Check your answers')
+      expect($('title').text()).toEqual(`Check your answers - ${title}`)
       expectPhaseBanner.ok($)
     })
 
