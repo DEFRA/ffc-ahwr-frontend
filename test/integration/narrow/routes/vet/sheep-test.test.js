@@ -63,8 +63,8 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { speciesTest: 50 },
-      { speciesTest: 2 }
+      { speciesTest: 100 },
+      { speciesTest: 0 }
     ])('returns 302 to next page when acceptable answer given', async ({ speciesTest }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.sheep } })
       const options = {
