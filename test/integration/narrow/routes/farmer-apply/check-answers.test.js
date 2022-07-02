@@ -64,7 +64,7 @@ describe('Check Answers test', () => {
       const $ = cheerio.load(res.payload)
       expect($('.govuk-summary-list__row').length).toEqual(2)
       expect($('.govuk-summary-list__key').eq(0).text()).toMatch('Type of review')
-      expect($('.govuk-summary-list__value').eq(0).text()).toMatch(content[eligibleSpecies].reivewType)
+      expect($('.govuk-summary-list__value').eq(0).text()).toMatch(content[eligibleSpecies].reviewType)
       expect($('.govuk-summary-list__value').eq(1).text()).toMatch(content[eligibleSpecies].liveStockNumber)
       expect($('.govuk-summary-list__actions a').eq(1).attr('href')).toMatch(`/farmer-apply/${eligibleSpecies}-eligibility`)
     })

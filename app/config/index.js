@@ -50,8 +50,7 @@ const schema = Joi.object({
     templateIdVetLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
-  serviceName: Joi.string().default(
-    'Annual health and welfare reivew of livestock'
+  serviceName: Joi.string().default('Annual health and welfare review of livestock'
   ),
   journeys: {
     farmerApply: { title: Joi.string() },
