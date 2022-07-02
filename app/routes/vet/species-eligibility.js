@@ -47,7 +47,7 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-eligibility', {
-            ...getYesNoRadios(speciesContent[species].legendText, species, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
+            ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
             backLink,
             title
           }).code(400).takeover()
