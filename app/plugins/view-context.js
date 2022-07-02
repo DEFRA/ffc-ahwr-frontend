@@ -10,7 +10,6 @@ module.exports = {
         if (response.variety === 'view') {
           const ctx = response.source.context || {}
 
-          console.log('path:', request.path)
           const { path } = request
 
           let journeyTitle = serviceName
