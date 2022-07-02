@@ -59,10 +59,13 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
+        session.setVetVisitData(request, eligibleSpecies, request.payload[eligibleSpecies])
         switch (species) {
           case speciesTypes.sheep:
             return h.redirect('/vet/sheep-worms')
+          case speciesTypes.beef:
+          case speciesTypes.dairy:
+            return h.redirect(`/vet/${species}-vaccinated`)
           default:
             return h.redirect(`/vet/${species}-test`)
         }

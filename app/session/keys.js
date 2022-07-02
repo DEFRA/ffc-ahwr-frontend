@@ -39,6 +39,7 @@ module.exports = {
     sheepWorms: 'sheepWorms',
     signup: 'signup',
     speciesTest: 'speciesTest',
+    speciesVaccinated: 'speciesVaccinated',
     visitDate: 'visitDate',
     whichReview: 'whichReview'
   }
