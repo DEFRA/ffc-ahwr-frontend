@@ -37,7 +37,7 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          eligibleSpecies: Joi.string().valid('yes', 'no').required()
+          [eligibleSpecies]: Joi.string().valid('yes', 'no').required()
         }),
         params: Joi.object({
           species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
@@ -46,15 +46,15 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('farmer-apply/species-eligibility', {
-            ...getYesNoRadios(speciesContent[species].legendText, species, session.getFarmerApplyData(request, eligibleSpecies), speciesContent[species].errorText, getRadioOptions(species)),
+            ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getFarmerApplyData(request, eligibleSpecies), speciesContent[species].errorText, getRadioOptions(species)),
             backLink,
             title
           }).code(400).takeover()
         }
       },
       handler: async (request, h) => {
-        session.setFarmerApplyData(request, eligibleSpecies, request.payload.eligibleSpecies)
-        const redirect = request.payload.eligibleSpecies === 'yes' ? 'check-answers' : 'not-eligible'
+        session.setFarmerApplyData(request, eligibleSpecies, request.payload[eligibleSpecies])
+        const redirect = request.payload[eligibleSpecies] === 'yes' ? 'check-answers' : 'not-eligible'
         return h.redirect(`/farmer-apply/${redirect}`)
       }
     }
