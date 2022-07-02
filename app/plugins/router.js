@@ -30,6 +30,7 @@ const routes = [].concat(
   require('../routes/vet/reference'),
   require('../routes/vet/review-report'),
   require('../routes/vet/sheep-test'),
+  require('../routes/vet/sheep-worms'),
   require('../routes/vet/species-eligibility'),
   require('../routes/vet/species-test'),
   require('../routes/vet/visit-date')

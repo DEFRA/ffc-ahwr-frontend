@@ -27,7 +27,7 @@ module.exports = {
     todayOrPast: 'Visit date must be today or in the past'
   },
   epgPercentage: {
-    enterEpg: 'Enter EPG percentage',
-    validEpg: 'Enter a valid EPG percentage'
+    enterEpg: 'Enter the percentage reduction',
+    validEpg: 'Enter the percentage reduction'
   }
 }

@@ -36,6 +36,7 @@ module.exports = {
     pigsTest: 'pigsTest',
     reviewReport: 'reviewReport',
     sheep: 'sheep',
+    sheepWorms: 'sheepWorms',
     signup: 'signup',
     speciesTest: 'speciesTest',
     visitDate: 'visitDate',
