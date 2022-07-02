@@ -49,9 +49,9 @@ describe('Farmert review report test', () => {
     })
 
     test.each([
-      { reviewReport: 'no' },
-      { reviewReport: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ reviewReport }) => {
+      { reviewReport: 'yes', nextPage: '/vet/check-answers' },
+      { reviewReport: 'no', nextPage: '/vet/provide-report' }
+    ])('returns 302 to next page when acceptable answer given', async ({ reviewReport, nextPage }) => {
       const options = {
         method,
         url,
@@ -63,7 +63,7 @@ describe('Farmert review report test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/vet/check-answers')
+      expect(res.headers.location).toEqual(nextPage)
     })
 
     test.each([

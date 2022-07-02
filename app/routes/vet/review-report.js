@@ -45,8 +45,12 @@ module.exports = [
         }
       },
       handler: async (request, h) => {
+        const answer = request.payload[reviewReport]
         session.setVetVisitData(request, reviewReport, request.payload.reviewReport)
-        return h.redirect('/vet/check-answers')
+        if (answer === 'yes') {
+          return h.redirect('/vet/check-answers')
+        }
+        return h.redirect('/vet/provide-report')
       }
     }
   }
