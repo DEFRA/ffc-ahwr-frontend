@@ -7,10 +7,10 @@ const { vetSignup: { practice: practiceKey } } = require('../../../../../app/ses
 const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('What is the name of the vet practice the vet was working for at the time of the review?')
-  expect($('label[for=practice]').text()).toMatch('Vet practice name')
+  expect($('h1').text()).toMatch('What is the vet practice name?')
+  expect($('label[for=practice]').text()).toMatch('What is the vet practice name?')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual(`What is the name of vet practice - ${title}`)
+  expect($('title').text()).toEqual(`What is the vet practice name? - ${title}`)
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/name')

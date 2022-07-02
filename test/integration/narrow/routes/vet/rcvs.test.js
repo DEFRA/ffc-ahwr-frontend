@@ -7,10 +7,10 @@ const { vetSignup: { rcvs: rcvsKey } } = require('../../../../../app/session/key
 const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('What is the vet\'s Royal College of Veterinary Surgeons(RCVS) number?')
+  expect($('.govuk-heading-l').text()).toEqual('What is the vet\'s Royal College of Veterinary Surgeons (RCVS) number?')
   expect($('label[for=rcvs]').text()).toMatch('RCVS number')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual(`What is the vet's RCVS number - ${title}`)
+  expect($('title').text()).toEqual(`What is the vet's Royal College of Veterinary Surgeons (RCVS) number? - ${title}`)
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/reference')
