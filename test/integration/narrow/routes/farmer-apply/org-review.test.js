@@ -149,7 +149,7 @@ describe('Org review page test', () => {
         expect(res.statusCode).toBe(400)
         expect(res.request.response.variety).toBe('view')
         expect(res.request.response.source.template).toBe(
-          'farmer-apply/update-details'
+          'farmer-apply/org-review'
         )
       }
     )
