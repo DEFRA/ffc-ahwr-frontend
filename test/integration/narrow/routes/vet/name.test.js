@@ -8,9 +8,9 @@ const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('What is the name of the vet who did the review?')
-  expect($('label[for=name]').text()).toMatch('Full name')
+  expect($('label[for=name]').text()).toMatch('Vet\'s full name')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual(`Vet name - ${title}`)
+  expect($('title').text()).toEqual(`What is the name of the vet who did the review? - ${title}`)
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet/rcvs')

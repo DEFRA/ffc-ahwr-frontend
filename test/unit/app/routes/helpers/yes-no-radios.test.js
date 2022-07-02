@@ -12,7 +12,6 @@ describe('getYesNoRadios', () => {
 
     expect(res).toEqual({
       radios: {
-        classes: 'govuk-radios--inline',
         idPrefix: id,
         name: id,
         fieldset: {
@@ -50,12 +49,12 @@ describe('getYesNoRadios', () => {
   test('options are used when supplied', () => {
     const isPageHeading = false
     const legendClasses = 'not-a-real-class'
-    const inline = false
+    const inline = true
     const hintText = 'hint: vet visit'
 
     const res = getYesNoRadios(legendText, id, 'yes', undefined, { isPageHeading, legendClasses, inline, hintText })
 
-    expect(res.radios.classes).toBeUndefined()
+    expect(res.radios.classes).toEqual('govuk-radios--inline')
     expect(res.radios.fieldset.legend.classes).toEqual(legendClasses)
     expect(res.radios.fieldset.legend.isPageHeading).toEqual(isPageHeading)
     expect(res.radios.hint.text).toEqual(hintText)

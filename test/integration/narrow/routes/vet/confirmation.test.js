@@ -49,7 +49,7 @@ describe('Confirmation test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Record submitted')
-      expect($('title').text()).toEqual(`Confirmation - ${title}`)
+      expect($('title').text()).toEqual(`Record submitted - ${title}`)
       expectPhaseBanner.ok($)
     })
 

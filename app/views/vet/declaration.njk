@@ -18,13 +18,13 @@
     <p>By submitting the record you confirm that:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>the information you've given is correct</li>
-      <li>you've given the farmer a written report, including recommended actions</li>
+      <li>you have or will give the farmer a written report</li>
     </ul>
 
     <form method="POST" action="confirmation">
       <input type="hidden" name="crumb" value="{{crumb}}"/>
       {{ govukButton({
-        text: "Submit record"
+        text: "Submit"
       }) }}
     </form>
   </div>

@@ -13,7 +13,7 @@ describe('Vet home page test', () => {
 
     expect(res.statusCode).toBe(200)
     const $ = cheerio.load(res.payload)
-    expect($('.govuk-heading-l').text()).toEqual('Record information about a livestock health and welfare review')
+    expect($('.govuk-heading-l').text()).toEqual(title)
     const button = $('.govuk-main-wrapper .govuk-button')
     expect(button.attr('href')).toMatch('/vet/reference')
     expect(button.text()).toMatch('Start now')

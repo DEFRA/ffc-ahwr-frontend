@@ -7,10 +7,10 @@ const { vetSignup: { reference: referenceKey } } = require('../../../../../app/s
 const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
-  expect($('.govuk-heading-l').text()).toEqual('Enter booking reference number')
-  expect($('label[for=applicationReference]').text()).toMatch('Booking reference number')
+  expect($('.govuk-heading-l').text()).toEqual('Enter reference number')
+  expect($('label[for=applicationReference]').text()).toMatch('Reference number')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual(`Enter booking reference number - ${title}`)
+  expect($('title').text()).toEqual(`Enter reference number - ${title}`)
   const backLink = $('.govuk-back-link')
   expect(backLink.text()).toMatch('Back')
   expect(backLink.attr('href')).toMatch('/vet')
