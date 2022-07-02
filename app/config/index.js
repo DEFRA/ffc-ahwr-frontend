@@ -39,7 +39,9 @@ const schema = Joi.object({
     path: Joi.string().default('/'),
     ttl: Joi.number().default(1000 * 60 * 60 * 24 * 365) // 1 year
   },
-  env: Joi.string().valid('development', 'test', 'production').default('development'),
+  env: Joi.string().valid('development', 'test', 'production').default(
+    'development'
+  ),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
@@ -48,7 +50,13 @@ const schema = Joi.object({
     templateIdVetLogin: Joi.string().uuid()
   },
   port: Joi.number().default(3000),
-  serviceName: Joi.string().default('Review the health and welfare of your livestock'),
+  serviceName: Joi.string().default('Annual health and welfare review of livestock'
+  ),
+  journeys: {
+    farmerApply: { title: Joi.string() },
+    farmerClaim: { title: Joi.string() },
+    vet: { title: Joi.string() }
+  },
   applicationRequestQueue: {
     address: Joi.string().default('applicationRequestQueue'),
     type: Joi.string(),
@@ -109,8 +117,10 @@ const config = {
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,
-    templateIdFarmerApplyLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
-    templateIdFarmerClaimLogin: process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
+    templateIdFarmerApplyLogin:
+      process.env.NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN,
+    templateIdFarmerClaimLogin:
+      process.env.NOTIFY_TEMPLATE_ID_FARMER_CLAIM_LOGIN,
     templateIdVetLogin: process.env.NOTIFY_TEMPLATE_ID_VET_LOGIN
   },
   port: process.env.PORT,
@@ -134,6 +144,19 @@ const config = {
     connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
   },
   useRedis: process.env.NODE_ENV !== 'test',
+  journeys: {
+    farmerApply: {
+      title: 'Apply for an annual health and welfare review of your livestock'
+    },
+    farmerClaim: {
+      title:
+        'Claim funding for an annual health and welfare review of your livestock'
+    },
+    vet: {
+      title:
+        'Record information about an annual health and welfare review of livestock'
+    }
+  },
   testToken: process.env.TEST_TOKEN
 }
 

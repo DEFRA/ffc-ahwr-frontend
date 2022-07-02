@@ -4,6 +4,7 @@ const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
 const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
+const { journeys: { farmerClaim: { title } } } = require('../../../../../app/config')
 
 const { getClaimAmount } = require('../../../../../app/lib/get-claim-amount')
 const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
@@ -26,7 +27,7 @@ function expectPageContentOk ($, application) {
   expect(values.eq(4).text()).toMatch(speciesTestRow.value.text)
   expect(keys.eq(5).text()).toMatch('Payment amount')
   expect(values.eq(5).text()).toMatch(`£${getClaimAmount(application.data)}`)
-  expect($('title').text()).toEqual('Confirm the details of your annual health and welfare review')
+  expect($('title').text()).toEqual(`Confirm the details - ${title}`)
   expectPhaseBanner.ok($)
 }
 

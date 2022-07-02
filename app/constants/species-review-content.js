@@ -1,18 +1,18 @@
 module.exports = {
   beef: {
-    reivewType: 'Beef cattle',
+    reviewType: 'Beef cattle',
     liveStockNumber: '11 or more beef cattle'
   },
   dairy: {
-    reivewType: 'Dairy cattle',
+    reviewType: 'Dairy cattle',
     liveStockNumber: '11 or more dairy cattle'
   },
   pigs: {
-    reivewType: 'Pigs',
+    reviewType: 'Pigs',
     liveStockNumber: '51 or more pigs'
   },
   sheep: {
-    reivewType: 'Sheep',
+    reviewType: 'Sheep',
     liveStockNumber: '21 or more sheep'
   }
 }

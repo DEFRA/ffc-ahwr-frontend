@@ -34,8 +34,7 @@ module.exports = {
     context: {
       appVersion: version,
       assetPath: '/assets',
-      pageTitle: serviceName,
-      serviceName
+      pageTitle: serviceName
     }
   }
 }

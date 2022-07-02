@@ -4,6 +4,7 @@ const pageExpects = require('../../../../utils/page-expects')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const species = require('../../../../../app/constants/species')
 const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 const { getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
 
@@ -16,7 +17,7 @@ function expectPageContentOk ($, vetVisitData) {
   expect(values.eq(0).text()).toMatch(vetVisitData.farmerApplication.data.organisation.name)
   expect(keys.eq(1).text()).toMatch(typeOfReviewRow.key.text)
   expect(values.eq(1).text()).toMatch(typeOfReviewRow.value.text)
-  expect($('title').text()).toEqual('Check the details of the review')
+  expect($('title').text()).toEqual(`Check the details of the review - ${title}`)
   expectPhaseBanner.ok($)
 }
 

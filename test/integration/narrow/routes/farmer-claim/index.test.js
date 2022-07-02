@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
+const { journeys: { farmerClaim: { title } } } = require('../../../../../app/config')
 
 describe('Farmer claim home page test', () => {
   test('GET /farmer-claim route returns 200 when not logged in', async () => {
@@ -16,7 +17,7 @@ describe('Farmer claim home page test', () => {
     const button = $('.govuk-main-wrapper .govuk-button')
     expect(button.attr('href')).toMatch('/farmer-claim/login')
     expect(button.text()).toMatch('Start now')
-    expect($('title').text()).toEqual('Claim funding for a livestock health and welfare review')
+    expect($('title').text()).toEqual(`Claim funding - ${title}`)
     expectPhaseBanner.ok($)
   })
 })

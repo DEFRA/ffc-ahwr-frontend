@@ -3,6 +3,7 @@ const getCrumbs = require('../../../../utils/get-crumbs')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const { inputErrorClass, labels } = require('../../../../../app/config/visit-date')
 const { vetVisitData: { farmerApplication } } = require('../../../../../app/session/keys')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
   expect($('h1').text()).toMatch('When was the review completed?')
@@ -10,7 +11,7 @@ function expectPageContentOk ($) {
   expect($(`label[for=${labels.month}]`).text()).toMatch('Month')
   expect($(`label[for=${labels.year}]`).text()).toMatch('Year')
   expect($('.govuk-button').text()).toMatch('Continue')
-  expect($('title').text()).toEqual('Enter the date of the visit')
+  expect($('title').text()).toEqual(`Date of visit - ${title}`)
   expect($('.govuk-back-link').length).toEqual(0)
 }
 
