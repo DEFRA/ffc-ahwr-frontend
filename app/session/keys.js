@@ -40,6 +40,8 @@ module.exports = {
     signup: 'signup',
     speciesTest: 'speciesTest',
     speciesVaccinated: 'speciesVaccinated',
+    speciesLastVaccinated: 'speciesLastVaccinated',
+    speciesVaccinationUpToDate: 'speciesVaccinationUpToDate',
     visitDate: 'visitDate',
     whichReview: 'whichReview'
   }

@@ -1,19 +1,20 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
-const { speciesVaccinatedRadios } = require('../helpers/species-vaccinated-radios')
+const { speciesVaccinationUpToDateRadios } = require('../helpers/species-vaccination-up-to-date-radios')
 const { beef, dairy } = require('../../constants/species')
-const speciesContent = require('../../constants/species-vaccinated-content-vet')
-const { fully, partly, no, na } = require('../../constants/vaccinated-options')
+const { yes, no, na } = require('../../constants/vaccination-up-to-date-options')
 const session = require('../../session')
-const { vetVisitData: { speciesVaccinated, farmerApplication } } = require('../../session/keys')
+const { vetVisitData: { speciesVaccinationUpToDate, farmerApplication } } = require('../../session/keys')
 
+const title = 'Are all breeding cattle currently up to date with vaccination?'
+const errorText = 'Select yes if breeding cattle are vaccinated'
 function getBackLink (species) {
-  return `/vet/${species}-eligibility`
+  return `/vet/${species}-last-vaccinated`
 }
 module.exports = [
   {
     method: 'GET',
-    path: '/vet/{species}-vaccinated',
+    path: '/vet/{species}-vaccination-up-to-date',
     options: {
       validate: {
         params: Joi.object({
@@ -26,9 +27,8 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        const title = speciesContent[species].title
-        return h.view('vet/species-vaccinated', {
-          ...speciesVaccinatedRadios(speciesContent[species].title, speciesVaccinated, session.getVetVisitData(request, speciesVaccinated)),
+        return h.view('vet/species-vaccination-up-to-date', {
+          ...speciesVaccinationUpToDateRadios(title, speciesVaccinationUpToDate, session.getVetVisitData(request, speciesVaccinationUpToDate)),
           backLink: getBackLink(species),
           title
         })
@@ -37,20 +37,19 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/vet/{species}-vaccinated',
+    path: '/vet/{species}-vaccination-up-to-date',
     options: {
       validate: {
         payload: Joi.object({
-          [speciesVaccinated]: Joi.string().valid(fully.value, partly.value, no.value, na.value).required()
+          [speciesVaccinationUpToDate]: Joi.string().valid(yes.value, no.value, na.value).required()
         }),
         params: Joi.object({
           species: Joi.string().valid(beef, dairy)
         }),
         failAction: (request, h, _err) => {
           const species = request.params.species
-          const title = speciesContent[species].title
-          return h.view('vet/species-vaccinated', {
-            ...speciesVaccinatedRadios(speciesContent[species].title, speciesVaccinated, session.getVetVisitData(request, speciesVaccinated), speciesContent[species].errorText),
+          return h.view('vet/species-vaccination-up-to-date', {
+            ...speciesVaccinationUpToDateRadios(title, speciesVaccinationUpToDate, session.getVetVisitData(request, speciesVaccinationUpToDate), errorText),
             backLink: getBackLink(species),
             title
           }).code(400).takeover()
@@ -62,12 +61,9 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        const answer = request.payload[speciesVaccinated]
-        session.setVetVisitData(request, speciesVaccinated, answer)
-        if (answer === no.value || answer === na.value) {
-          return h.redirect(`/vet/${species}-test`)
-        }
-        return h.redirect(`/vet/${species}-last-vaccinated`)
+        const answer = request.payload[speciesVaccinationUpToDate]
+        session.setVetVisitData(request, speciesVaccinationUpToDate, answer)
+        return h.redirect(`/vet/${species}-test`)
       }
     }
   }
