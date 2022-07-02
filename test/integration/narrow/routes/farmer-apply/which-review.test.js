@@ -82,7 +82,7 @@ describe('Species review test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select which livestock do you want a review for?')
+      expect($('p.govuk-error-message').text()).toMatch('Select the livestock you would like reviewed')
       expect(res.statusCode).toBe(400)
     })
 
