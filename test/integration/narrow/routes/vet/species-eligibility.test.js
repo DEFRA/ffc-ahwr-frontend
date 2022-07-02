@@ -79,15 +79,15 @@ describe('Vet species eligibility test', () => {
     })
 
     test.each([
-      { species: species.beef, eligibleSpecies: 'no' },
-      { species: species.dairy, eligibleSpecies: 'no' },
-      { species: species.pigs, eligibleSpecies: 'no' },
-      { species: species.sheep, eligibleSpecies: 'no' },
-      { species: species.beef, eligibleSpecies: 'yes' },
-      { species: species.dairy, eligibleSpecies: 'yes' },
-      { species: species.pigs, eligibleSpecies: 'yes' },
-      { species: species.sheep, eligibleSpecies: 'yes' }
-    ])('returns 302 to next page when acceptable answer given', async ({ species, eligibleSpecies }) => {
+      { species: species.beef, eligibleSpecies: 'no', nextPage: '/vet/beef-test' },
+      { species: species.dairy, eligibleSpecies: 'no', nextPage: '/vet/dairy-test' },
+      { species: species.pigs, eligibleSpecies: 'no', nextPage: '/vet/pigs-test' },
+      { species: species.sheep, eligibleSpecies: 'no', nextPage: '/vet/sheep-worms' },
+      { species: species.beef, eligibleSpecies: 'yes', nextPage: '/vet/beef-test' },
+      { species: species.dairy, eligibleSpecies: 'yes', nextPage: '/vet/dairy-test' },
+      { species: species.pigs, eligibleSpecies: 'yes', nextPage: '/vet/pigs-test' },
+      { species: species.sheep, eligibleSpecies: 'yes', nextPage: '/vet/sheep-worms' }
+    ])('returns 302 to next page when acceptable answer given', async ({ species, eligibleSpecies, nextPage }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species } })
       const url = `/vet/${species}-eligibility`
       const options = {
@@ -101,7 +101,7 @@ describe('Vet species eligibility test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual(`/vet/${species}-test`)
+      expect(res.headers.location).toEqual(nextPage)
     })
 
     test.each([
