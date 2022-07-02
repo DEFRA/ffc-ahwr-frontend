@@ -4,7 +4,6 @@ const Joi = require('joi')
 const {
   farmerApplyData: { confirmCheckDetails, organisation: organisationKey }
 } = require('../../session/keys')
-const radioId = 'confirmCheckDetails'
 const labelText = 'Are your details correct?'
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
@@ -30,7 +29,7 @@ function getView (request, errorText) {
   return {
     organisation,
     listData: { rows },
-    ...getYesNoRadios(labelText, radioId, prevAnswer, errorText, {
+    ...getYesNoRadios(labelText, confirmCheckDetails, prevAnswer, errorText, {
       isPageHeading: false,
       classes: 'govuk-fieldset__legend--m'
     })
@@ -55,7 +54,7 @@ module.exports = [{
   options: {
     validate: {
       payload: Joi.object({
-        confirmCheckDetails: Joi.string().valid('yes', 'no').required()
+        [confirmCheckDetails]: Joi.string().valid('yes', 'no').required()
       }),
       failAction: (_request, h, _err) => {
         return h.view('farmer-apply/update-details').code(400).takeover()
@@ -67,7 +66,7 @@ module.exports = [{
         session.setFarmerApplyData(
           request,
           confirmCheckDetails,
-          request.payload.confirmCheckDetails
+          request.payload[confirmCheckDetails]
         )
         return h.redirect('/farmer-apply/which-review')
       }
