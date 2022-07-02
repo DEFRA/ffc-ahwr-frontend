@@ -13,14 +13,21 @@ module.exports = {
           const { path } = request
 
           let journeyTitle = serviceName
+          let serviceUrl = '/'
           if (path.startsWith('/vet')) {
             journeyTitle = journeys.vet.title
+            serviceUrl = '/vet'
           } else if (path.startsWith('/farmer-apply')) {
             journeyTitle = journeys.farmerApply.title
+            serviceUrl = '/farmer-apply'
           } else if (path.startsWith('/farmer-claim')) {
             journeyTitle = journeys.farmerClaim.title
+            serviceUrl = '/farmer-claim'
+          } else if (path.startsWith('/cookies')) {
+            serviceUrl = '/cookies'
           }
           ctx.serviceName = journeyTitle
+          ctx.serviceUrl = serviceUrl
 
           response.source.context = ctx
         }
