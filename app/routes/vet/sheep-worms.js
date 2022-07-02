@@ -5,7 +5,7 @@ const session = require('../../session')
 const { vetVisitData: { sheepWorms, farmerApplication } } = require('../../session/keys')
 const species = require('../../constants/species')
 
-const errorText = 'Select yes if there were worms in the first check'
+const errorText = 'Select yes if the first check showed worms'
 const labelText = 'Were there worms in the first check?'
 
 const path = 'vet/sheep-worms'

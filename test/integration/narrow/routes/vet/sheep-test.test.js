@@ -82,9 +82,9 @@ describe('Sheep worming test', () => {
     })
 
     test.each([
-      { speciesTest: 200, message: 'EPG percentage must be 100 or less' },
-      { speciesTest: -80, message: 'EPG percentage must be 0 or more' },
-      { speciesTest: null, message: 'Enter a valid EPG percentage' }
+      { speciesTest: 200, message: 'Percentage reduction must be 100 or less' },
+      { speciesTest: -80, message: 'Percentage reduction must be 0 or more' },
+      { speciesTest: null, message: 'Enter the percentage reduction' }
     ])('returns error when unacceptable answer is given', async ({ speciesTest, message }) => {
       const options = {
         method,
