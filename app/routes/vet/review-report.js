@@ -1,7 +1,8 @@
 const Joi = require('joi')
-const { getClaimType } = require('../../lib/get-claim-type')
-const { vetVisitData: { reviewReport, farmerApplication } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
+const species = require('../../constants/species')
+const { getClaimType } = require('../../lib/get-claim-type')
+const { vetVisitData: { farmerApplication, reviewReport, sheepWorms } } = require('../../session/keys')
 const session = require('../../session')
 
 const legendText = 'Have you given the farmer a written report of the review?'
@@ -9,18 +10,31 @@ const errorText = 'Select yes if you have given the farmer a written report of t
 const hintText = 'The report must include follow-up actions and recommendations. It will not be shared with Defra.'
 const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: false, hintText }
 
+function getBackLink (request) {
+  const application = session.getVetVisitData(request, farmerApplication)
+  const sheepWormsValue = session.getVetVisitData(request, sheepWorms)
+  const claimType = getClaimType(application.data)
+  switch (claimType) {
+    case species.sheep:
+      if (sheepWormsValue === 'yes') {
+        return '/vet/sheep-test'
+      } else {
+        return '/vet/sheep-worms'
+      }
+    default:
+      return `/vet/${claimType}-test`
+  }
+}
+
 module.exports = [
   {
     method: 'GET',
     path: '/vet/review-report',
     options: {
       handler: async (request, h) => {
-        const application = session.getVetVisitData(request, farmerApplication)
-        const claimType = getClaimType(application.data)
-        const backLink = `/vet/${claimType}-test`
         return h.view('vet/review-report', {
           ...getYesNoRadios(legendText, reviewReport, session.getVetVisitData(request, reviewReport), undefined, radioOptions),
-          backLink
+          backLink: getBackLink(request)
         })
       }
     }
@@ -34,12 +48,9 @@ module.exports = [
           [reviewReport]: Joi.string().valid('yes', 'no').required()
         }),
         failAction: (request, h, _err) => {
-          const application = session.getVetVisitData(request, farmerApplication)
-          const claimType = getClaimType(application.data)
-          const backLink = `/vet/${claimType}-test`
           return h.view('vet/review-report', {
             ...getYesNoRadios(legendText, reviewReport, session.getVetVisitData(request, reviewReport), errorText, radioOptions),
-            backLink
+            backLink: getBackLink(request)
           }).code(400).takeover()
         }
       },
