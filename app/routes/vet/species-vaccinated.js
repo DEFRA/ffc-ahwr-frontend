@@ -3,10 +3,9 @@ const boom = require('@hapi/boom')
 const { speciesVaccinatedRadios } = require('../helpers/species-vaccinated-radios')
 const { beef, dairy } = require('../../constants/species')
 const speciesContent = require('../../constants/species-vaccinated-content-vet')
+const { fully, partly, no, na } = require('../../constants/vaccinated-options')
 const session = require('../../session')
 const { vetVisitData: { speciesVaccinated, farmerApplication } } = require('../../session/keys')
-
-const { fully, partly, no, na } = require('../../constants/vaccinated-options')
 
 function getBackLink (species) {
   return `/vet/${species}-eligibility`
@@ -60,11 +59,17 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
+        console.log(application)
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        session.setVetVisitData(request, speciesVaccinated, request.payload[speciesVaccinated])
-        return h.redirect('/vet/review-report')
+        const answer = request.payload[speciesVaccinated]
+        session.setVetVisitData(request, speciesVaccinated, answer)
+        console.log('ans', answer)
+        if (answer === no.value || answer === na.value) {
+          return h.redirect(`/vet/${species}-test`)
+        }
+        return h.redirect(`/vet/${species}-last-vaccinated`)
       }
     }
   }
