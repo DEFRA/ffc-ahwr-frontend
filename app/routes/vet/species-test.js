@@ -1,12 +1,12 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
-const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
-const session = require('../../session')
 const speciesTypes = require('../../constants/species')
 const speciesContent = require('../../constants/species-test-content-vet')
-const backLink = '/vet/visit-date'
+const session = require('../../session')
+const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
 
+const backLink = '/vet/visit-date'
 module.exports = [
   {
     method: 'GET',
