@@ -79,12 +79,12 @@ describe('Vet species eligibility test', () => {
     })
 
     test.each([
-      { species: species.beef, eligibleSpecies: 'no', nextPage: '/vet/beef-test' },
-      { species: species.dairy, eligibleSpecies: 'no', nextPage: '/vet/dairy-test' },
+      { species: species.beef, eligibleSpecies: 'no', nextPage: '/vet/beef-vaccinated' },
+      { species: species.dairy, eligibleSpecies: 'no', nextPage: '/vet/dairy-vaccinated' },
       { species: species.pigs, eligibleSpecies: 'no', nextPage: '/vet/pigs-test' },
       { species: species.sheep, eligibleSpecies: 'no', nextPage: '/vet/sheep-worms' },
-      { species: species.beef, eligibleSpecies: 'yes', nextPage: '/vet/beef-test' },
-      { species: species.dairy, eligibleSpecies: 'yes', nextPage: '/vet/dairy-test' },
+      { species: species.beef, eligibleSpecies: 'yes', nextPage: '/vet/beef-vaccinated' },
+      { species: species.dairy, eligibleSpecies: 'yes', nextPage: '/vet/dairy-vaccinated' },
       { species: species.pigs, eligibleSpecies: 'yes', nextPage: '/vet/pigs-test' },
       { species: species.sheep, eligibleSpecies: 'yes', nextPage: '/vet/sheep-worms' }
     ])('returns 302 to next page when acceptable answer given', async ({ species, eligibleSpecies, nextPage }) => {
