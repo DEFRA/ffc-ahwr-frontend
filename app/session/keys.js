@@ -38,9 +38,10 @@ module.exports = {
     sheep: 'sheep',
     sheepWorms: 'sheepWorms',
     signup: 'signup',
+    speciesBvdInHerd: 'speciesBvdInHerd',
+    speciesLastVaccinated: 'speciesLastVaccinated',
     speciesTest: 'speciesTest',
     speciesVaccinated: 'speciesVaccinated',
-    speciesLastVaccinated: 'speciesLastVaccinated',
     speciesVaccinationUpToDate: 'speciesVaccinationUpToDate',
     visitDate: 'visitDate',
     whichReview: 'whichReview'

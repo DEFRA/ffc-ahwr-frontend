@@ -21,6 +21,9 @@ function getBackLink (request) {
       } else {
         return '/vet/sheep-worms'
       }
+    case species.beef:
+    case species.dairy:
+      return `/vet/${claimType}-bvd-in-herd`
     default:
       return `/vet/${claimType}-test`
   }

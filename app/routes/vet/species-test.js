@@ -71,6 +71,9 @@ module.exports = [
           throw boom.badRequest()
         }
         session.setVetVisitData(request, speciesTest, request.payload[speciesTest])
+        if (species === speciesTypes.beef || species === speciesTypes.dairy) {
+          return h.redirect(`/vet/${species}-bvd-in-herd`)
+        }
         return h.redirect('/vet/review-report')
       }
     }
