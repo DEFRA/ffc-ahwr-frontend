@@ -11,6 +11,59 @@ function getVisitDate (vetVisit) {
   return new Date(visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
+function cattle (rows, vetVisit) {
+  const speciesVaccinated = vetVisit[vetVisitData.speciesVaccinated]
+
+  if (speciesVaccinated) {
+    rows.push({
+      key: { text: 'Herd vaccinated for BVD' },
+      value: { text: upperFirstLetter(speciesVaccinated) },
+      actions: { items: [{ href: '/vet/beef-vaccinated', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+  }
+
+  const speciesLastVaccinated = vetVisit[vetVisitData.speciesLastVaccinated]
+
+  if (speciesLastVaccinated) {
+    rows.push({
+      key: { text: 'Herd last vaccinated for BVD' },
+      value: { text: `${speciesLastVaccinated.month}/${speciesLastVaccinated.year}` },
+      actions: { items: [{ href: '/vet/beef-last-vaccinated', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+  }
+
+  const speciesVaccinationUpToDate = vetVisit[vetVisitData.speciesVaccinationUpToDate]
+
+  if (speciesVaccinationUpToDate) {
+    rows.push({
+      key: { text: 'Breeding cattle up to date' },
+      value: { text: upperFirstLetter(speciesVaccinationUpToDate) },
+      actions: { items: [{ href: '/vet/beef-vaccination-up-to-date', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+  }
+  rows.push({
+    key: { text: 'BVD in herd' },
+    value: { text: upperFirstLetter(vetVisit[vetVisitData.speciesTest]) },
+    actions: { items: [{ href: '/vet/beef-test', text: 'Change', visuallyHiddenText: 'change test result' }] }
+  })
+}
+
+function sheep (rows, vetVisit) {
+  rows.push({
+    key: { text: 'Percentage reduction in eggs per gram (EPG)' },
+    value: { text: vetVisit[vetVisitData.speciesTest] },
+    actions: { items: [{ href: '/vet/sheep-test', text: 'Change', visuallyHiddenText: 'change test result' }] }
+  })
+}
+
+function pigs (rows, vetVisit) {
+  rows.push({
+    key: { text: 'PRRS in herd' },
+    value: { text: upperFirstLetter(vetVisit[vetVisitData.speciesTest]) },
+    actions: { items: [{ href: '/vet/pigs-test', text: 'Change', visuallyHiddenText: 'change test result' }] }
+  })
+}
+
 const path = 'vet/check-answers'
 module.exports = [{
   method: 'GET',
@@ -30,37 +83,20 @@ module.exports = [{
         actions: { items: [{ href: eligibilityPath, text: 'Change', visuallyHiddenText: 'change eligible number of animals' }] }
       }]
 
-      let text
-      let value
-      let href
       switch (claimType) {
         case species.beef:
-          text = 'BVD in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
-          href = '/vet/beef-test'
+          cattle(rows, vetVisit)
           break
         case species.sheep:
-          text = 'Percentage reduction in eggs per gram (EPG)'
-          value = vetVisit[vetVisitData.speciesTest]
-          href = '/vet/sheep-test'
+          sheep(rows, vetVisit)
           break
         case species.dairy:
-          text = 'BVD in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
-          href = '/vet/dairy-test'
+          cattle(rows, vetVisit)
           break
         case species.pigs:
-          text = 'PRRS in herd'
-          value = upperFirstLetter(vetVisit[vetVisitData.speciesTest])
-          href = '/vet/pigs-test'
+          pigs(rows, vetVisit)
           break
       }
-
-      rows.push({
-        key: { text },
-        value: { text: value },
-        actions: { items: [{ href, text: 'Change', visuallyHiddenText: 'change test result' }] }
-      })
 
       rows.push({
         key: { text: 'Written report given to farmer' },

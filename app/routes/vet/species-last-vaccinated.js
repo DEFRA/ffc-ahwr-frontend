@@ -27,11 +27,11 @@ module.exports = [
       handler: async (request, h) => {
         const species = request.params.species
         const application = session.getVetVisitData(request, farmerApplication)
-        const { month, year } = session.getVetVisitData(request, speciesLastVaccinated)
+        const lastVaccinated = session.getVetVisitData(request, speciesLastVaccinated)
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        return h.view('vet/species-last-vaccinated', { month, year, backLink: getBackLink(species) })
+        return h.view('vet/species-last-vaccinated', { month: lastVaccinated?.month, year: lastVaccinated?.year, backLink: getBackLink(species) })
       }
     }
   },

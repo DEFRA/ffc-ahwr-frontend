@@ -5,7 +5,7 @@ const { beef, dairy } = require('../../constants/species')
 const speciesContent = require('../../constants/species-vaccinated-content-vet')
 const { fully, partly, no, na } = require('../../constants/vaccinated-options')
 const session = require('../../session')
-const { vetVisitData: { speciesVaccinated, farmerApplication } } = require('../../session/keys')
+const { vetVisitData: { speciesVaccinated, speciesLastVaccinated, speciesVaccinationUpToDate, farmerApplication } } = require('../../session/keys')
 
 function getBackLink (species) {
   return `/vet/${species}-eligibility`
@@ -27,6 +27,9 @@ module.exports = [
           throw boom.badRequest()
         }
         const title = speciesContent[species].title
+        session.setVetVisitData(request, speciesVaccinated, null)
+        session.setVetVisitData(request, speciesLastVaccinated, null)
+        session.setVetVisitData(request, speciesVaccinationUpToDate, null)
         return h.view('vet/species-vaccinated', {
           ...speciesVaccinatedRadios(speciesContent[species].title, speciesVaccinated, session.getVetVisitData(request, speciesVaccinated)),
           backLink: getBackLink(species),
