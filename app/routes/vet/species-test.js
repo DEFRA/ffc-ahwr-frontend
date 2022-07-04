@@ -3,10 +3,20 @@ const boom = require('@hapi/boom')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const speciesTypes = require('../../constants/species')
 const speciesContent = require('../../constants/species-test-content-vet')
+const { fully, partly } = require('../../constants/vaccinated-options')
 const session = require('../../session')
-const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
+const { vetVisitData: { farmerApplication, speciesTest, speciesVaccinated } } = require('../../session/keys')
 
-function getBackLink (species) {
+function getBackLink (request) {
+  const species = request.params.species
+  const vaccinated = session.getVetVisitData(request, speciesVaccinated)
+  if (species === speciesTypes.beef || species === speciesTypes.dairy) {
+    if (vaccinated === fully.value || vaccinated === partly.value) {
+      return `/vet/${species}-vaccination-up-to-date`
+    } else {
+      return `/vet/${species}-vaccinated`
+    }
+  }
   return `/vet/${species}-eligibility`
 }
 module.exports = [
@@ -25,11 +35,10 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        const title = speciesContent[species].title
         return h.view('vet/species-test', {
-          ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest)),
-          backLink: getBackLink(species),
-          title
+          ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), null, { inline: true }),
+          backLink: getBackLink(request),
+          title: speciesContent[species].title
         })
       }
     }
@@ -49,8 +58,8 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-test', {
-            ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText),
-            backLink: getBackLink(species),
+            ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText, { inline: true }),
+            backLink: getBackLink(request),
             title
           }).code(400).takeover()
         }
@@ -61,7 +70,10 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        session.setVetVisitData(request, speciesTest, request.payload.speciesTest)
+        session.setVetVisitData(request, speciesTest, request.payload[speciesTest])
+        if (species === speciesTypes.beef || species === speciesTypes.dairy) {
+          return h.redirect(`/vet/${species}-bvd-in-herd`)
+        }
         return h.redirect('/vet/review-report')
       }
     }

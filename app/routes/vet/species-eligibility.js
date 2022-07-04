@@ -1,10 +1,11 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
-const { vetVisitData: { eligibleSpecies, farmerApplication } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
-const session = require('../../session')
 const speciesTypes = require('../../constants/species')
 const speciesContent = require('../../constants/species-content-vet')
+const session = require('../../session')
+const { vetVisitData: { eligibleSpecies, farmerApplication } } = require('../../session/keys')
+
 const backLink = '/vet/visit-date'
 
 module.exports = [
@@ -25,7 +26,7 @@ module.exports = [
         }
         const title = speciesContent[species].title
         return h.view('vet/species-eligibility', {
-          ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies)),
+          ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies), null, { inline: true }),
           backLink,
           title
         })
@@ -47,7 +48,7 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-eligibility', {
-            ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
+            ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText, { inline: true }),
             backLink,
             title
           }).code(400).takeover()
@@ -59,10 +60,13 @@ module.exports = [
         if (application.data.whichReview !== species) {
           throw boom.badRequest()
         }
-        session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
+        session.setVetVisitData(request, eligibleSpecies, request.payload[eligibleSpecies])
         switch (species) {
           case speciesTypes.sheep:
             return h.redirect('/vet/sheep-worms')
+          case speciesTypes.beef:
+          case speciesTypes.dairy:
+            return h.redirect(`/vet/${species}-vaccinated`)
           default:
             return h.redirect(`/vet/${species}-test`)
         }

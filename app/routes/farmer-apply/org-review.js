@@ -31,7 +31,8 @@ function getView (request, errorText) {
     listData: { rows },
     ...getYesNoRadios(labelText, confirmCheckDetails, prevAnswer, errorText, {
       isPageHeading: false,
-      classes: 'govuk-fieldset__legend--m'
+      legendClasses: 'govuk-fieldset__legend--m',
+      inline: true
     })
   }
 }

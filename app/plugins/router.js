@@ -31,8 +31,12 @@ const routes = [].concat(
   require('../routes/vet/review-report'),
   require('../routes/vet/sheep-test'),
   require('../routes/vet/sheep-worms'),
+  require('../routes/vet/species-bvd-in-herd'),
   require('../routes/vet/species-eligibility'),
+  require('../routes/vet/species-last-vaccinated'),
   require('../routes/vet/species-test'),
+  require('../routes/vet/species-vaccinated'),
+  require('../routes/vet/species-vaccination-up-to-date'),
   require('../routes/vet/visit-date')
 )
 

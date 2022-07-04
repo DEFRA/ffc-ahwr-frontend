@@ -8,7 +8,7 @@ const session = require('../../session')
 const legendText = 'Have you given the farmer a written report of the review?'
 const errorText = 'Select yes if you have given the farmer a written report of the review'
 const hintText = 'The report must include follow-up actions and recommendations. It will not be shared with Defra.'
-const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: false, hintText }
+const radioOptions = { isPageHeading: true, legendClasses: 'govuk-fieldset__legend--l', inline: true, hintText }
 
 function getBackLink (request) {
   const application = session.getVetVisitData(request, farmerApplication)
@@ -21,6 +21,9 @@ function getBackLink (request) {
       } else {
         return '/vet/sheep-worms'
       }
+    case species.beef:
+    case species.dairy:
+      return `/vet/${claimType}-bvd-in-herd`
     default:
       return `/vet/${claimType}-test`
   }

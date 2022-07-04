@@ -1,15 +1,17 @@
+const { fully, partly, no, na } = require('../../constants/vaccinated-options')
+
 /**
  * Generate GOV.UK radios component.
  *
  * @param {string} legendText heading text for radios.
  * @param {string} id of the radio component.
- * @param {string} previousAnswer - one of the four species.
+ * @param {string} previousAnswer one of the vaccinated options.
  * @param {string} [errorText] error message to display.
  * @param {object} [options] an object containing `isPageHeading` (boolean, determines if the legendText is marked as a heading), `legendClasses` (string, contains classes to add to legendText), `inline` (boolean determines if the class to make the radios display as inline is added) and hintHtml (html string to display hint message with the radio button).
  *
  * @return {object} object with `radios` property containing radios component.
  */
-function speciesRadios (legendText, id, previousAnswer, errorText = undefined, options = {}) {
+function speciesVaccinatedRadios (legendText, id, previousAnswer, errorText = undefined, options = {}) {
   const { isPageHeading = true, legendClasses = 'govuk-fieldset__legend--l', inline = false, hintHtml = '' } = options
   return {
     radios: {
@@ -28,24 +30,24 @@ function speciesRadios (legendText, id, previousAnswer, errorText = undefined, o
       },
       items: [
         {
-          value: 'beef',
-          text: 'Beef cattle',
-          checked: previousAnswer === 'beef'
+          value: fully.value,
+          text: fully.text,
+          checked: previousAnswer === fully.value
         },
         {
-          value: 'dairy',
-          text: 'Dairy cattle',
-          checked: previousAnswer === 'dairy'
+          value: partly.value,
+          text: partly.text,
+          checked: previousAnswer === partly.value
         },
         {
-          value: 'sheep',
-          text: 'Sheep',
-          checked: previousAnswer === 'sheep'
+          value: no.value,
+          text: no.text,
+          checked: previousAnswer === no.value
         },
         {
-          value: 'pigs',
-          text: 'Pigs',
-          checked: previousAnswer === 'pigs'
+          value: na.value,
+          text: na.text,
+          checked: previousAnswer === na.value
         }
       ],
       ...(errorText ? { errorMessage: { text: errorText } } : {})
@@ -54,5 +56,5 @@ function speciesRadios (legendText, id, previousAnswer, errorText = undefined, o
 }
 
 module.exports = {
-  speciesRadios
+  speciesVaccinatedRadios
 }

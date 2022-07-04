@@ -1,8 +1,8 @@
 module.exports = {
   beef: {
     errorText: 'Select yes if test results showed BVD in the herd',
-    legendText: 'Did antibody test results show that BVD is in the herd?',
-    title: 'Did antibody test results show that BVD is in the herd?'
+    legendText: 'Did test results show that BVD is in the herd?',
+    title: 'Did test results show that BVD is in the herd?'
   },
   dairy: {
     errorText: 'Select yes if test results showed BVD in the herd',
