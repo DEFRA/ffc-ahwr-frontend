@@ -28,7 +28,7 @@ module.exports = [
           throw boom.badRequest()
         }
         return h.view('vet/species-bvd-in-herd', {
-          ...getYesNoRadios(title, speciesBvdInHerd, session.getVetVisitData(request, speciesBvdInHerd)),
+          ...getYesNoRadios(title, speciesBvdInHerd, session.getVetVisitData(request, speciesBvdInHerd), null, { inline: true }),
           backLink: getBackLink(request),
           title
         })
@@ -48,7 +48,7 @@ module.exports = [
         }),
         failAction: (request, h, _err) => {
           return h.view('vet/species-bvd-in-herd', {
-            ...getYesNoRadios(title, speciesBvdInHerd, session.getVetVisitData(request, speciesBvdInHerd), errorText),
+            ...getYesNoRadios(title, speciesBvdInHerd, session.getVetVisitData(request, speciesBvdInHerd), errorText, { inline: true }),
             backLink: getBackLink(request),
             title
           }).code(400).takeover()

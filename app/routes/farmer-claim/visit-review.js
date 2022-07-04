@@ -28,7 +28,7 @@ function getRows (claim) {
 
 function getViewData (claim, errorText) {
   return {
-    ...getYesNoRadios(legendText, detailsCorrect, claim[detailsCorrect], errorText, { isPageHeading: false, legendClasses: 'govuk-fieldset__legend--m', inline: false }),
+    ...getYesNoRadios(legendText, detailsCorrect, claim[detailsCorrect], errorText, { isPageHeading: false, legendClasses: 'govuk-fieldset__legend--m', inline: true }),
     listData: { rows: getRows(claim) },
     email: claim.data.organisation.email
   }

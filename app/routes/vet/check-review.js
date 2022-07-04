@@ -16,7 +16,7 @@ function getRows (claimData) {
 
 function getViewData (visitData, errorText) {
   return {
-    ...getYesNoRadios(legendText, detailsCorrect, visitData[detailsCorrect], errorText, { isPageHeading: false, legendClasses: 'govuk-fieldset__legend--m', inline: false }),
+    ...getYesNoRadios(legendText, detailsCorrect, visitData[detailsCorrect], errorText, { isPageHeading: false, legendClasses: 'govuk-fieldset__legend--m', inline: true }),
     listData: { rows: getRows(visitData.farmerApplication.data) }
   }
 }

@@ -36,7 +36,7 @@ module.exports = [
           throw boom.badRequest()
         }
         return h.view('vet/species-test', {
-          ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest)),
+          ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), null, { inline: true }),
           backLink: getBackLink(request),
           title: speciesContent[species].title
         })
@@ -58,7 +58,7 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-test', {
-            ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText),
+            ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText, { inline: true }),
             backLink: getBackLink(request),
             title
           }).code(400).takeover()
