@@ -6,7 +6,7 @@ module.exports = {
     .messages({
       'number.required': epgErrorMessages.enterEpg,
       'number.base': epgErrorMessages.validEpg,
-      'number.max': 'EPG percentage must be 100 or less',
-      'number.min': 'EPG percentage must be 0 or more'
+      'number.max': 'Percentage reduction must be 100 or less',
+      'number.min': 'Percentage reduction must be 0 or more'
     })
 }

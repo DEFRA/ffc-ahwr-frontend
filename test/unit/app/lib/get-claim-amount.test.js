@@ -15,6 +15,6 @@ describe('getClaimAmount returns correct amount', () => {
   })
 
   test('error thrown when species are not matched', () => {
-    expect(() => getClaimAmount({})).toThrow(new Error('Unexpected species combination detected'))
+    expect(() => getClaimAmount({})).toThrow(new Error('No claim type found, \'whichReview\' property empty.'))
   })
 })

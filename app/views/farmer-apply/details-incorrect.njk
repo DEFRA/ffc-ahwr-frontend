@@ -1,11 +1,11 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Update you details - {{ serviceName }}{% endblock %}
+{% block pageTitle %}Update your details - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: "/farmer-apply/org-review",
+    href: "./org-review",
 	  attributes: {id: "back"}
   }) }}
 {% endblock %}
@@ -15,7 +15,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Update your details</h1>
 
-    <p>Sign in to <a href="https://www.gov.uk/claim-rural-payments">update your details with the Rural Payments Agency.</a></p>
+    <p>Sign in to <a href="https://www.gov.uk/claim-rural-payments">update your details with the Rural Payments Agency</a>.</p>
   </div>
 </div>
 {% endblock %}

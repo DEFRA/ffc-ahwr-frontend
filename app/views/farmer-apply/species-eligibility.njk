@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}{{title}}{% endblock %}
+{% block pageTitle %}{{title}} - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({

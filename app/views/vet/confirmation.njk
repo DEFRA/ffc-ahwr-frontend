@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Confirmation{% endblock %}
+{% block pageTitle %}Record submitted - {{ serviceName }}{% endblock %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -10,8 +10,10 @@
     {% else %}
       {{ govukPanel({
         titleText: "Record submitted",
-        html: "Booking reference number<br><strong>" + reference + "</strong>"
+        html: "Reference number<br><strong>" + reference + "</strong>"
       }) }}
+
+      <p class="govuk-body">The record has been submitted.</p>
 
       <h2 class="govuk-heading-m">What happens next</h2>
       <p class="govuk-body">We’ve contacted the farmer to tell them they can claim their funding.</p>

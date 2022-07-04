@@ -1,11 +1,11 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}Cattle Numbers - {{ serviceName }}{% endblock %}
+{% block pageTitle %}Were there worms in the first check? - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: backLink,
+    href: "/vet/sheep-eligibility",
 	  attributes: {id: "back"}
   }) }}
 {% endblock %}

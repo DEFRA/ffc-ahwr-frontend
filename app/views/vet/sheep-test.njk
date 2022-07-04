@@ -1,11 +1,11 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?{% endblock %}
+{% block pageTitle %}What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment? - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: "/vet/sheep-eligibility",
+    href: "/vet/sheep-worms",
     attributes: {
       id: "back"
     }
@@ -17,12 +17,16 @@
     <div class="govuk-grid-column-two-thirds">
       <form method="POST">
         <input type="hidden" name="crumb" value="{{crumb}}"/>
-        <h1 class="govuk-heading-l">What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?</h1>
         {{ govukInput({
           label: {
+            text: "What was the percentage reduction in eggs per gram (EPG) from pre- to post- worming treatment?",
+            classes: "govuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
             text: "Percentage"
           },
-          classes: "govuk-input-!-width-full",
+          classes: "govuk-input--width-3",
           id: "speciesTest",
           name: "speciesTest",
           value: speciesTest,

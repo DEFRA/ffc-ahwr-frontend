@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
 const getCrumbs = require('../../../../utils/get-crumbs')
+const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 const reference = 'VV-5874-0BFA'
 
@@ -48,7 +49,7 @@ describe('Confirmation test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Record submitted')
-      expect($('title').text()).toEqual('Confirmation')
+      expect($('title').text()).toEqual(`Record submitted - ${title}`)
       expectPhaseBanner.ok($)
     })
 

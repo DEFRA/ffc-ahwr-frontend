@@ -3,7 +3,7 @@ function getClaimType (claimData) {
   if (whichReview) {
     return whichReview
   }
-  throw new Error('Unexpected species combination detected')
+  throw new Error('No claim type found, \'whichReview\' property empty.')
 }
 
 module.exports = {

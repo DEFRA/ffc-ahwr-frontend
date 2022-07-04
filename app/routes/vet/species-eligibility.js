@@ -14,7 +14,7 @@ module.exports = [
     options: {
       validate: {
         params: Joi.object({
-          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
+          species: Joi.string().valid(...Object.keys(speciesTypes))
         })
       },
       handler: async (request, h) => {
@@ -41,13 +41,13 @@ module.exports = [
           [eligibleSpecies]: Joi.string().valid('yes', 'no').required()
         }),
         params: Joi.object({
-          species: Joi.string().valid(speciesTypes.beef, speciesTypes.dairy, speciesTypes.pigs, speciesTypes.sheep)
+          species: Joi.string().valid(...Object.keys(speciesTypes))
         }),
         failAction: (request, h, _err) => {
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-eligibility', {
-            ...getYesNoRadios(speciesContent[species].legendText, species, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
+            ...getYesNoRadios(speciesContent[species].legendText, eligibleSpecies, session.getVetVisitData(request, eligibleSpecies), speciesContent[species].errorText),
             backLink,
             title
           }).code(400).takeover()
@@ -60,7 +60,12 @@ module.exports = [
           throw boom.badRequest()
         }
         session.setVetVisitData(request, eligibleSpecies, request.payload.eligibleSpecies)
-        return h.redirect(`/vet/${species}-test`)
+        switch (species) {
+          case speciesTypes.sheep:
+            return h.redirect('/vet/sheep-worms')
+          default:
+            return h.redirect(`/vet/${species}-test`)
+        }
       }
     }
   }

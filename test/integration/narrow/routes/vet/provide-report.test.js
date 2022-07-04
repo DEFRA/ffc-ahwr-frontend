@@ -1,12 +1,11 @@
 const cheerio = require('cheerio')
 const expectPhaseBanner = require('../../../../utils/phase-banner-expect')
-const { journeys: { farmerApply: { title } } } = require('../../../../../app/config')
 
-describe('Not eligible page test', () => {
-  const url = '/farmer-apply/not-eligible'
+describe('Vet - provider report page', () => {
+  const url = '/vet/provide-report'
 
-  describe(`GET ${url} route`, () => {
-    test('when logged in returns 200', async () => {
+  describe(`GET ${url} route when logged in`, () => {
+    test('returns 200', async () => {
       const options = {
         auth: { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' },
         method: 'GET',
@@ -17,12 +16,13 @@ describe('Not eligible page test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('.govuk-heading-l').text()).toEqual('You\'re not eligible to apply')
-      expect($('title').text()).toEqual(`Not Eligible - ${title}`)
+      expect($('.govuk-heading-l').text()).toEqual('Give the farmer a written report')
       expectPhaseBanner.ok($)
     })
+  })
 
-    test('when not logged in redirects to /farmer-apply/login', async () => {
+  describe(`GET ${url} route when not logged in`, () => {
+    test('redirects to /vet', async () => {
       const options = {
         method: 'GET',
         url
@@ -31,7 +31,7 @@ describe('Not eligible page test', () => {
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(302)
-      expect(res.headers.location).toEqual('/farmer-apply/login')
+      expect(res.headers.location).toEqual('/vet')
     })
   })
 })

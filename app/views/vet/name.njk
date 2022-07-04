@@ -1,6 +1,6 @@
 {% extends './layouts/layout.njk' %}
 
-{% block pageTitle %}What is the name of vet{% endblock %}
+{% block pageTitle %}What is the name of the vet who did the review? - {{ serviceName }}{% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
@@ -21,7 +21,7 @@
 
         {{ govukInput({
           label: {
-            text: "Full name"
+            text: "Vet's full name"
           },
           classes: "govuk-input-!-width-full",
           id: "name",

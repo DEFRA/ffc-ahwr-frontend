@@ -16,7 +16,7 @@ module.exports = {
       const rows = [
         {
           key: { text: 'Type of review' },
-          value: { html: content[species].reivewType },
+          value: { html: content[species].reviewType },
           actions: { items: [{ href: '/farmer-apply/which-review', text: 'Change', visuallyHiddenText: 'change livestock' }] }
         },
         {

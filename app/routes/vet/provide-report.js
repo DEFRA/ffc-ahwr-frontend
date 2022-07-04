@@ -1,10 +1,9 @@
 module.exports = {
   method: 'GET',
-  path: '/',
+  path: '/vet/provide-report',
   options: {
-    auth: false,
     handler: async (_, h) => {
-      return h.view('home')
+      return h.view('vet/provide-report')
     }
   }
 }

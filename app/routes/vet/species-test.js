@@ -1,12 +1,14 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
-const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
-const session = require('../../session')
 const speciesTypes = require('../../constants/species')
 const speciesContent = require('../../constants/species-test-content-vet')
-const backLink = '/vet/visit-date'
+const session = require('../../session')
+const { vetVisitData: { speciesTest, farmerApplication } } = require('../../session/keys')
 
+function getBackLink (species) {
+  return `/vet/${species}-eligibility`
+}
 module.exports = [
   {
     method: 'GET',
@@ -26,7 +28,7 @@ module.exports = [
         const title = speciesContent[species].title
         return h.view('vet/species-test', {
           ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest)),
-          backLink,
+          backLink: getBackLink(species),
           title
         })
       }
@@ -47,8 +49,8 @@ module.exports = [
           const species = request.params.species
           const title = speciesContent[species].title
           return h.view('vet/species-test', {
-            ...getYesNoRadios(speciesContent[species].legendText, species, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText),
-            backLink,
+            ...getYesNoRadios(speciesContent[species].legendText, speciesTest, session.getVetVisitData(request, speciesTest), speciesContent[species].errorText),
+            backLink: getBackLink(species),
             title
           }).code(400).takeover()
         }
