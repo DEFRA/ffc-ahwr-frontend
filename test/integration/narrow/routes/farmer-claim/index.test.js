@@ -13,7 +13,7 @@ describe('Farmer claim home page test', () => {
 
     expect(res.statusCode).toBe(200)
     const $ = cheerio.load(res.payload)
-    expect($('.govuk-heading-l').text()).toEqual('Claim funding for a livestock health and welfare review')
+    expect($('.govuk-heading-l').text()).toEqual('Claim funding for an annual health and welfare review of your livestock')
     const button = $('.govuk-main-wrapper .govuk-button')
     expect(button.attr('href')).toMatch('/farmer-claim/login')
     expect(button.text()).toMatch('Start now')
