@@ -11,19 +11,28 @@ describe('Farmert review report test', () => {
   const auth = { credentials: { reference: '1111', sbi: '111111111' }, strategy: 'cookie' }
   const url = '/vet/review-report'
   describe(`GET ${url} route`, () => {
-    test('returns 200', async () => {
+    test.each([
+      { expectedBackLink: '/vet/sheep-test', sheepWormsValue: 'yes' },
+      { expectedBackLink: '/vet/sheep-worms', sheepWormsValue: 'no' }
+    ])('returns 200', async ({ expectedBackLink, sheepWormsValue }) => {
+      session
+      .getVetVisitData.mockReturnValueOnce({ data: { whichReview: 'sheep' } })
+      .mockReturnValueOnce({ data: { whichReview: 'sheep' } })
+      .mockReturnValueOnce(sheepWormsValue)
       const options = {
         method: 'GET',
         url,
         auth
       }
-
       const res = await global.__SERVER__.inject(options)
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Have you given the farmer a written report of the review?')
       expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra.')
+      const backLink = $('.govuk-back-link')
+      expect(backLink.text()).toMatch('Back')
+      expect(backLink.attr('href')).toMatch(expectedBackLink)
       expectPhaseBanner.ok($)
     })
 
