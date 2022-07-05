@@ -16,9 +16,9 @@ describe('Farmert review report test', () => {
       { expectedBackLink: '/vet/sheep-worms', sheepWormsValue: 'no' }
     ])('returns 200', async ({ expectedBackLink, sheepWormsValue }) => {
       session
-      .getVetVisitData.mockReturnValueOnce({ data: { whichReview: 'sheep' } })
-      .mockReturnValueOnce({ data: { whichReview: 'sheep' } })
-      .mockReturnValueOnce(sheepWormsValue)
+        .getVetVisitData.mockReturnValueOnce({ data: { whichReview: 'sheep' } })
+        .mockReturnValueOnce({ data: { whichReview: 'sheep' } })
+        .mockReturnValueOnce(sheepWormsValue)
       const options = {
         method: 'GET',
         url,
