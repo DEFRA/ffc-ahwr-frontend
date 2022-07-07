@@ -83,7 +83,7 @@ describe('Farmert review report test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you\'ll have given the farmer a written report of the review')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have given the farmer a written report of the review')
       expect(res.statusCode).toBe(400)
     })
 
