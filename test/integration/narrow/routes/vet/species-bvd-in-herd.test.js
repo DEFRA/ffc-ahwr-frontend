@@ -30,8 +30,8 @@ describe('Vet species bvd in herd test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Is there evidence of circulating BVD virus within the herd?')
-      expect($('title').text()).toEqual(`Is there evidence of circulating BVD virus within the herd? - ${title}`)
+      expect($('h1').text()).toMatch('Was there evidence of circulating BVD virus within the herd?')
+      expect($('title').text()).toEqual(`Was there evidence of circulating BVD virus within the herd? - ${title}`)
       const backLink = $('.govuk-back-link')
       expect(backLink.text()).toMatch('Back')
       expect(backLink.attr('href')).toMatch(`/vet/${species}-test`)
@@ -129,7 +129,7 @@ describe('Vet species bvd in herd test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if test results showed evidence BVD is circulating within the herd')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if test results showed evidence BVD was circulating within the herd')
       expect(res.statusCode).toBe(400)
     })
 

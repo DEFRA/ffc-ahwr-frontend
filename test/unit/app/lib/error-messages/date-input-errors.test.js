@@ -28,9 +28,9 @@ describe('date input error message', () => {
   })
 
   test.each([
-    { label: labels.day, value: 31, error: 'Visit date must include a month and a year' },
-    { label: labels.month, value: 12, error: 'Visit date must include a day and a year' },
-    { label: labels.year, value: 2022, error: 'Visit date must include a day and a month' }
+    { label: labels.day, value: 31, error: 'Date must include a month and a year' },
+    { label: labels.month, value: 12, error: 'Date must include a day and a year' },
+    { label: labels.year, value: 2022, error: 'Date must include a day and a month' }
   ])('returns message to enter value when single value has been entered - %p', ({ label, value, error }) => {
     const errorDetails = emptyErrorDetails.filter(err => err.context.label !== label)
     const payload = { ...emptyPayload }
@@ -42,9 +42,9 @@ describe('date input error message', () => {
   })
 
   test.each([
-    { label: labels.day, error: 'Visit date must include a day' },
-    { label: labels.month, error: 'Visit date must include a month' },
-    { label: labels.year, error: 'Visit date must include a year' }
+    { label: labels.day, error: 'Date must include a day' },
+    { label: labels.month, error: 'Date must include a month' },
+    { label: labels.year, error: 'Date must include a year' }
   ])('returns message to enter value when two values have been entered - %p', ({ label, error }) => {
     const errorDetails = [{ context: { label, value: '', key: label } }]
     const payload = { ...fullPayload }
@@ -70,7 +70,7 @@ describe('date input error message', () => {
     ]
 
     const { errorMessage, items } = getDateInputErrors(errorDetails, payload)
-    expect(errorMessage.text).toEqual('Visit date must be a real date')
+    expect(errorMessage.text).toEqual('Date must be a real date')
     const errorItems = items.filter(x => x.classes.includes(inputErrorClass))
     expect(errorItems).toHaveLength(1)
     expect(errorItems[0].name).toEqual(label.split('-').pop())
@@ -92,16 +92,16 @@ describe('date input error message', () => {
 
     const { errorMessage, items } = getDateInputErrors(errorDetails, payload)
 
-    expect(errorMessage.text).toEqual('Visit date must be today or in the past')
+    expect(errorMessage.text).toEqual('The date the review was completed must be in the past')
     const errorItems = items.filter(x => x.classes.includes(inputErrorClass))
     expect(errorItems).toHaveLength(3)
   })
 
   const firstValidDate = new Date(2022, 6, 13)
   test.each([
-    { label: labels.day, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
-    { label: labels.month, value: 999, expectedErrorMessage: 'Visit date must be today or in the past' },
-    { label: labels.year, value: 999, expectedErrorMessage: `Visit date must be the same as or after ${firstValidDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was created` }
+    { label: labels.day, value: 999, expectedErrorMessage: 'The date the review was completed must be in the past' },
+    { label: labels.month, value: 999, expectedErrorMessage: 'The date the review was completed must be in the past' },
+    { label: labels.year, value: 999, expectedErrorMessage: `Date must be the same or after ${firstValidDate.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} when the application was made` }
   ])('returns all items highlighted with values set - %p', ({ label, value, expectedErrorMessage }) => {
     const errorDetails = [{
       context: { label, value, key: label }

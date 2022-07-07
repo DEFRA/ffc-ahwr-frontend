@@ -38,7 +38,7 @@ module.exports = [{
       const application = await getApplication(applicationReference, request.yar.id)
 
       if (application?.claimed) {
-        const error = { details: [{ message: `No application found for reference "${applicationReference}"` }] }
+        const error = { details: [{ message: 'You’ve entered a reference number that has already been used' }] }
         return h.view('vet/reference', { ...request.payload, errorMessage: { text: error.details[0].message } }).code(404).takeover()
       }
 

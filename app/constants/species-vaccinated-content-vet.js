@@ -1,10 +1,10 @@
 module.exports = {
   beef: {
-    errorText: 'Select yes if the herd are vaccinated',
-    title: 'Is the herd vaccinated for BVD?'
+    errorText: 'Select yes if the herd was vaccinated',
+    title: 'Was the herd vaccinated for BVD?'
   },
   dairy: {
-    errorText: 'Select yes if the herd are vaccinated',
-    title: 'Is the herd vaccinated for BVD?'
+    errorText: 'Select yes if the herd was vaccinated',
+    title: 'Was the herd vaccinated for BVD?'
   }
 }

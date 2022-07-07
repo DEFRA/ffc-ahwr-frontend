@@ -37,6 +37,7 @@ module.exports = {
     reviewReport: 'reviewReport',
     sheep: 'sheep',
     sheepWorms: 'sheepWorms',
+    sheepWormTreatment: 'sheepWormTreatment',
     signup: 'signup',
     speciesBvdInHerd: 'speciesBvdInHerd',
     speciesLastVaccinated: 'speciesLastVaccinated',

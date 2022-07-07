@@ -2,7 +2,7 @@ const Joi = require('joi')
 const boom = require('@hapi/boom')
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 const session = require('../../session')
-const { vetVisitData: { sheepWorms, farmerApplication } } = require('../../session/keys')
+const { vetVisitData: { sheepWorms, sheepWormTreatment, speciesTest, farmerApplication } } = require('../../session/keys')
 const species = require('../../constants/species')
 
 const errorText = 'Select yes if the first check showed worms'
@@ -18,8 +18,10 @@ module.exports = [{
       if (application.data.whichReview !== species.sheep) {
         throw boom.badRequest()
       }
+      session.setVetVisitData(request, speciesTest, null)
+      session.setVetVisitData(request, sheepWormTreatment, null)
       const prevAnswer = session.getVetVisitData(request, sheepWorms)
-      return h.view(path, { ...getYesNoRadios(labelText, sheepWorms, prevAnswer) })
+      return h.view(path, { ...getYesNoRadios(labelText, sheepWorms, prevAnswer, null, { inline: true }) })
     }
   }
 }, {
@@ -43,7 +45,7 @@ module.exports = [{
       session.setVetVisitData(request, sheepWorms, request.payload[sheepWorms])
       const answer = request.payload[sheepWorms]
       if (answer === 'yes') {
-        return h.redirect('/vet/sheep-test')
+        return h.redirect('/vet/sheep-worming-treatment')
       } else {
         return h.redirect('/vet/review-report')
       }

@@ -49,11 +49,27 @@ function cattle (rows, vetVisit) {
 }
 
 function sheep (rows, vetVisit) {
-  rows.push({
-    key: { text: 'Percentage reduction in eggs per gram (EPG)' },
-    value: { text: vetVisit[vetVisitData.speciesTest] },
-    actions: { items: [{ href: '/vet/sheep-test', text: 'Change', visuallyHiddenText: 'change test result' }] }
-  })
+  if (vetVisit[vetVisitData.sheepWorms]) {
+    rows.push({
+      key: { text: 'Worms in first check' },
+      value: { text: upperFirstLetter(vetVisit[vetVisitData.sheepWorms]) },
+      actions: { items: [{ href: '/vet/sheep-worms', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+  }
+
+  if (vetVisit[vetVisitData.speciesTest]) {
+    rows.push({
+      key: { text: 'Active chemical used in worming treatment' },
+      value: { text: vetVisit[vetVisitData.sheepWormTreatment] },
+      actions: { items: [{ href: '/vet/sheep-worming-treatment', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+
+    rows.push({
+      key: { text: 'Percentage reduction in eggs per gram (EPG)' },
+      value: { text: vetVisit[vetVisitData.speciesTest] },
+      actions: { items: [{ href: '/vet/sheep-test', text: 'Change', visuallyHiddenText: 'change test result' }] }
+    })
+  }
 }
 
 function pigs (rows, vetVisit) {

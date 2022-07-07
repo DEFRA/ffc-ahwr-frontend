@@ -6,8 +6,8 @@ const { yes, no, na } = require('../../constants/vaccination-up-to-date-options'
 const session = require('../../session')
 const { vetVisitData: { speciesVaccinationUpToDate, farmerApplication } } = require('../../session/keys')
 
-const title = 'Are all breeding cattle currently up to date with vaccination?'
-const errorText = 'Select yes if breeding cattle are vaccinated'
+const title = 'Were all breeding cattle up to date with vaccination?'
+const errorText = 'Select yes if breeding cattle were vaccinated'
 function getBackLink (species) {
   return `/vet/${species}-last-vaccinated`
 }

@@ -29,10 +29,7 @@ describe('Farmert review report test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Have you given the farmer a written report of the review?')
-      expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra.')
-      const backLink = $('.govuk-back-link')
-      expect(backLink.text()).toMatch('Back')
-      expect(backLink.attr('href')).toMatch(expectedBackLink)
+      expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra')
       expectPhaseBanner.ok($)
     })
 

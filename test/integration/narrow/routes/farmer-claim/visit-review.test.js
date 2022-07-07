@@ -7,10 +7,9 @@ const { claim: { detailsCorrect } } = require('../../../../../app/session/keys')
 const { journeys: { farmerClaim: { title } } } = require('../../../../../app/config')
 
 const { getClaimAmount } = require('../../../../../app/lib/get-claim-amount')
-const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
+const { getTypeOfReviewRowForDisplay } = require('../../../../../app/lib/display-helpers')
 
 function expectPageContentOk ($, application) {
-  const speciesTestRow = getSpeciesTestRowForDisplay(application)
   const typeOfReviewRow = getTypeOfReviewRowForDisplay(application.data)
   expect($('.govuk-heading-l').text()).toEqual('Confirm the details of your annual health and welfare review')
   const keys = $('.govuk-summary-list__key')
@@ -23,10 +22,8 @@ function expectPageContentOk ($, application) {
   expect(values.eq(2).text()).toMatch(application.vetVisit.data.signup.name)
   expect(keys.eq(3).text()).toMatch(typeOfReviewRow.key.text)
   expect(values.eq(3).text()).toMatch(typeOfReviewRow.value.text)
-  expect(keys.eq(4).text()).toMatch(speciesTestRow.key.text)
-  expect(values.eq(4).text()).toMatch(speciesTestRow.value.text)
-  expect(keys.eq(5).text()).toMatch('Payment amount')
-  expect(values.eq(5).text()).toMatch(`£${getClaimAmount(application.data)}`)
+  expect(keys.eq(keys.length - 1).text()).toMatch('Payment amount')
+  expect(values.eq(keys.length - 1).text()).toMatch(`£${getClaimAmount(application.data)}`)
   expect($('title').text()).toEqual(`Confirm the details - ${title}`)
   expectPhaseBanner.ok($)
 }
@@ -40,10 +37,10 @@ describe('Vet visit review page test', () => {
     let vvData
     switch (speciesToTest) {
       case species.beef:
-        vvData = { beef: 'yes', speciesTest: 'yes', reviewReport: 'yes' }
+        vvData = { beef: 'yes', speciesTest: 'yes', speciesVaccinated: 'fully', reviewReport: 'yes' }
         break
       case species.dairy:
-        vvData = { dairy: 'yes', speciesTest: 'yes', reviewReport: 'no' }
+        vvData = { dairy: 'yes', speciesTest: 'yes', speciesVaccinated: 'fully', reviewReport: 'no' }
         break
       case species.pigs:
         vvData = { pigs: 'yes', speciesTest: 'no', reviewReport: 'yes' }
@@ -170,7 +167,7 @@ describe('Vet visit review page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPageContentOk($, application)
-      pageExpects.errors($, 'Select yes if the review details are correct')
+      pageExpects.errors($, 'Select yes if these details are correct')
     })
 
     test.each([

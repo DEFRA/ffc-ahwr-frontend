@@ -26,8 +26,8 @@ describe('Vet species vaccinated up to date test', () => {
 
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
-      expect($('h1').text()).toMatch('Are all breeding cattle currently up to date with vaccination?')
-      expect($('title').text()).toEqual(`Are all breeding cattle currently up to date with vaccination? - ${title}`)
+      expect($('h1').text()).toMatch('Were all breeding cattle up to date with vaccination?')
+      expect($('title').text()).toEqual(`Were all breeding cattle up to date with vaccination? - ${title}`)
       const backLink = $('.govuk-back-link')
       expect(backLink.text()).toMatch('Back')
       expect(backLink.attr('href')).toMatch(`/vet/${species}-last-vaccinated`)
@@ -121,7 +121,7 @@ describe('Vet species vaccinated up to date test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if breeding cattle are vaccinated')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if breeding cattle were vaccinated')
       expect(res.statusCode).toBe(400)
     })
 
