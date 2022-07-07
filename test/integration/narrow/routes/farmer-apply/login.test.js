@@ -59,7 +59,7 @@ describe('FarmerApply application login page test', () => {
 
   describe(`POST requests to '${url}' route`, () => {
     test.each([
-      { email: 'not-an-email', errorMessage: 'Enter a valid email address' },
+      { email: 'not-an-email', errorMessage: 'Enter an email address in the correct format, like name@example.com' },
       { email: '', errorMessage: 'Enter an email address' },
       { email: null, errorMessage: 'Enter an email address' },
       { email: undefined, errorMessage: 'Enter an email address' },

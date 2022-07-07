@@ -139,7 +139,7 @@ describe('Vet check review page test', () => {
       expect(res.statusCode).toBe(400)
       const $ = cheerio.load(res.payload)
       expectPageContentOk($, vetVisitData)
-      pageExpects.errors($, 'Select yes if the review details are correct')
+      pageExpects.errors($, 'Select yes if these details are correct')
     })
 
     test.each([

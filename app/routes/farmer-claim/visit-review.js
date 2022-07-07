@@ -6,7 +6,7 @@ const { getSpeciesTestRowForDisplay, getTypeOfReviewRowForDisplay } = require('.
 const { getClaim, setClaim } = require('../../session')
 const { claim: { detailsCorrect } } = require('../../session/keys')
 
-const errorMessage = 'Select yes if the review details are correct'
+const errorMessage = 'Select yes if these details are correct'
 const legendText = 'Are these details correct?'
 
 const path = 'farmer-claim/visit-review'
@@ -16,14 +16,17 @@ function getRows (claim) {
   const visitData = claim.vetVisit.data
   const paymentAmount = getClaimAmount(claimData)
 
-  return [
+  let rows = [
     { key: { text: 'Business name' }, value: { text: claimData.organisation.name } },
     { key: { text: 'Date of review' }, value: { text: new Date(visitData.visitDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) } },
     { key: { text: 'Vet name' }, value: { text: visitData.signup.name } },
-    getTypeOfReviewRowForDisplay(claimData),
-    getSpeciesTestRowForDisplay(claim),
-    { key: { text: 'Payment amount' }, value: { text: `£${paymentAmount}` } }
+    getTypeOfReviewRowForDisplay(claimData)
   ]
+
+  rows = [...rows, ...getSpeciesTestRowForDisplay(claim)]
+  rows.push({ key: { text: 'Payment amount' }, value: { text: `£${paymentAmount}` } })
+
+  return rows
 }
 
 function getViewData (claim, errorText) {

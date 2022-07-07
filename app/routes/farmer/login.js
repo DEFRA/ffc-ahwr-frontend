@@ -24,9 +24,9 @@ function getLoggedInPath (loginType) {
 function getHintText (loginType) {
   switch (loginType) {
     case loginTypes.apply:
-      return 'We\'ll use this to send you a link to apply for a review.'
+      return 'We\'ll use this to send you a link to apply for a review'
     case loginTypes.claim:
-      return 'We\'ll use this to send you a link to claim funding for a review.'
+      return 'We\'ll use this to send you a link to claim funding for a review'
   }
 }
 

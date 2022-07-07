@@ -8,7 +8,7 @@ const { journeys: { vet: { title } } } = require('../../../../../app/config')
 
 function expectPageContentOk ($) {
   expect($('.govuk-heading-l').text()).toEqual('Enter reference number')
-  expect($('label[for=applicationReference]').text()).toMatch('Reference number')
+  expect($('label[for=applicationReference]').text()).toMatch('Enter the reference number in the correct format')
   expect($('.govuk-button').text()).toMatch('Continue')
   expect($('title').text()).toEqual(`Enter reference number - ${title}`)
   const backLink = $('.govuk-back-link')
@@ -108,7 +108,7 @@ describe('Vet, enter reference test', () => {
       const $ = cheerio.load(res.payload)
       expectPageContentOk($)
       expectPhaseBanner.ok($)
-      pageExpects.errors($, `No application found for reference "${applicationReference}"`)
+      pageExpects.errors($, 'You’ve entered a reference number that has already been used')
     })
 
     test.each([

@@ -23,7 +23,7 @@ describe('Farmert review report test', () => {
       expect(res.statusCode).toBe(200)
       const $ = cheerio.load(res.payload)
       expect($('h1').text()).toMatch('Have you given the farmer a written report of the review?')
-      expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra.')
+      expect($('.govuk-hint').text()).toMatch('The report must include follow-up actions and recommendations. It will not be shared with Defra')
       expectPhaseBanner.ok($)
     })
 
@@ -83,7 +83,7 @@ describe('Farmert review report test', () => {
       const res = await global.__SERVER__.inject(options)
 
       const $ = cheerio.load(res.payload)
-      expect($('p.govuk-error-message').text()).toMatch('Select yes if you have given the farmer a written report of the review')
+      expect($('p.govuk-error-message').text()).toMatch('Select yes if you\'ll have given the farmer a written report of the review')
       expect(res.statusCode).toBe(400)
     })
 

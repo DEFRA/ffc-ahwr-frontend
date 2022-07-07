@@ -4,7 +4,7 @@ const { speciesRadios } = require('../helpers/species-radio')
 const session = require('../../session')
 
 const legendText = 'Which livestock do you want a review for?'
-const errorText = 'Select the livestock you would like reviewed'
+const errorText = 'Select the livestock type you want reviewed'
 const hintHtml = `<p>You can have one review each year for one type of livestock.</p>
 <p>If you're eligible for more than one type of livestock, you must choose which one you want reviewed.</p>`
 const backLink = '/farmer-apply/org-review'

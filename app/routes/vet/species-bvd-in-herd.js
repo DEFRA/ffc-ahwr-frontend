@@ -5,8 +5,8 @@ const speciesTypes = require('../../constants/species')
 const session = require('../../session')
 const { vetVisitData: { farmerApplication, speciesBvdInHerd } } = require('../../session/keys')
 
-const title = 'Is there evidence of circulating BVD virus within the herd?'
-const errorText = 'Select yes if test results showed evidence BVD is circulating within the herd'
+const title = 'Was there evidence of circulating BVD virus within the herd?'
+const errorText = 'Select yes if test results showed evidence BVD was circulating within the herd'
 function getBackLink (request) {
   const species = request.params.species
   return `/vet/${species}-test`

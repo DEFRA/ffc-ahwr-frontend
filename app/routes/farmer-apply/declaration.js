@@ -25,20 +25,20 @@ function getSpeciesTestText (application) {
     case species.pigs:
       return 'allow a vet to test for PRRS'
     case species.sheep:
-      return 'allow a vet to test for EPG percentage'
+      return 'allow a vet to test for the effectiveness of worming treatments in sheep'
   }
 }
 
 function getSpeciesMinNumText (application) {
   switch (application.whichReview) {
     case species.beef:
-      return "you'll have 11 or more beef cattle at the time the vet does the review"
+      return "you'll have 11 or more beef cattle on the date the vet visits"
     case species.dairy:
-      return "you'll have 11 or more dairy cattle at the time the vet does the review"
+      return "you'll have 11 or more dairy cattle on the date the vet visits"
     case species.pigs:
-      return "you'll have 51 or more pigs at the time the vet does the review"
+      return "you'll have 51 or more pigs on the date the vet visits"
     case species.sheep:
-      return "you'll have 21 or more sheep at the time the vet does the review"
+      return "you'll have 21 or more sheep on the date the vet visits"
   }
 }
 
@@ -103,7 +103,7 @@ module.exports = [{
         return h.view(path, {
           backLink,
           ...viewData,
-          errorMessage: { text: 'Select I agree to the terms and conditions' }
+          errorMessage: { text: 'Confirm you have read and agree to the terms and conditions' }
         }).code(400).takeover()
       }
     },

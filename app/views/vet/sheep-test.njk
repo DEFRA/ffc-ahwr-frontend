@@ -5,7 +5,7 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: "/vet/sheep-worms",
+    href: "/vet/sheep-worming-treatment",
     attributes: {
       id: "back"
     }
@@ -30,7 +30,10 @@
           id: "speciesTest",
           name: "speciesTest",
           value: speciesTest,
-          errorMessage: errorMessage
+          errorMessage: errorMessage,
+          suffix: {
+            text: "%"
+          }
         }) }}
 
         {{ govukButton({

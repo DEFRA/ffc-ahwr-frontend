@@ -4,6 +4,7 @@ const Joi = require('joi')
 const {
   farmerApplyData: { confirmCheckDetails, organisation: organisationKey }
 } = require('../../session/keys')
+const errorMessage = 'Select yes if these details are correct'
 const labelText = 'Are your details correct?'
 const { getYesNoRadios } = require('../helpers/yes-no-radios')
 
@@ -58,7 +59,7 @@ module.exports = [{
         [confirmCheckDetails]: Joi.string().valid('yes', 'no').required()
       }),
       failAction: (request, h, _err) => {
-        return h.view('farmer-apply/org-review', getView(request)).code(400).takeover()
+        return h.view('farmer-apply/org-review', getView(request, errorMessage)).code(400).takeover()
       }
     },
     handler: async (request, h) => {

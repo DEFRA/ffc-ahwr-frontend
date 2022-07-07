@@ -146,15 +146,15 @@ const config = {
   useRedis: process.env.NODE_ENV !== 'test',
   journeys: {
     farmerApply: {
-      title: 'Apply for an annual health and welfare review of your livestock'
+      title: 'Annual health and welfare review of your livestock'
     },
     farmerClaim: {
       title:
-        'Claim funding for an annual health and welfare review of your livestock'
+        'Annual health and welfare review of your livestock'
     },
     vet: {
       title:
-        'Record information about an annual health and welfare review of livestock'
+        'Annual health and welfare review of livestock'
     }
   },
   testToken: process.env.TEST_TOKEN
