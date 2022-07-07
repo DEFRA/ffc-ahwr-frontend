@@ -64,7 +64,7 @@ describe('Sheep worms test', () => {
 
     test.each([
       { sheepWorms: 'yes', redirectUrl: '/vet/sheep-worming-treatment' },
-      { sheepWorms: 'no', redirectUrl: '/vet/sheep-test' }
+      { sheepWorms: 'no', redirectUrl: '/vet/review-report' }
     ])('returns 302 to next page when acceptable answer given', async ({ sheepWorms, redirectUrl }) => {
       session.getVetVisitData.mockReturnValueOnce({ data: { whichReview: species.sheep } })
       const options = {
