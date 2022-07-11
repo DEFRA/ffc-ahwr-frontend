@@ -42,6 +42,7 @@ const schema = Joi.object({
   env: Joi.string().valid('development', 'test', 'production').default(
     'development'
   ),
+  googleTagManagerKey: Joi.string().default('GTM-5HKTPLK'),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
@@ -114,6 +115,7 @@ const config = {
     password: process.env.COOKIE_PASSWORD
   },
   env: process.env.NODE_ENV,
+  googleTagManagerKey: process.env.GOOGLE_TAG_MANAGER_KEY,
   isDev: process.env.NODE_ENV === 'development',
   notify: {
     apiKey: process.env.NOTIFY_API_KEY,

@@ -21,6 +21,18 @@ function updatePolicy (request, h, analytics) {
   cookiesPolicy.confirmed = true
 
   h.state(cookieNameCookiePolicy, cookiesPolicy)
+
+  if (!analytics) {
+    removeAnalytics(request, h)
+  }
+}
+
+function removeAnalytics (request, h) {
+  Object.keys(request.state).forEach(cookieName => {
+    if (cookieName.startsWith('_ga') || cookieName.startsWith('_gid')) {
+      h.unstate(cookieName)
+    }
+  })
 }
 
 module.exports = {
