@@ -26,21 +26,6 @@ describe('Sheep worming treatment test', () => {
       expectPhaseBanner.ok($)
     })
 
-    // test('returns 400 for non-accesible species test page', async () => {
-    //   const options = {
-    //     method: 'GET',
-    //     url,
-    //     auth
-    //   }
-    //   // session.getVetVisitData.mockReturnValueOnce({ data: { sheepWormTreatment: sheepWormTreatmentOptions.bz.value } })
-
-    //   const res = await global.__SERVER__.inject(options)
-
-    //   expect(res.statusCode).toBe(400)
-    //   const $ = cheerio.load(res.payload)
-    //   expectPhaseBanner.ok($)
-    // })
-
     test('when not logged in redirects to /vet', async () => {
       const options = {
         method: 'GET',
