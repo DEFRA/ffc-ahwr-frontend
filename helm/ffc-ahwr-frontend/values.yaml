@@ -29,7 +29,7 @@ container:
   cookiePassword: who-likes-cookies-i-like-cookies-everybody-likes-cookies
   eligibilityRequestQueueAddress: ffc-ahwr-eligibility-request
   eligibilityResponseQueueAddress: ffc-ahwr-eligibility-response
-  googleTagManagerKey: GTM-5HKTPLK
+  googleTagManagerKey:
   imagePullPolicy: IfNotPresent
   limitCpu: 120m
   limitMemory: 200Mi

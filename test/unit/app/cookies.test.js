@@ -8,7 +8,9 @@ describe('cookies', () => {
   beforeEach(() => {
     request = {
       state: {
-        [cookieNameCookiePolicy]: undefined
+        [cookieNameCookiePolicy]: undefined,
+        _ga: '123',
+        _gid: '123'
       }
     }
     h = {

@@ -42,7 +42,7 @@ const schema = Joi.object({
   env: Joi.string().valid('development', 'test', 'production').default(
     'development'
   ),
-  googleTagManagerKey: Joi.string().default('GTM-5HKTPLK'),
+  googleTagManagerKey: Joi.string().allow(null, ''),
   isDev: Joi.boolean().default(false),
   notify: {
     apiKey: Joi.string().pattern(notifyApiKeyRegex),
