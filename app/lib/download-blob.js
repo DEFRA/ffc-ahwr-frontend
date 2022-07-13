@@ -13,7 +13,6 @@ const { storage: { useConnectionString, storageAccount } } = require('../config'
  * there is no file.
  */
 module.exports = async (connectionString, container, file) => {
-
   let blobServiceClient
   if (useConnectionString === true) {
     console.log('Using connection string for BlobServiceClient')
@@ -23,6 +22,7 @@ module.exports = async (connectionString, container, file) => {
     const uri = `https://${storageAccount}.blob.core.windows.net`
     blobServiceClient = new BlobServiceClient(uri, new DefaultAzureCredential())
   }
+
   const client = blobServiceClient.getContainerClient(container)
 
   if (await client.exists()) {
