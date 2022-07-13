@@ -1,6 +1,6 @@
 const { BlobServiceClient } = require('@azure/storage-blob')
 const { DefaultAzureCredential } = require('@azure/identity')
-const { storage: { useConnectionString, storageAccount } } = require('../config')
+const { storage: { connectionString, useConnectionString, storageAccount } } = require('../config')
 
 /**
  * Downloads the file from the provided container using the given
@@ -12,7 +12,7 @@ const { storage: { useConnectionString, storageAccount } } = require('../config'
  * @returns {string} representing the content of the file or `undefined` if
  * there is no file.
  */
-module.exports = async (connectionString, container, file) => {
+module.exports = async (container, file) => {
   let blobServiceClient
   if (useConnectionString === true) {
     console.log('Using connection string for BlobServiceClient')
