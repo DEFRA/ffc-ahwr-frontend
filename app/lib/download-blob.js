@@ -1,4 +1,6 @@
-const { BlockBlobClient } = require('@azure/storage-blob')
+const { BlobServiceClient } = require('@azure/storage-blob')
+const { DefaultAzureCredential } = require('@azure/identity')
+const { storage: { useConnectionString, storageAccount } } = require('../config')
 
 /**
  * Downloads the file from the provided container using the given
@@ -11,11 +13,22 @@ const { BlockBlobClient } = require('@azure/storage-blob')
  * there is no file.
  */
 module.exports = async (connectionString, container, file) => {
-  const client = new BlockBlobClient(connectionString, container, file)
+
+  let blobServiceClient
+  if (useConnectionString === true) {
+    console.log('Using connection string for BlobServiceClient')
+    blobServiceClient = BlobServiceClient.fromConnectionString(connectionString)
+  } else {
+    console.log('Using DefaultAzureCredential for BlobServiceClient')
+    const uri = `https://${storageAccount}.blob.core.windows.net`
+    blobServiceClient = new BlobServiceClient(uri, new DefaultAzureCredential())
+  }
+  const client = blobServiceClient.getContainerClient(container)
 
   if (await client.exists()) {
     try {
-      return (await client.downloadToBuffer()).toString()
+      const blob = client.getBlockBlobClient(file)
+      return (await blob.downloadToBuffer()).toString()
     } catch (e) {
       console.error(e)
     }

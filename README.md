@@ -41,6 +41,8 @@ overridden by build and release pipelines.
 | NOTIFY_TEMPLATE_ID_VET_LOGIN          | Id of email template used for vet login email                                                    |
 | SERVICE_URI                           | URI of service (used in links, in emails) e.g. `http://localhost:3000` or `https://defra.gov.uk` |
 | TEST_TOKEN                            | Test Token for Magic link for getting access to test access                                      |
+| AZURE_STORAGE_CREATE_CONTAINERS       | Set true to use connection string, false to connect using azure credentials for blobstorage      |
+| AZURE_STORAGE_ACCOUNT_NAME            | Blob storage account name example strageaccountxyz                                               |
 
 ## Running the application
 
