@@ -15,10 +15,8 @@ const { storage: { connectionString, useConnectionString, storageAccount } } = r
 module.exports = async (container, file) => {
   let blobServiceClient
   if (useConnectionString === true) {
-    console.log('Using connection string for BlobServiceClient')
     blobServiceClient = BlobServiceClient.fromConnectionString(connectionString)
   } else {
-    console.log('Using DefaultAzureCredential for BlobServiceClient')
     const uri = `https://${storageAccount}.blob.core.windows.net`
     blobServiceClient = new BlobServiceClient(uri, new DefaultAzureCredential())
   }
