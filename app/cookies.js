@@ -30,7 +30,6 @@ function updatePolicy (request, h, analytics) {
 function removeAnalytics (request, h) {
   const googleCookiesRegex = /^_ga$|^_gid$|^_ga_.*$|^_gat_.*$/g
   Object.keys(request.state).forEach(cookieName => {
-    console.log(cookieName)
     if (cookieName.search(googleCookiesRegex) === 0) {
       h.unstate(cookieName)
     }
