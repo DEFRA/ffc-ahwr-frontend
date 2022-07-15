@@ -21,6 +21,19 @@ function updatePolicy (request, h, analytics) {
   cookiesPolicy.confirmed = true
 
   h.state(cookieNameCookiePolicy, cookiesPolicy)
+
+  if (!analytics) {
+    removeAnalytics(request, h)
+  }
+}
+
+function removeAnalytics (request, h) {
+  const googleCookiesRegex = /^_ga$|^_gid$|^_ga_.*$|^_gat_.*$/g
+  Object.keys(request.state).forEach(cookieName => {
+    if (cookieName.search(googleCookiesRegex) === 0) {
+      h.unstate(cookieName)
+    }
+  })
 }
 
 module.exports = {

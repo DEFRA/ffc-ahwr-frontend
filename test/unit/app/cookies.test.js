@@ -8,11 +8,14 @@ describe('cookies', () => {
   beforeEach(() => {
     request = {
       state: {
-        [cookieNameCookiePolicy]: undefined
+        [cookieNameCookiePolicy]: undefined,
+        _ga: '123',
+        _gid: '123'
       }
     }
     h = {
-      state: jest.fn()
+      state: jest.fn(),
+      unstate: jest.fn()
     }
   })
 
@@ -62,5 +65,18 @@ describe('cookies', () => {
     request.state[cookieNameCookiePolicy] = { confirmed: false, essential: true, analytics: false }
     cookies.updatePolicy(request, h, false)
     expect(h.state).toHaveBeenCalledWith(cookieNameCookiePolicy, { confirmed: true, essential: true, analytics: false })
+  })
+
+  test('updatePolicy denying analytics removes Google cookies', () => {
+    request.state.cookies_policy = { confirmed: false, essential: true, analytics: false }
+    cookies.updatePolicy(request, h, false)
+    expect(h.unstate).toHaveBeenCalledWith('_ga')
+    expect(h.unstate).toHaveBeenCalledWith('_gid')
+  })
+
+  test('updatePolicy approving analytics does not remove Google cookies', () => {
+    request.state.cookies_policy = { confirmed: false, essential: true, analytics: true }
+    cookies.updatePolicy(request, h, true)
+    expect(h.unstate).not.toHaveBeenCalled()
   })
 })

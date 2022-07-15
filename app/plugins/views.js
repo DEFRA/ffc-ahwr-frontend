@@ -1,6 +1,6 @@
 const path = require('path')
 const nunjucks = require('nunjucks')
-const { isLocal, serviceName } = require('../config')
+const { googleTagManagerKey, isLocal, serviceName } = require('../config')
 const { version } = require('../../package.json')
 
 module.exports = {
@@ -34,7 +34,8 @@ module.exports = {
     context: {
       appVersion: version,
       assetPath: '/assets',
-      pageTitle: serviceName
+      pageTitle: serviceName,
+      googleTagManagerKey: googleTagManagerKey
     }
   }
 }

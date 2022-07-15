@@ -6,6 +6,7 @@ data:
   APPLICATIONRESPONSE_QUEUE_ADDRESS: {{ quote .Values.container.applicationResponseQueueAddress }}
   ELIGIBILITYREQUEST_QUEUE_ADDRESS: {{ quote .Values.container.eligibilityRequestQueueAddress }}
   ELIGIBILITYRESPONSE_QUEUE_ADDRESS: {{ quote .Values.container.eligibilityResponseQueueAddress }}
+  GOOGLE_TAG_MANAGER_KEY: {{ quote .Values.container.googleTagManagerKey}}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   NODE_ENV: {{ quote .Values.environment }}
   NOTIFY_TEMPLATE_ID_FARMER_APPLY_LOGIN: {{ quote .Values.container.notifyTemplateIdFarmerApplyLogin }}
