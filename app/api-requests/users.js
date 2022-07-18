@@ -1,8 +1,8 @@
 const downloadBlob = require('../lib/download-blob')
-const { storage: { connectionString, usersContainer, usersFile } } = require('../config')
+const { storage: { usersContainer, usersFile } } = require('../config')
 
 async function getUsers () {
-  const contents = await downloadBlob(connectionString, usersContainer, usersFile) ?? '[]'
+  const contents = await downloadBlob(usersContainer, usersFile) ?? '[]'
   return JSON.parse(contents)
 }
 

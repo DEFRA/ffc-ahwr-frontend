@@ -77,7 +77,9 @@ const schema = Joi.object({
   storage: {
     connectionString: Joi.string().required(),
     usersContainer: Joi.string().default('users'),
-    usersFile: Joi.string().default('users.json')
+    usersFile: Joi.string().default('users.json'),
+    storageAccount: Joi.string().required(),
+    useConnectionString: Joi.bool().default(true)
   },
   useRedis: Joi.boolean().default(false),
   testToken: Joi.string().uuid().optional()
@@ -143,7 +145,9 @@ const config = {
   vetVisitRequestMsgType: `${msgTypePrefix}.vet.visit.request`,
   serviceUri: process.env.SERVICE_URI,
   storage: {
-    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING
+    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
+    useConnectionString: process.env.AZURE_STORAGE_USE_CONNECTION_STRING,
+    storageAccount: process.env.AZURE_STORAGE_ACCOUNT_NAME
   },
   useRedis: process.env.NODE_ENV !== 'test',
   journeys: {

@@ -1,56 +1,72 @@
+
+let downloadBlob
+const container = 'container'
+const file = 'file'
+let storageBlobMock
+
+storageBlobMock = require('@azure/storage-blob')
+jest.mock('@azure/storage-blob', () => {
+  return {
+    BlobServiceClient: {
+      fromConnectionString: jest.fn().mockImplementation(() => {
+        return {
+          getContainerClient: jest.fn().mockImplementation(() => {
+            return {
+              exists: jest.fn().mockResolvedValueOnce(false)
+            }
+          })
+        }
+      })
+    }
+  }
+})
+const blobServiceClientMock = storageBlobMock.BlobServiceClient
+
+downloadBlob = require('../../../../app/lib/download-blob')
+
 describe('Download blob tests', () => {
-  let blockBlobClientMock
-  let downloadBlob
-  const connectionString = 'connectionString'
-  const container = 'container'
-  const file = 'file'
-
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     jest.resetModules()
+  })
 
-    const storageBlobMock = require('@azure/storage-blob')
-    jest.mock('@azure/storage-blob')
-    blockBlobClientMock = storageBlobMock.BlockBlobClient
+  test('creates client using connection string', async () => {
+    await downloadBlob(container, file)
 
+    expect(blobServiceClientMock.fromConnectionString).toHaveBeenCalledTimes(1)
+  })
+
+  test('creates client using connection string', async () => {
+    const response = await downloadBlob(container, file)
+
+    expect(blobServiceClientMock.fromConnectionString).toHaveBeenCalledTimes(1)
+    expect(response).toBeUndefined()
+  })
+  test('creates client using connection string', async () => {
+    storageBlobMock = require('@azure/storage-blob')
+    jest.mock('@azure/storage-blob', () => {
+      return {
+        BlobServiceClient: {
+          fromConnectionString: jest.fn().mockImplementation(() => {
+            return {
+              getContainerClient: jest.fn().mockImplementation(() => {
+                return {
+                  exists: jest.fn().mockResolvedValueOnce(true),
+                  getBlockBlobClient: jest.fn().mockImplementation(() => {
+                    return {
+                      downloadToBuffer: jest.fn().mockResolvedValue('contents of file')
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      }
+    })
     downloadBlob = require('../../../../app/lib/download-blob')
-  })
-
-  test('creates client correctly', async () => {
-    await downloadBlob(connectionString, container, file)
-
-    expect(blockBlobClientMock).toHaveBeenCalledTimes(1)
-    expect(blockBlobClientMock).toHaveBeenCalledWith(connectionString, container, file)
-  })
-
-  test('returns undefined if the client doesn\'t exist', async () => {
-    blockBlobClientMock.prototype.exists.mockResolvedValue(false)
-
-    const res = await downloadBlob(connectionString, container, file)
-
-    expect(res).toBeUndefined()
-  })
-
-  test('returns blob content as string when client exists', async () => {
-    const fileContent = 'contents of file'
-    blockBlobClientMock.prototype.exists.mockResolvedValue(true)
-    blockBlobClientMock.prototype.downloadToBuffer.mockResolvedValue(fileContent)
-
-    const res = await downloadBlob(connectionString, container, file)
-
-    expect(res).toEqual(fileContent)
-  })
-
-  test('returns undefined and logs error when download errors', async () => {
-    const error = new Error('bust')
-    const consoleSpy = jest.spyOn(console, 'error')
-    blockBlobClientMock.prototype.exists.mockResolvedValue(true)
-    blockBlobClientMock.prototype.downloadToBuffer.mockRejectedValue(error)
-
-    const res = await downloadBlob(connectionString, container, file)
-
-    expect(res).toBeUndefined()
-    expect(consoleSpy).toHaveBeenCalledWith(error)
-    consoleSpy.mockRestore()
+    const response = await downloadBlob(container, file)
+    expect(storageBlobMock.BlobServiceClient.fromConnectionString).toHaveBeenCalledTimes(1)
+    expect(response).toBe('contents of file')
   })
 })

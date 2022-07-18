@@ -1,4 +1,4 @@
-const { storage: { connectionString, usersContainer, usersFile } } = require('../../../../app/config')
+const { storage: { usersContainer, usersFile } } = require('../../../../app/config')
 
 describe('Get users', () => {
   let downloadBlobMock
@@ -20,7 +20,7 @@ describe('Get users', () => {
     await getByEmail('email')
 
     expect(downloadBlobMock).toHaveBeenCalledTimes(1)
-    expect(downloadBlobMock).toHaveBeenCalledWith(connectionString, usersContainer, usersFile)
+    expect(downloadBlobMock).toHaveBeenCalledWith(usersContainer, usersFile)
   })
 
   test.each([
