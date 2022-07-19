@@ -25,8 +25,8 @@ export default async pageName => {
       // Handle error
     }
 
-    reporter.logTestResult(`${pageName}`, results);
-    reporter.buildHTML(outputDir);
+    // reporter.logTestResult(`${pageName}`, results);
+    // reporter.buildHTML(outputDir);
 
     assert.strictEqual(results.violations.length, 0);
   });
