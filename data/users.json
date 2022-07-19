@@ -23,5 +23,14 @@
     "address": "Long dusty road, Middle-of-knowhere, In the countryside, CC33 3CC",
     "email": "farm@livestock-keeper.com",
     "isTest": true
+  },
+  {
+    "farmerName": "Farmer rainbox",
+    "name": "Rainbow Farm",
+    "sbi": "444444444",
+    "cph": "44/444/4444",
+    "address": "somewhere over the rainbow",
+    "email": "julian.taylor@capgemini.com",
+    "isTest": true
   }
 ]

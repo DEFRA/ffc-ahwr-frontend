@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  ffc-ahwr-frontend:
+    command: npm run start:watch
+    build:
+      target: development
+    image: ffc-ahwr-frontend-development
+    environment:
+      NODE_ENV: test
+      CLAIM_QUEUE_ADDRESS: ${CLAIM_QUEUE_ADDRESS:-ffc-ahwr-claim}
+    volumes:
+      - ./test-output:/home/node/test-output
+
+  axe:
+    image: defradigital/ffc-axe
+    depends_on:
+      - ffc-ahwr-frontend
+    command: sh -c "/scripts/wait ffc-ahwr-frontend:3000 -- axe --exclude ".govuk-skip-link,.govuk-breadcrumbs"  --chrome-options="no-sandbox,disable-setuid-sandbox,disable-dev-shm-usage" --chromedriver-path=/usr/bin/chromedriver --exit ffc-ahwr-frontend:3000, ffc-ahwr-frontend:3000/farmer-apply"
+    volumes:
+      - ./test-output:/test-output
+      - ./scripts:/scripts

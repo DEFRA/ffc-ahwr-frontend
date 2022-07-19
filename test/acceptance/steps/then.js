@@ -32,6 +32,7 @@ import waitForVisible from '../support/action/waitForDisplayed'
 import checkIfElementExists from '../support/lib/checkIfElementExists'
 import checkURLContains from '../support/check/checkURLContains'
 import mockResponse from '../support/mock-utils/mockResponse'
+import checkPageIsAxeClean from '../support/check/checkPageIsAxeClean'
 
 Then(
   /^I expect that the title is( not)* "([^"]*)?"$/,
@@ -202,3 +203,8 @@ Then(
   /^I mock the response for "([^"]*)?"$/,
   mockResponse
 )
+
+Then(
+  /^I expect "([^"]*)?" to pass axe a11y checks$/,
+  checkPageIsAxeClean
+);

@@ -21,6 +21,8 @@
   "contributors": [],
   "license": "OGL-UK-3.0",
   "dependencies": {
+    "@axe-core/cli": "^4.4.3",
+    "@axe-core/webdriverjs": "^4.4.3",
     "@azure/storage-blob": "^12.9.0",
     "@hapi/boom": "^9.1.4",
     "@hapi/catbox-redis": "^6.0.2",
@@ -37,6 +39,7 @@
     "joi": "^17.6.0",
     "notifications-node-client": "^5.1.1",
     "nunjucks": "^3.2.3",
+    "selenium-webdriver": "^4.3.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
