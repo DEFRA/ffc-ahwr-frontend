@@ -1,4 +1,4 @@
-import Page from './page'
+import Page from '../page'
 
 class FarmerCattleEligibility extends Page {
   get yesRadioButton () { return $('#eligibleSpecies') }

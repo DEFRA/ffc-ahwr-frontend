@@ -1,22 +1,27 @@
 Feature: Farmer apply
   @wip
-  Scenario: Farmer receives email when signing in
-    Given I open the site "/farmer-apply/login"
-    Then I expect that the title contains "Sign in - Review the health and welfare of your livestock"
-    #Then I expect that the title contains "Review the health and welfare of your livestock - GOV.UK"
-    And I expect that element "h1" contains the text "Enter your email address"
-    When I click on the button "#submit"
+  Scenario: Farmer applies for token
+#    Given I am on the landing page
+#    Then I click on farmer Apply
+    Then I click on startNow
+    When I enter my valid "livsey-erubamie.williams@capgemini.com"
 
-  @wip
-  Scenario: Get Login Token
-    Given I open the site "/farmer-apply/login"
-    When I enter my valid "venkata.gannavarapu@capgemini.com" 
-    Given I open the site "/verify-login?token=0f9ecf32-da18-4e17-8a94-c37732d97489&email=venkata.gannavarapu%40capgemini.com"
-    Then I expect that the title contains "Check your details"
-    When I select yes option from farmer review
-    And I select beef cattle from which review
-    And I select yes option from farmer eligibility
-    And I select confirm from check your answers
+ @wip
+  Scenario: Farmer completes application
+     Given farmer clicks on email link "15be7dfe-31da-42e8-88f9-d136225f4555" "livsey-erubamie.williams@capgemini.com"
+     When I select yes my details are correct on farmer review page
+     Then I select beef cattle on the livestock review page
+     Then I select yes option from farmer eligibility
+     Then I select confirm from check your answers
+     And I check the terms and condition checkbox and click submit application
+#    #When I enter my valid "venkata.gannavarapu@capgemini.com"
+#    Given I open the site "/verify-login?token=0f9ecf32-da18-4e17-8a94-c37732d97489&email=livsey-erubamie.williams@capgemini.com"
+#    #Then I expect that the title contains "Check your details"
+#    When I select yes my details are correct on farmer review page
+#    And I select beef cattle on the livestock review page
+#    And I select yes option from farmer eligibility
+#    And I select confirm from check your answers
+#    #And I check the terms and condition checkbox and click submit application
 
-    
-    
+
+

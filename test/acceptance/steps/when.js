@@ -17,7 +17,8 @@ import selectOptionByIndex from '../support/action/selectOptionByIndex'
 import setCookie from '../support/action/setCookie'
 import setInputField from '../support/action/setInputField'
 import setPromptText from '../support/action/setPromptText'
-import FarmerLogin from '../page-objects/farmer-login'
+import FarmerLogin from '../page-objects/farmer/farmer-login'
+import FarmerApply from '../page-objects/farmer/farmer-apply'
 
 When(
   /^I click the back button$/,
@@ -107,3 +108,6 @@ When(
 When(/^I click on the sign in button$/, async () => {
   FarmerLogin.clickSignin()
 })
+When(/^I click start now button$/, function () {
+  FarmerApply.clickStartNow()
+});

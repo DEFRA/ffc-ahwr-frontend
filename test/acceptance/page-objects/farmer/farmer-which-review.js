@@ -1,4 +1,4 @@
-import Page from './page'
+import Page from '../page'
 
 class WhichReview extends Page {
   get beefRadioButton () { return $('#whichReview') }
@@ -15,9 +15,9 @@ class WhichReview extends Page {
 
   async selectBeef () {
     await (await this.beefRadioButton).scrollIntoView();
-    await browser.pause(3000); 
+    await browser.pause(3000);
     await (await this.beefRadioButton).click()
-    await browser.pause(3000); 
+    await browser.pause(3000);
   }
 
   async selectDairy () {
