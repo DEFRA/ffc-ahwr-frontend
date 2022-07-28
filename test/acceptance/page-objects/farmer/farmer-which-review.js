@@ -1,12 +1,11 @@
 import Page from '../page'
 
 class WhichReview extends Page {
-  get beefRadioButton () { return $('#whichReview') }
-  get dairyRadioButton () { return $('#whichReview-2') }
-  get sheepRadioButton () { return $('#whichReview-3') }
-  get pigRadioButton () { return $('#whichReview-4') }
-  get headerTitle () { return $('.govuk-fieldset__heading') }
-  get continue () { return $('#btnContinue') }
+  get beefRadioButton () { return browser.$('#whichReview') }
+  get dairyRadioButton () { return browser.$('#whichReview-2') }
+  get sheepRadioButton () { return browser.$('#whichReview-3') }
+  get pigRadioButton () { return browser.$('#whichReview-4') }
+  get headerTitle () { return browser.$('.govuk-fieldset__heading') }
 
   open () {
     super.open('')
@@ -36,10 +35,8 @@ class WhichReview extends Page {
     await this.headerTitle.getText()
   }
 
-  async clickContinue () {
-    await (await this.continue).click()
-  }
+
 }
 
-export default new WhichReview()
+module.exports =  new WhichReview()
 

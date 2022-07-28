@@ -1,10 +1,11 @@
 import Page from './page'
 
+
 class CheckAnswer extends Page {
   get yesRadioButton () { return $('#pigs') }
   get noRadioButton () { return $('#pigs-2') }
   get headerTitle () { return $('.govuk-fieldset__heading') }
-  get confirm () { return $('.govuk-button') }
+  get confirm () { return browser.$("//a[contains(.,'Continue')]") }
 
   open () {
     super.open('')
@@ -25,8 +26,8 @@ class CheckAnswer extends Page {
 
   async clickContinue () {
     await (await this.confirm).click()
-    await browser.pause(6000)
+    await browser.pause(1000)
   }
 }
 
-export default new CheckAnswer()
+module.exports = new CheckAnswer()

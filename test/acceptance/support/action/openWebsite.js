@@ -9,6 +9,7 @@ export default async (type, page) => {
      * @type {String}
      */
   const url = (type === 'url') ? page : browser.options.baseUrl + page
+  console.log(page)
   await browser.url(url)
   await browser.pause(5000)
 }

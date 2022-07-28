@@ -1,10 +1,9 @@
 import Page from '../page'
 
 class FarmerCattleEligibility extends Page {
-  get yesRadioButton () { return $('#eligibleSpecies') }
-  get noRadioButton () { return $('#eligibleSpecies-2') }
-  get headerTitle () { return $('.govuk-fieldset__heading') }
-  get continue () { return $('#btnContinue') }
+  get yesRadioButton () { return browser.$('#eligibleSpecies') }
+  get noRadioButton () { return browser.$('#eligibleSpecies-2') }
+  get headerTitle () { return browser.$('.govuk-fieldset__heading') }
 
   open () {
     super.open('')
@@ -23,10 +22,6 @@ class FarmerCattleEligibility extends Page {
   async verifyHeaderTitle () {
     await this.headerTitle.getText()
   }
-
-  async clickContinue () {
-    await (await this.continue).click()
-  }
 }
 
-export default new FarmerCattleEligibility()
+module.exports = new FarmerCattleEligibility()

@@ -18,4 +18,4 @@ class FarmerLogin extends Page {
   }
 }
 
-export default new FarmerLogin()
+module.exports = new FarmerLogin()
